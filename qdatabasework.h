@@ -1,17 +1,17 @@
 #ifndef QDATABASEWORK_H
 #define QDATABASEWORK_H
 
-#include <QObject>
+#include <QtSql>
 
-class QDataBaseWork : public QObject
+class QDataBaseWork
 {
-    Q_OBJECT
+private:
+    QSqlDatabase dbase;
 public:
-    explicit QDataBaseWork(QObject *parent = 0);
-
-signals:
-
-public slots:
+    QDataBaseWork();
+    ~QDataBaseWork();
+    void createDataBase(char* dbName);
+    void createTable(char* tableName);
 };
 
 #endif // QDATABASEWORK_H

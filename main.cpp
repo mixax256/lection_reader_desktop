@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
+#include "qdatabasework.h"
 
 int main(int argc, char *argv[])
 {
@@ -7,6 +8,8 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    int x = 10;
+    QDataBaseWork dataBaseWork;
+    dataBaseWork.createDataBase("lections");
+    dataBaseWork.createTable("LECTIONS");
     return app.exec();
 }

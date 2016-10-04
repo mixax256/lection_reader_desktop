@@ -2,5 +2,5 @@
 
 QModelParent::QModelParent(QObject *parent) : QObject(parent)
 {
-
+    
 }
