@@ -2,6 +2,9 @@
 #define QDATABASEWORK_H
 
 #include <QtSql>
+#include <map>
+
+using namespace std;
 
 class QDataBaseWork
 {
@@ -10,8 +13,11 @@ private:
 public:
     QDataBaseWork();
     ~QDataBaseWork();
-    void createDataBase(char* dbName);
-    void createTable(char* tableName);
+    void createDataBase(string dbName);
+    void createTable(string tableName);
+    void insertInTable(string tableName, int pid, string path, string commet, string tag, int type);
+    void updateInTable(string tableName, map<string, string> rowsNamesAndValues, string whereCondition);
+    void deleteFromTable(string tableName, string whereCondition);
 };
 
 #endif // QDATABASEWORK_H
