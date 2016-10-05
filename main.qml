@@ -10,13 +10,13 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         Menu {
-            title: qsTr("File")
+            title: qsTr("Rotation")
             MenuItem {
-                text: qsTr("&Open")
+                text: qsTr("Current image")
                 onTriggered: console.log("Open action triggered");
             }
             MenuItem {
-                text: qsTr("Exit")
+                text: qsTr("Choose \& rotate")
                 onTriggered: Qt.quit();
             }
         }
@@ -24,9 +24,7 @@ ApplicationWindow {
 
     MainForm {
         anchors.fill: parent
-        button1.onClicked: messageDialog.show(qsTr("Button 1 pressed"))
-        button2.onClicked: messageDialog.show(qsTr("Button 2 pressed"))
-    }
+     }
 
     MessageDialog {
         id: messageDialog
