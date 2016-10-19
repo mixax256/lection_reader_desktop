@@ -46,6 +46,13 @@ QModelIndex QModelParent::index(int row, int column, const QModelIndex &parent) 
 
 QModelIndex QModelParent::parent(const QModelIndex &child) const
 {
-
+    if (!child.parent().isValid()) {
+        return QModelIndex();
+    }
+    DataWrapper *child_pointer = child.internalPointer();
+    if (!child_pointer->parent) {
+        return QModelIndex();
+    }
+    return createIndex(child_pointer->parent->number, 0, static_cast<void *> (child_pointer->parent));
 }
 
