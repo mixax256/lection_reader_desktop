@@ -21,6 +21,18 @@ public:
         QList<DataWrapper> children;
         int count;
     };
+    struct IData {
+
+        QString path; ///< Путь к изображению
+        QString comments;
+        QStringList tags;
+    };
+
+    struct HData {
+        QString name;
+        QString comments;
+        QStringList tags;
+    };
 
     virtual QVariant data(const QModelIndex &index, int role) const;
     virtual int rowCount(const QModelIndex &parent) const;
