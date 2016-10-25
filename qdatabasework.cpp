@@ -27,7 +27,8 @@ void QDataBaseWork::createTable(string tableName) {
                  "path       text,"
                  "comments   text,"
                  "tags       text,"
-                 "type       integer );");
+                 "type       integer,"
+                 "number     integer);");
 
     bool exec = sqlQuery.exec(query);
     if (!exec) {
@@ -37,18 +38,19 @@ void QDataBaseWork::createTable(string tableName) {
     }
 }
 
-void QDataBaseWork::insertInTable(string tableName, int pid, string path, string comment, string tag, int type) {
+void QDataBaseWork::insertInTable(string tableName, int pid, string path, string comment, string tag, int type, int number) {
     QSqlQuery sqlQuery;
     QString query;
     query.append("INSERT into ").append(tableName.c_str())
-         .append(" (pid, path, comments, tags, type)")
-         .append("values(:pid, :path, :comment, :tag, :type);");
+         .append(" (pid, path, comments, tags, type, number)")
+         .append("values(:pid, :path, :comment, :tag, :type, :number);");
     sqlQuery.prepare(query);
     sqlQuery.bindValue(":pid", pid);
     sqlQuery.bindValue(":path", path.c_str());
     sqlQuery.bindValue(":comment", comment.c_str());
     sqlQuery.bindValue(":tag", tag.c_str());
     sqlQuery.bindValue(":type", type);
+    sqlQuery.bindValue(":number", number);
     bool exec = sqlQuery.exec();
     if (!exec) {
         QString error;

@@ -1,12 +1,10 @@
 #include "qmodelparent.h"
-#include "qdatabasework.h"
 
 
 QModelParent::QModelParent(string dbName)
 {
-    QDataBaseWork db;
     db.createDataBase(dbName);
-
+    fetchAll (QModelIndex());
 }
 
 QModelParent::~QModelParent()
@@ -89,4 +87,67 @@ QModelIndex QModelParent::parent(const QModelIndex &child) const
     }
     return createIndex(child_pointer->parent->number, 0, static_cast<void *> (child_pointer->parent));
 }
-
+void QModelParent::fetchAll (const QModelIndex &parent)
+{
+    DataWrapper *data = static_cast<DataWrapper *> (parent.internalPointer());;
+    data->children.clear();
+    QSqlQuery query;
+    query.prepare ("SELECT * from lections where pid = :id ORDER BY id");
+    query.bindValue (":id", data->id);
+    query.exec();
+    while (query.next()) {
+        auto id = query.value ("id").toUInt();
+        auto comment = query.value ("comments").toString();
+        auto number = query.value ("number").toInt();
+        QStringList tags = query.value ("tags").toStringList();
+        switch (data->type) {
+        case ROOT:
+        case COURSE: {
+            auto type = query.value ("type").toInt();
+            auto name = query.value ("path").toString();
+            data->children.append (
+                        new DataWrapper{id, (h_type)type,
+                                        new HData{name, comment, tags},
+                                        number, data, {}, getChildrenCount (h_type(type),id)});
+            break;
+        }
+        case THEME: {
+            auto path = query.value ("path").toString();
+            data->children.append (
+                        new DataWrapper{id, IMAGE,
+                                        new IData{path, comment, tags},
+                                        number, data, {}, getChildrenCount (IMAGE,id)});
+            break;
+        }
+        default:
+            break;
+        }
+    }
+    data->count = data->children.size();
+}
+int QModelParent::getChildrenCount (h_type type, int pid) const
+{
+    QSqlQuery query;
+    switch (type) {
+    case ROOT:
+    case COURSE:
+    case THEME:
+        query.prepare ("SELECT COUNT (*) from lections where pid = :id ");
+        break;
+    case IMAGE:
+        return 0;
+    default:
+        break;
+    }
+    query.bindValue (":id", pid);
+    query.exec();
+    query.next();
+    qDebug() << query.executedQuery();
+    qDebug() << query.lastError();
+    int count = query.value (0).toInt();
+    return count;
+}
+void QModelParent::fetchMore (const QModelIndex &parent)
+{
+    fetchAll (parent);
+}

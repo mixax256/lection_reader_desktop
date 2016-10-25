@@ -1,6 +1,6 @@
 #ifndef QMODELPARENT_H
 #define QMODELPARENT_H
-
+#include "qdatabasework.h"
 #include <QObject>
 #include <QAbstractItemModel>
 #include <QModelIndex>
@@ -23,7 +23,7 @@ public:
     };
     struct IData {
 
-        QString path; ///< Путь к изображению
+        QString path;
         QString comments;
         QStringList tags;
     };
@@ -39,8 +39,13 @@ public:
     virtual int columnCount(const QModelIndex &parent) const;
     virtual QModelIndex index(int row, int column, const QModelIndex &parent) const;
     virtual QModelIndex parent(const QModelIndex &child) const;
+
 private:
     DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, -1};
+    void fetchMore (const QModelIndex &parent);
+    int getChildrenCount (h_type type, int pid) const;
+    void fetchAll (const QModelIndex &parent);
+    QDataBaseWork db;
 };
 
 #endif // QMODELPARENT_H
