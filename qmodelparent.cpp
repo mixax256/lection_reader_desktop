@@ -92,7 +92,7 @@ void QModelParent::fetchAll (const QModelIndex &parent)
     DataWrapper *data = static_cast<DataWrapper *> (parent.internalPointer());;
     data->children.clear();
     QSqlQuery query;
-    query.prepare ("SELECT * from lections where pid = :id ORDER BY id");
+    query.prepare ("SELECT * from LECTIONS where pid = :id");
     query.bindValue (":id", data->id);
     query.exec();
     while (query.next()) {
@@ -132,7 +132,7 @@ int QModelParent::getChildrenCount (h_type type, int pid) const
     case ROOT:
     case COURSE:
     case THEME:
-        query.prepare ("SELECT COUNT (*) from lections where pid = :id ");
+        query.prepare ("SELECT COUNT (*) from LECTIONS where pid = :id ");
         break;
     case IMAGE:
         return 0;
