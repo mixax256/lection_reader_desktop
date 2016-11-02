@@ -18,7 +18,7 @@ public:
         void *data;
         int number;
         DataWrapper *parent;
-        QList<DataWrapper> children;
+        QList<DataWrapper*> children;
         int count;
     };
     struct IData {
@@ -43,6 +43,7 @@ public:
 private:
     DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, -1};
     void fetchMore (const QModelIndex &parent);
+    bool canFetchMore(const QModelIndex &parent) const;
     int getChildrenCount (h_type type, int pid) const;
     void fetchAll (const QModelIndex &parent);
     QDataBaseWork db;

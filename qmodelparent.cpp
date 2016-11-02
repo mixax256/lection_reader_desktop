@@ -70,15 +70,21 @@ QModelIndex QModelParent::index(int row, int column, const QModelIndex &parent) 
         return QModelIndex();
     }
     if (!parent.isValid()) {
-        return createIndex(row, column, const_cast<DataWrapper*>(&d.children[row]));
+        return createIndex(row, column, d.children[row]);
     }
-    DataWrapper* parentInfo = static_cast<DataWrapper*>(parent.internalPointer());
-    return createIndex(row, column, &parentInfo->children[row]);
+    const DataWrapper* parentInfo;
+    if (!parent.isValid()) {
+        parentInfo = &d;
+    }
+    else {
+        parentInfo = static_cast<DataWrapper*>(parent.internalPointer());
+    }
+    return createIndex(row, column, parentInfo->children[row]);
 }
 
 QModelIndex QModelParent::parent(const QModelIndex &child) const
 {
-    if (!child.parent().isValid()) {
+    if (!child.isValid()) {
         return QModelIndex();
     }
     DataWrapper *child_pointer = static_cast<DataWrapper *> (child.internalPointer());
@@ -89,10 +95,16 @@ QModelIndex QModelParent::parent(const QModelIndex &child) const
 }
 void QModelParent::fetchAll (const QModelIndex &parent)
 {
-    DataWrapper *data = static_cast<DataWrapper *> (parent.internalPointer());;
+    DataWrapper *data;
+    if (!parent.isValid()) {
+        data = &d;
+    }
+    else {
+        data = static_cast<DataWrapper *> (parent.internalPointer());
+    }
     data->children.clear();
     QSqlQuery query;
-    query.prepare ("SELECT * from LECTIONS where pid = :id");
+    query.prepare ("SELECT * from LECTIONS where pid = :id order by number");
     query.bindValue (":id", data->id);
     query.exec();
     while (query.next()) {
@@ -150,4 +162,16 @@ int QModelParent::getChildrenCount (h_type type, int pid) const
 void QModelParent::fetchMore (const QModelIndex &parent)
 {
     fetchAll (parent);
+}
+bool QModelParent::canFetchMore (const QModelIndex &parent) const
+{
+    const DataWrapper *data;
+    if (!parent.isValid()) {
+        data = &d;
+    }
+    else {
+        data = static_cast<DataWrapper *> (parent.internalPointer());
+    }
+
+    return data->children.size() < data->count;
 }
