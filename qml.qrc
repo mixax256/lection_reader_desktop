@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>MainForm.ui.qml</file>
+        <file>ToolBut.qml</file>
+        <file>ToolBar1.qml</file>
+        <file>RectForParts.qml</file>
     </qresource>
 </RCC>
