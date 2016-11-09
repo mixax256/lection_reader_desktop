@@ -4,29 +4,44 @@ import QtQuick.Controls.Styles 1.4
 
 Item {
     ToolButton {
+        id:button
+        Component.onCompleted: {
+            console.log(width)
+        }
         style: ButtonStyle {
-               background: Rectangle {
-                    implicitWidth: 20
-                    implicitHeight: 20
-                    color: "#000088"
-                    radius: 1.0
+               background:
+                   Item{
 
-                    Rectangle{
-                        implicitWidth: parent.width - 4
-                        implicitHeight: parent.height - 4
-                        anchors { bottom: parent.bottom; left: parent.left }
-                        color: "#0000cc"
-                        radius: 3.0
-                    }
-                    Rectangle{
-                        implicitWidth: parent.width -4
-                        implicitHeight: parent.height - 4
-                        anchors { top: parent.top; right: parent.right }
-                        color: "#0000a0"
-                        radius: 3.0
-                    }
 
-                 }
+                   Image{
+                   anchors.fill: parent
+
+                   source: "buttons/фон.svg"
+                   fillMode: Image.Tile
+                   }
+               }
+//                   Rectangle {
+//                        implicitWidth: 20
+//                        implicitHeight: 20
+//                        color: "#000088"
+//                        radius: 1.0
+
+//                        Rectangle{
+//                            implicitWidth: parent.width - 4
+//                            implicitHeight: parent.height - 4
+//                            anchors { bottom: parent.bottom; left: parent.left }
+//                            color: "#0000cc"
+//                            radius: 3.0
+//                        }
+//                        Rectangle{
+//                            implicitWidth: parent.width -4
+//                            implicitHeight: parent.height - 4
+//                            anchors { top: parent.top; right: parent.right }
+//                            color: "#0000a0"
+//                            radius: 3.0
+//                        }
+
+//                    }
 
             }
        }

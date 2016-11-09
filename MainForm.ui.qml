@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.3
 
 Item {
     property var spaces_main : 3;
-    property var toolBarMinHeight : 43;
+    property var toolBarMinHeight : 50;
 
     property var treeMinWidth : 193;
     property var treeMinHeight : 300;
@@ -42,33 +42,59 @@ Item {
                 //anchors.fill: parent.width
 
 
-                /* GroupBox {
+                 GroupBox {
                             id: gBoxToolsTree
-                            anchors { bottom: parent.bottom; right: parent.right }
-                            width: parent.width-4
-                            height: parent.height-4
+                            anchors { bottom: parent.bottom; top: parent.top; left: parent.left; right: parent.right }
+                            anchors.leftMargin: 4
+                            anchors.topMargin: 4
+                            anchors.bottomMargin: 4
+                            anchors.rightMargin: 4
+                            //width: gBoxFor1*2
                             visible: true
-                            x: -1
-                            y: 0
 
-                            ToolBut {
-                                id: toolBut1
-                                x: 94
-                                y: 6
+
+                            ToolButton {
+                                id: toolButCheck
+                                anchors { top: parent.top; left: parent.left }
+                                anchors.leftMargin: 0
+                                anchors.topMargin: 0
+                                width: 30
+                                height: 30
+
+
+                                Image {
+                                    source: "buttons/check.png"
+                                    anchors.fill: parent
+                                }
+                            }
+                            ToolButton {
+                                id: toolButAdd
+                                anchors { top: parent.top; left: parent.left }
+                                anchors.leftMargin: gBoxFor1-5
+                                anchors.topMargin: 0
+                                width: 30
+                                height: 30
+                                Image {
+                                    source: "buttons/add.png"
+                                    anchors.fill: parent
+                                }
+
+                            }
+                            ToolButton {
+                                id: toolButDelete
+                                anchors { top: parent.top; left: parent.left }
+                                anchors.leftMargin: gBoxFor1*2-10
+                                anchors.topMargin: 0
+                                width: 30
+                                height: 30
+                                Image {
+                                    source: "buttons/delete.png"
+                                    anchors.fill: parent
+                                }
+
                             }
 
-                            ToolBut {
-                                id: toolBut2
-                                x: 131
-                                y: 6
-                            }
-
-                            ToolBut {
-                                id: toolBut6
-                                x: 49
-                                y: 6
-                            }
-                        }*/
+                        }
             }
 
             RectForParts {
@@ -189,20 +215,36 @@ Item {
                     width: gBoxFor1*2
                     visible: true
 
-                    ToolBut {
+                    ToolButton {
                         id: toolButUndo
                         anchors { top: parent.top; left: parent.left }
                         anchors.leftMargin: 0
-                        anchors.topMargin: 1
+                        anchors.topMargin: 0
                         //anchors.bottomMargin: 4
+                        //children[1].
+                        width: 30
+                        height: 30
+
+
+                        Image {
+                            source: "buttons/undo.png"
+                            anchors.fill: parent
+                        }
 
                     }
 
-                    ToolBut {
+                    ToolButton {
                         id: toolButRedo
                         anchors { top: parent.top; left: parent.left }
-                        anchors.leftMargin: gBoxFor1
-                        anchors.topMargin: 1
+                        anchors.leftMargin: gBoxFor1-5
+                        anchors.topMargin: 0
+                        width: 30
+                        height: 30
+
+                        Image {
+                            source: "buttons/redo.png"
+                            anchors.fill: parent
+                        }
 
                     }
 
@@ -213,36 +255,68 @@ Item {
                             anchors.leftMargin: -1
                             anchors.topMargin: 4
                             anchors.bottomMargin: 4
-                            width: gBoxFor1*4
+                            width: gBoxFor1*4-10
                             visible: true
                             ToolBut {
                                 id: toolButCut
                                 anchors { top: parent.top; left: parent.left }
                                 anchors.leftMargin: 0
-                                anchors.topMargin: 1
+                                anchors.topMargin: 0
+                                width: 30
+                                height: 30
+                                Image {
+                                    source: "buttons/cut.svg"
+                                    antialiasing: true
+                                    anchors.fill: parent
+                                    z:2
+                                }
+
+                                Image {
+                                    source: "buttons/фон.svg"
+                                    anchors.fill: parent
+                                    z: 1
+                                }
 
                             }
 
                             ToolBut {
                                 id: toolButRotate
                                 anchors { top: parent.top; left: parent.left }
-                                anchors.leftMargin: gBoxFor1
-                                anchors.topMargin: 1
+                                anchors.leftMargin: gBoxFor1-5
+                                anchors.topMargin: 0
+                                width: 30
+                                height: 30
+                                Image {
+                                    source: "buttons/rotate.png"
+                                    anchors.fill: parent
+                                }
 
                             }
-                            ToolBut {
+                            ToolButton {
                                 id: toolButBlackWhite
                                 anchors { top: parent.top; left: parent.left }
-                                anchors.leftMargin: gBoxFor1*2
-                                anchors.topMargin: 1
+                                anchors.leftMargin: gBoxFor1*2-10
+                                anchors.topMargin: 0
+                                width: 30
+                                height: 30
+                                Image {
+                                    source: "buttons/black_white.png"
+                                    anchors.fill: parent
+                                }
 
                             }
 
-                            ToolBut {
+                            ToolButton {
                                 id: toolButEnhance
                                 anchors { top: parent.top; left: parent.left }
-                                anchors.leftMargin: gBoxFor1*3
-                                anchors.topMargin: 1
+                                anchors.leftMargin: gBoxFor1*3-15
+                                anchors.topMargin: 0
+                                width: 30
+                                height: 30
+                                Image {
+                                    source: "buttons/enhance.png"
+                                    anchors.fill: parent
+                                }
 
                             }
                         }
@@ -254,11 +328,17 @@ Item {
                             anchors.bottomMargin: 4
                             anchors.rightMargin: 4
                             visible: true
-                            ToolBut {
+                            ToolButton {
                                 id: toolButPrint
                                 anchors { top: parent.top; left: parent.left }
                                 anchors.leftMargin: 0
-                                anchors.topMargin: 1
+                                anchors.topMargin: 0
+                                width: 30
+                                height: 30
+                                Image {
+                                    source: "buttons/print.png"
+                                    anchors.fill: parent
+                                }
 
                             }
                         }
@@ -294,18 +374,30 @@ Item {
                     visible: true
                     title: qsTr("Group Box")
 
-                    Button {
+                    ToolButton {
                         id: buttonOkOnView
-                        x: 336
+                        x: 130
                         y: 0
-                        text: qsTr("Button")
+                        width: 130
+                        height: 30
+
+                        Image {
+                            source: "buttons/ok.png"
+                            anchors.fill: parent
+                        }
                     }
 
-                    Button {
+                    ToolButton {
                         id: butCancelOnView
-                        x: 255
+                        x: 270
                         y: 0
-                        text: qsTr("Button")
+                        width: 130
+                        height: 30
+
+                        Image {
+                            source: "buttons/cancel.png"
+                            anchors.fill: parent
+                        }
                     }
                 }
 

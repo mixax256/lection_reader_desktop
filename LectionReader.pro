@@ -6,8 +6,8 @@ QT += sql
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    qmodelparent.cpp \
-    qdatabasework.cpp
+    qdatabasework.cpp \
+    qmodelparent.cpp
 
 RESOURCES += qml.qrc
 
@@ -20,5 +20,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    qmodelparent.h \
-    qdatabasework.h
+    qdatabasework.h \
+    qmodelparent.h

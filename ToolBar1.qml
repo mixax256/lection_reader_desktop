@@ -7,7 +7,7 @@ Item {
         x: 0
         y: 0
         implicitWidth: 193
-        implicitHeight: 43
+        implicitHeight: 50
         style: ToolBarStyle{
             /*padding {
                 left: 8
@@ -39,6 +39,7 @@ Item {
                                 color: "#483D8B" //dark slate blue
                                 border.color: "#FFFFFF" //white
                                 border.width: 1
+
 
                 }
                 /*//right gradient
