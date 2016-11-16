@@ -63,8 +63,16 @@ Item {
 
 
                                 Image {
-                                    source: "buttons/check.png"
+                                    source: "buttons/check.svg"
+                                    antialiasing: true
                                     anchors.fill: parent
+                                    z:2
+                                }
+
+                                Image {
+                                    source: "buttons/фон.svg"
+                                    anchors.fill: parent
+                                    z: 1
                                 }
                             }
                             ToolButton {
@@ -75,8 +83,16 @@ Item {
                                 width: 30
                                 height: 30
                                 Image {
-                                    source: "buttons/add.png"
+                                    source: "buttons/add.svg"
+                                    antialiasing: true
                                     anchors.fill: parent
+                                    z:2
+                                }
+
+                                Image {
+                                    source: "buttons/фон.svg"
+                                    anchors.fill: parent
+                                    z: 1
                                 }
 
                             }
@@ -225,10 +241,17 @@ Item {
                         width: 30
                         height: 30
 
+                        Image {
+                            source: "buttons/undo.svg"
+                            antialiasing: true
+                            anchors.fill: parent
+                            z:2
+                        }
 
                         Image {
-                            source: "buttons/undo.png"
+                            source: "buttons/фон.svg"
                             anchors.fill: parent
+                            z: 1
                         }
 
                     }
@@ -242,8 +265,16 @@ Item {
                         height: 30
 
                         Image {
-                            source: "buttons/redo.png"
+                            source: "buttons/redo.svg"
+                            antialiasing: true
                             anchors.fill: parent
+                            z:2
+                        }
+
+                        Image {
+                            source: "buttons/фон.svg"
+                            anchors.fill: parent
+                            z: 1
                         }
 
                     }
@@ -287,8 +318,16 @@ Item {
                                 width: 30
                                 height: 30
                                 Image {
-                                    source: "buttons/rotate.png"
+                                    source: "buttons/rotate.svg"
+                                    antialiasing: true
                                     anchors.fill: parent
+                                    z:2
+                                }
+
+                                Image {
+                                    source: "buttons/фон.svg"
+                                    anchors.fill: parent
+                                    z: 1
                                 }
 
                             }

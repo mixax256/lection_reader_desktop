@@ -9,7 +9,6 @@
         <file>buttons/black_white.png</file>
         <file>buttons/cancel.png</file>
         <file>buttons/check.png</file>
-        <file>buttons/cut.png</file>
         <file>buttons/delete.png</file>
         <file>buttons/enhance.png</file>
         <file>buttons/ok.png</file>
@@ -19,7 +18,11 @@
         <file>buttons/scale.png</file>
         <file>buttons/undo.png</file>
         <file>buttons/undo.svg</file>
-        <file>buttons/cut.svg</file>
         <file>buttons/фон.svg</file>
+        <file>buttons/cut.svg</file>
+        <file>buttons/check.svg</file>
+        <file>buttons/redo.svg</file>
+        <file>buttons/add.svg</file>
+        <file>buttons/rotate.svg</file>
     </qresource>
 </RCC>
