@@ -38,7 +38,7 @@ void QDataBaseWork::createTable(string tableName) {
     }
 }
 
-void QDataBaseWork::insertInTable(string tableName, int pid, string path, string comment, string tag, int type, int number) {
+int QDataBaseWork::insertInTable(string tableName, int pid, string path, string comment, string tag, int type, int number) {
     QSqlQuery sqlQuery;
     QString query;
     query.append("INSERT into ").append(tableName.c_str())
@@ -57,6 +57,9 @@ void QDataBaseWork::insertInTable(string tableName, int pid, string path, string
         error.append("Row in ").append(tableName.c_str()).append(" not inserted");
         qDebug() << error;
     }
+    query.append("SELECT max(id) as id from ").append(tableName.c_str());
+    exec = sqlQuery.exec();
+    return sqlQuery.value("id");
 }
 
 void QDataBaseWork::updateInTable(string tableName, map<string, string> rowsNamesAndValues, string whereCondition) {

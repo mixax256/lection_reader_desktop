@@ -1,5 +1,13 @@
 #ifndef QMODELPARENT_H
 #define QMODELPARENT_H
+
+#define PID     1111111
+#define PATH    1111112
+#define COMMENT 1111113
+#define TAG     1111114
+#define TYPE    1111115
+#define NUMBER  1111116
+
 #include "qdatabasework.h"
 #include <QObject>
 #include <QAbstractItemModel>
@@ -47,6 +55,14 @@ private:
     int getChildrenCount (h_type type, int pid) const;
     void fetchAll (const QModelIndex &parent);
     QDataBaseWork db;
+    QString dbname;
+
+    // QAbstractItemModel interface
+public:
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
+    bool insertRows(int row, int count, const QModelIndex &parent);
+    bool removeRows(int row, int count, const QModelIndex &parent);
+    bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild);
 };
 
 #endif // QMODELPARENT_H

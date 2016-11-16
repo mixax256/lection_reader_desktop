@@ -1,9 +1,10 @@
 #include "qmodelparent.h"
 
 
-QModelParent::QModelParent(string dbName)
+QModelParent::QModelParent(string dbName1)
 {
-    db.createDataBase(dbName);
+    db.createDataBase(dbName1);
+    dbname = dbName1;
     fetchAll (QModelIndex());
 }
 
@@ -102,6 +103,7 @@ void QModelParent::fetchAll (const QModelIndex &parent)
     else {
         data = static_cast<DataWrapper *> (parent.internalPointer());
     }
+    beginInsertRows(parent, 0, data->children.size());
     data->children.clear();
     QSqlQuery query;
     query.prepare ("SELECT * from LECTIONS where pid = :id order by number");
@@ -136,6 +138,95 @@ void QModelParent::fetchAll (const QModelIndex &parent)
         }
     }
     data->count = data->children.size();
+    endInsertRows();
+}
+
+bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    DataWrapper *data = static_cast<DataWrapper *> (index.internalPointer());
+    int pid = data->parent->id;
+    string path;
+    string comment;
+    string tag;
+    int type = data->type;
+    int number = data->number;
+
+    switch (data->type) {
+        case ROOT:
+        case COURSE:
+        case THEME:
+        {
+            path = (HData*)(data->data)->name;
+            comment = (HData*)(data->data)->comments;
+            tag = (HData*)(data->data)->tags;
+            break;
+        }
+        case IMAGE: {
+            path = (IData*)(data->data)->path;
+            comment = (IData*)(data->data)->comments;
+            tag = (IData*)(data->data)->tags;
+            break;
+        }
+    }
+
+    map<string, string> rowsNamesAndValues;
+    string whereCondition = "id = " + data->id;
+    switch (role) {
+    case PID:
+        pid = value.toInt();
+        rowsNamesAndValues["pid"] = "" + pid;
+        break;
+    case PATH:
+        path = value.toString();
+        rowsNamesAndValues["path"] = path;
+        break;
+    case COMMENT:
+        comment = value.toString();
+        rowsNamesAndValues["comment"] = comment;
+        break;
+    case TAG:
+        tag = value.toString();
+        rowsNamesAndValues["tag"] = tag;
+         break;
+    case TYPE:
+        type = value.toInt();
+        rowsNamesAndValues["type"] = "" + type;
+        break;
+    case NUMBER:
+        number = value.toInt();
+        rowsNamesAndValues["number"] = "" + number;
+        break;
+    }
+    if (data->id = NULL) {
+        int id = db.insertInTable(dbname.toStdString(), pid, path, comment, tag, type, number);
+        data->id = id;
+    }
+    else {
+            db.updateInTable(dbname.toStdString(), rowsNamesAndValues, whereCondition);
+    }
+}
+
+bool QModelParent::insertRows(int row, int count, const QModelIndex &parent)
+{
+    beginInsertRows(parent, row, row + count - 1);
+
+    DataWrapper *data = static_cast<DataWrapper *> (parent.internalPointer());
+    for (int i = 0; i < count; i++) {
+        data->children.insert(row + i, new DataWrapper() );
+    }
+
+    endInsertRows();
+    return true;
+}
+
+bool QModelParent::removeRows(int row, int count, const QModelIndex &parent)
+{
+
+}
+
+bool QModelParent::moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild)
+{
+
 }
 int QModelParent::getChildrenCount (h_type type, int pid) const
 {

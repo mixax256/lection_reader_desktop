@@ -15,7 +15,7 @@ public:
     ~QDataBaseWork();
     void createDataBase(string dbName);
     void createTable(string tableName);
-    void insertInTable(string tableName, int pid, string path, string commet, string tag, int type, int number);
+    int insertInTable(string tableName, int pid, string path, string commet, string tag, int type, int number);
     void updateInTable(string tableName, map<string, string> rowsNamesAndValues, string whereCondition);
     void deleteFromTable(string tableName, string whereCondition);
 };
