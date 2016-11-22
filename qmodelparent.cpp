@@ -1,7 +1,7 @@
 #include "qmodelparent.h"
 
 
-QModelParent::QModelParent(string dbName1)
+QModelParent::QModelParent(QString dbName1)
 {
     db.createDataBase(dbName1);
     dbname = dbName1;
@@ -22,32 +22,36 @@ QVariant QModelParent::data(const QModelIndex &index, int role) const
                      return &d;
                  }
                  const DataWrapper *elem = static_cast<DataWrapper *> (index.internalPointer());
+                 int pos;
+                 QString path;
                  switch (elem->type) {
                      case COURSE:
                      case THEME:
                          return static_cast<HData*> (elem->data)->name;
                      case IMAGE:
-                         return static_cast<IData*> (elem->data)->path;
+                         path = static_cast<IData*> (elem->data)->path;
+                         pos = path.lastIndexOf('/') + 1;
+                         return path.mid(pos, path.lastIndexOf('.') - pos);
                      default:
                          break;
                  }
              }
          }
-        if (role == Qt::DecorationRole||Qt::SizeHintRole){
-             if (index.isValid()) {
-                 const DataWrapper *elem = static_cast<DataWrapper *> (index.internalPointer());
-                     if (elem->type == IMAGE){
-                         QPixmap pix;
-                         pix.load(static_cast<IData*> (elem->data)->path);
-                         if (role == Qt::DecorationRole){
-                             return pix;
-                         }
-                         else {
-                             return pix.size()/2;
-                         }
-                 }
-             }
-         }
+//        if (role == Qt::DecorationRole||Qt::SizeHintRole){
+//             if (index.isValid()) {
+//                 const DataWrapper *elem = static_cast<DataWrapper *> (index.internalPointer());
+//                     if (elem->type == IMAGE){
+//                         QPixmap pix;
+//                         pix.load(static_cast<IData*> (elem->data)->path);
+//                         if (role == Qt::DecorationRole){
+//                             return pix;
+//                         }
+//                         else {
+//                             return pix.size()/4;
+//                         }
+//                 }
+//             }
+//         }
         return QVariant();
 }
 int QModelParent::rowCount(const QModelIndex &parent) const
@@ -62,6 +66,7 @@ int QModelParent::rowCount(const QModelIndex &parent) const
 
 int QModelParent::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     return 1;
 }
 
@@ -145,9 +150,10 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
 {
     DataWrapper *data = static_cast<DataWrapper *> (index.internalPointer());
     int pid = data->parent->id;
-    string path;
-    string comment;
-    string tag;
+    QString path;
+    QString comment;
+    QStringList tags;
+    QString tag;
     int type = data->type;
     int number = data->number;
 
@@ -156,21 +162,25 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
         case COURSE:
         case THEME:
         {
-            path = (HData*)(data->data)->name;
-            comment = (HData*)(data->data)->comments;
-            tag = (HData*)(data->data)->tags;
+            path = static_cast<HData*>(data->data)->name;
+            comment = static_cast<HData*>(data->data)->comments;
+
+            tags = static_cast<HData*>(data->data)->tags;
             break;
         }
         case IMAGE: {
-            path = (IData*)(data->data)->path;
-            comment = (IData*)(data->data)->comments;
-            tag = (IData*)(data->data)->tags;
+            path = static_cast<IData*>(data->data)->path;
+            comment = static_cast<IData*>(data->data)->comments;
+            tags = static_cast<IData*>(data->data)->tags;
             break;
         }
     }
+    for (auto it = tags.begin(); it != tags.end(); it++) {
+        tag = tag.append(*it).append(';');
+    }
 
-    map<string, string> rowsNamesAndValues;
-    string whereCondition = "id = " + data->id;
+    map<QString, QString> rowsNamesAndValues;
+    QString whereCondition = "id = " + data->id;
     switch (role) {
     case PID:
         pid = value.toInt();
@@ -197,13 +207,16 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
         rowsNamesAndValues["number"] = "" + number;
         break;
     }
-    if (data->id = NULL) {
-        int id = db.insertInTable(dbname.toStdString(), pid, path, comment, tag, type, number);
+    if (data->id == NULL) {
+        int id = db.insertInTable(dbname, pid, path, comment, tag, type, number);
         data->id = id;
+        return true;
     }
     else {
-            db.updateInTable(dbname.toStdString(), rowsNamesAndValues, whereCondition);
+            db.updateInTable(dbname, rowsNamesAndValues, whereCondition);
+            return true;
     }
+    return false;
 }
 
 bool QModelParent::insertRows(int row, int count, const QModelIndex &parent)
@@ -221,14 +234,14 @@ bool QModelParent::insertRows(int row, int count, const QModelIndex &parent)
 
 bool QModelParent::removeRows(int row, int count, const QModelIndex &parent)
 {
-
+    return true;
 }
 
 bool QModelParent::moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild)
 {
-
+    return true;
 }
-int QModelParent::getChildrenCount (h_type type, int pid) const
+int QModelParent::getChildrenCount (h_type type, quint16 pid) const
 {
     QSqlQuery query;
     switch (type) {
