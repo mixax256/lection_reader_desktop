@@ -1,10 +1,10 @@
 #include "qmodelparent.h"
 
 
-QModelParent::QModelParent(QString dbName1)
+QModelParent::QModelParent(QString dbName, QString tableName)
 {
-    db.createDataBase(dbName1);
-    dbname = dbName1;
+    db.createDataBase(dbName);
+    this->tableName = tableName;
     fetchAll (QModelIndex());
 }
 
@@ -111,7 +111,7 @@ void QModelParent::fetchAll (const QModelIndex &parent)
     beginInsertRows(parent, 0, data->children.size());
     data->children.clear();
     QSqlQuery query;
-    query.prepare ("SELECT * from LECTIONS where pid = :id order by number");
+    query.prepare ("SELECT * from " + tableName + " where pid = :id order by number");
     query.bindValue (":id", data->id);
     query.exec();
     while (query.next()) {
@@ -149,6 +149,7 @@ void QModelParent::fetchAll (const QModelIndex &parent)
 bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     DataWrapper *data = static_cast<DataWrapper *> (index.internalPointer());
+    // вытягиваем все данные из данного элемента
     int pid = data->parent->id;
     QString path;
     QString comment;
@@ -179,6 +180,8 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
         tag = tag.append(*it).append(';');
     }
 
+    // собираем условие на апдейт (т.к. у нас за один раз можно поставить только одно значение,
+    // то мы будем по кускам заполнять апдейт)
     map<QString, QString> rowsNamesAndValues;
     QString whereCondition = "id = " + data->id;
     switch (role) {
@@ -207,13 +210,14 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
         rowsNamesAndValues["number"] = "" + number;
         break;
     }
+    // всё пусто, делаем setData впервые
     if (data->id == NULL) {
-        int id = db.insertInTable(dbname, pid, path, comment, tag, type, number);
+        int id = db.insertInTable(tableName, pid, path, comment, tag, type, number);
         data->id = id;
         return true;
     }
-    else {
-            db.updateInTable(dbname, rowsNamesAndValues, whereCondition);
+    else { // иначе докидываем новые данные
+            db.updateInTable(tableName, rowsNamesAndValues, whereCondition);
             return true;
     }
     return false;
@@ -234,11 +238,36 @@ bool QModelParent::insertRows(int row, int count, const QModelIndex &parent)
 
 bool QModelParent::removeRows(int row, int count, const QModelIndex &parent)
 {
+    DataWrapper *data = static_cast<DataWrapper *> (parent.internalPointer());
+    int id;
+    for (int i = 0; i < count; i++) {
+        // вытягиваем id дочернего элемента
+        id = data->children[i]->id;
+        // удаляем его из базы
+        db.deleteFromTable(tableName, "id = " + id);
+        // удаляем из списка детей
+        data->children.removeAt(row);
+    }
     return true;
 }
 
 bool QModelParent::moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild)
 {
+    DataWrapper *oldParent = static_cast<DataWrapper *> (sourceParent.internalPointer());
+    DataWrapper *newParent = static_cast<DataWrapper *> (destinationParent.internalPointer());
+
+    int id;
+    map<QString, QString> rowsAndVals;
+    for (int i = 0; i < count; i++) {
+        // перекидываем строку из старого родителя в новый
+        newParent->children.insert(destinationChild + i, oldParent->children.at(sourceRow));
+        // меняем родителя в базе
+        id = oldParent->children.at(sourceRow)->id;
+        rowsAndVals["pid"] = newParent->id;
+        db.updateInTable(tableName, rowsAndVals, "id = " + id);
+        //удаляем строку из старого родителя
+        removeRow(sourceRow, sourceParent);
+    }
     return true;
 }
 int QModelParent::getChildrenCount (h_type type, quint16 pid) const
@@ -248,7 +277,7 @@ int QModelParent::getChildrenCount (h_type type, quint16 pid) const
     case ROOT:
     case COURSE:
     case THEME:
-        query.prepare ("SELECT COUNT (*) from LECTIONS where pid = :id ");
+        query.prepare ("SELECT COUNT (*) from " + tableName + " where pid = :id ");
         break;
     case IMAGE:
         return 0;

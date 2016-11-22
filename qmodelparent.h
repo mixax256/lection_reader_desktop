@@ -18,7 +18,7 @@ class QModelParent : public QAbstractItemModel
     enum h_type {ROOT, COURSE, THEME, IMAGE};
     Q_OBJECT
 public:
-    QModelParent(QString dbName);
+    QModelParent(QString dbName, QString tableName);
     ~QModelParent();
     struct DataWrapper{
         quint16 id;
@@ -54,7 +54,7 @@ private:
     int getChildrenCount (h_type type, quint16 pid) const;
     void fetchAll (const QModelIndex &parent);
     QDataBaseWork db;
-    QString dbname;
+    QString tableName;
 
     // QAbstractItemModel interface
 public:

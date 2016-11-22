@@ -20,10 +20,10 @@ int main(int argc, char *argv[])
     //dataBaseWork.createTable(tableName);
     //dataBaseWork.insertInTable(tableName, NULL, "/home", "тестовая запись", "", 1);
 
-    //map <string, string> rowsAndVals = {{"tags", "148"}};
+    //map <QString, QString> rowsAndVals = {{"tags", "148"}};
     //dataBaseWork.updateInTable(tableName, rowsAndVals, "id = 2");
     /*dataBaseWork.deleteFromTable(tableName, "");*/
-    QModelParent model(dbName);
+    QModelParent model(dbName, tableName);
     QWidget widget;
      QHBoxLayout layout (&widget);
      QTreeView view;
