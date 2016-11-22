@@ -9,8 +9,8 @@
 
 int main(int argc, char *argv[])
 {
-    string dbName = "lections";
-    string tableName = "LECTIONS";
+    QString dbName = "lections";
+    QString tableName = "LECTIONS";
     QApplication app(argc, argv);
 
     /*QQmlApplicationEngine engine;

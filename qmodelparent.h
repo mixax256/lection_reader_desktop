@@ -18,7 +18,7 @@ class QModelParent : public QAbstractItemModel
     enum h_type {ROOT, COURSE, THEME, IMAGE};
     Q_OBJECT
 public:
-    QModelParent(string dbName);
+    QModelParent(QString dbName);
     ~QModelParent();
     struct DataWrapper{
         quint16 id;
@@ -30,7 +30,6 @@ public:
         int count;
     };
     struct IData {
-
         QString path;
         QString comments;
         QStringList tags;
@@ -52,7 +51,7 @@ private:
     DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, -1};
     void fetchMore (const QModelIndex &parent);
     bool canFetchMore(const QModelIndex &parent) const;
-    int getChildrenCount (h_type type, int pid) const;
+    int getChildrenCount (h_type type, quint16 pid) const;
     void fetchAll (const QModelIndex &parent);
     QDataBaseWork db;
     QString dbname;
