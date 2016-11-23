@@ -63,7 +63,7 @@ Item {
 
 
                                 Image {
-                                    source: "buttons/check.svg"
+                                    source: "buttons/check1.svg"
                                     antialiasing: true
                                     anchors.fill: parent
                                     z:2
@@ -83,7 +83,7 @@ Item {
                                 width: 30
                                 height: 30
                                 Image {
-                                    source: "buttons/add.svg"
+                                    source: "buttons/add1.svg"
                                     antialiasing: true
                                     anchors.fill: parent
                                     z:2
@@ -104,8 +104,16 @@ Item {
                                 width: 30
                                 height: 30
                                 Image {
-                                    source: "buttons/delete.png"
+                                    source: "buttons/delete1.svg"
+                                    antialiasing: true
                                     anchors.fill: parent
+                                    z:2
+                                }
+
+                                Image {
+                                    source: "buttons/фон.svg"
+                                    anchors.fill: parent
+                                    z: 1
                                 }
 
                             }
@@ -242,7 +250,7 @@ Item {
                         height: 30
 
                         Image {
-                            source: "buttons/undo.svg"
+                            source: "buttons/undo1.svg"
                             antialiasing: true
                             anchors.fill: parent
                             z:2
@@ -265,7 +273,7 @@ Item {
                         height: 30
 
                         Image {
-                            source: "buttons/redo.svg"
+                            source: "buttons/redo1.svg"
                             antialiasing: true
                             anchors.fill: parent
                             z:2
@@ -318,7 +326,7 @@ Item {
                                 width: 30
                                 height: 30
                                 Image {
-                                    source: "buttons/rotate.svg"
+                                    source: "buttons/rotate1.svg"
                                     antialiasing: true
                                     anchors.fill: parent
                                     z:2
@@ -339,8 +347,16 @@ Item {
                                 width: 30
                                 height: 30
                                 Image {
-                                    source: "buttons/black_white.png"
+                                    source: "buttons/black_white1.svg"
+                                    antialiasing: true
                                     anchors.fill: parent
+                                    z:2
+                                }
+
+                                Image {
+                                    source: "buttons/фон.svg"
+                                    anchors.fill: parent
+                                    z: 1
                                 }
 
                             }
@@ -353,8 +369,16 @@ Item {
                                 width: 30
                                 height: 30
                                 Image {
-                                    source: "buttons/enhance.png"
+                                    source: "buttons/enhance1.svg"
+                                    antialiasing: true
                                     anchors.fill: parent
+                                    z:2
+                                }
+
+                                Image {
+                                    source: "buttons/фон.svg"
+                                    anchors.fill: parent
+                                    z: 1
                                 }
 
                             }
@@ -375,8 +399,16 @@ Item {
                                 width: 30
                                 height: 30
                                 Image {
-                                    source: "buttons/print.png"
+                                    source: "buttons/print1.svg"
+                                    antialiasing: true
                                     anchors.fill: parent
+                                    z:2
+                                }
+
+                                Image {
+                                    source: "buttons/фон.svg"
+                                    anchors.fill: parent
+                                    z: 1
                                 }
 
                             }

@@ -24,5 +24,18 @@
         <file>buttons/redo.svg</file>
         <file>buttons/add.svg</file>
         <file>buttons/rotate.svg</file>
+        <file>buttons/black_white.svg</file>
+        <file>buttons/enhance.svg</file>
+        <file>buttons/delete.svg</file>
+        <file>buttons/print.svg</file>
+        <file>buttons/undo1.svg</file>
+        <file>buttons/add1.svg</file>
+        <file>buttons/check1.svg</file>
+        <file>buttons/print1.svg</file>
+        <file>buttons/redo1.svg</file>
+        <file>buttons/rotate1.svg</file>
+        <file>buttons/delete1.svg</file>
+        <file>buttons/enhance1.svg</file>
+        <file>buttons/black_white1.svg</file>
     </qresource>
 </RCC>
