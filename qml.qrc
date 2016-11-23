@@ -2,5 +2,40 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>MainForm.ui.qml</file>
+        <file>ToolBut.qml</file>
+        <file>ToolBar1.qml</file>
+        <file>RectForParts.qml</file>
+        <file>buttons/add.png</file>
+        <file>buttons/black_white.png</file>
+        <file>buttons/cancel.png</file>
+        <file>buttons/check.png</file>
+        <file>buttons/delete.png</file>
+        <file>buttons/enhance.png</file>
+        <file>buttons/ok.png</file>
+        <file>buttons/print.png</file>
+        <file>buttons/redo.png</file>
+        <file>buttons/rotate.png</file>
+        <file>buttons/scale.png</file>
+        <file>buttons/undo.png</file>
+        <file>buttons/undo.svg</file>
+        <file>buttons/фон.svg</file>
+        <file>buttons/cut.svg</file>
+        <file>buttons/check.svg</file>
+        <file>buttons/redo.svg</file>
+        <file>buttons/add.svg</file>
+        <file>buttons/rotate.svg</file>
+        <file>buttons/black_white.svg</file>
+        <file>buttons/enhance.svg</file>
+        <file>buttons/delete.svg</file>
+        <file>buttons/print.svg</file>
+        <file>buttons/undo1.svg</file>
+        <file>buttons/add1.svg</file>
+        <file>buttons/check1.svg</file>
+        <file>buttons/print1.svg</file>
+        <file>buttons/redo1.svg</file>
+        <file>buttons/rotate1.svg</file>
+        <file>buttons/delete1.svg</file>
+        <file>buttons/enhance1.svg</file>
+        <file>buttons/black_white1.svg</file>
     </qresource>
 </RCC>
