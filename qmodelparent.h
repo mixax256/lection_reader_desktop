@@ -62,6 +62,7 @@ public:
     bool insertRows(int row, int count, const QModelIndex &parent);
     bool removeRows(int row, int count, const QModelIndex &parent);
     bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild);
+    bool hasChildren(const QModelIndex &parent) const;
 };
 
 #endif // QMODELPARENT_H

@@ -6,6 +6,7 @@
 #include <QTreeView>
 #include "qdatabasework.h"
 #include "qmodelparent.h"
+#include <QQmlContext>
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+    QModelParent model(dbName, tableName);
+    engine.rootContext()->setContextProperty("modelTree", &model);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     //QDataBaseWork dataBaseWork;
     //dataBaseWork.createDataBase(dbName);
@@ -24,18 +27,14 @@ int main(int argc, char *argv[])
     //map <QString, QString> rowsAndVals = {{"tags", "148"}};
     //dataBaseWork.updateInTable(tableName, rowsAndVals, "id = 2");
     /*dataBaseWork.deleteFromTable(tableName, "");*/
-<<<<<<< HEAD
-    QModelParent model(dbName, tableName);
-=======
-    /*QModelParent model(dbName);
->>>>>>> design
-    QWidget widget;
-     QHBoxLayout layout (&widget);
-     QTreeView view;
-     QTableView lview;
-     layout.addWidget(&view);
+    //QModelParent model(dbName);
+    /*QWidget widget;
+    QHBoxLayout layout (&widget);
+    QTreeView view;
+     //QTableView lview;
+     //layout.addWidget(&view);
      //layout.addWidget(&lview);
-         view.setModel(&model);
+     //view.setModel(&model);
          //lview.setModel(&model);
        //  lview.setRootIndex(ip->index(0,0,ip->index(0,0,QModelIndex())));
     // QObject::connect (&view,SIGNAL(clicked(QModelIndex)),&lview,SLOT(setRootIndex(QModelIndex)));

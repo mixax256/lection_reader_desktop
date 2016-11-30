@@ -136,8 +136,14 @@ Item {
                     id: treeView1
                     width: parent.width-6
                     height: parent.height-6
+                    model: modelTree
                     x: 3
                     y: 3
+                    TableViewColumn {
+                        title: ""
+                        role: "display"
+                        width: 200
+                    }
 
                     Slider {
                         id: sliderVertical2
