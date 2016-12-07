@@ -48,7 +48,7 @@ public:
     virtual QModelIndex parent(const QModelIndex &child) const;
 
 private:
-    DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, -1};
+    DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, 0};
     void fetchMore (const QModelIndex &parent);
     bool canFetchMore(const QModelIndex &parent) const;
     int getChildrenCount (h_type type, quint16 pid) const;
@@ -62,6 +62,7 @@ public:
     bool insertRows(int row, int count, const QModelIndex &parent);
     bool removeRows(int row, int count, const QModelIndex &parent);
     bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild);
+    bool hasChildren(const QModelIndex &parent) const;
 };
 
 #endif // QMODELPARENT_H
