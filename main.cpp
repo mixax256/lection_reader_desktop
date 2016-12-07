@@ -28,8 +28,6 @@ int main(int argc, char *argv[])
     //dataBaseWork.updateInTable(tableName, rowsAndVals, "id = 2");
     /*dataBaseWork.deleteFromTable(tableName, "");*/
 
-    QModelParent model(dbName, tableName);
 
-    /*QModelParent model(dbName);
     return app.exec();
 }

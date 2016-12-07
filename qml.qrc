@@ -39,5 +39,6 @@
         <file>buttons/black_white1.svg</file>
         <file>buttons/cancel1.svg</file>
         <file>buttons/ok1.svg</file>
+        <file>buttons/фон2.svg</file>
     </qresource>
 </RCC>

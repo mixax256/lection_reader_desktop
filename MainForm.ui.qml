@@ -426,7 +426,6 @@ Item {
                 id: rectForPartsView
 
                 width: parent.width
-                //implicitHeight: parent.height-toolBar1View.height-spaces_main
 
                 anchors.top: toolBar1View.bottom
                 anchors.topMargin: spaces_main
@@ -446,13 +445,19 @@ Item {
                         id: buttonOkOnView
                         x: 130
                         y: 0
-                        width: 130
+                        width: 120
                         height: 30
 
 
                         Image {
                             source: "buttons/ok1.svg"
                             anchors.fill: parent
+                            z: 2
+                        }
+                        Image {
+                            source: "buttons/фон2.svg"
+                            anchors.fill: parent
+                            z: 1
                         }
                     }
 
@@ -460,12 +465,18 @@ Item {
                         id: butCancelOnView
                         x: 270
                         y: 0
-                        width: 130
+                        width: 120
                         height: 30
 
                         Image {
                             source: "buttons/cancel1.svg"
                             anchors.fill: parent
+                            z :2
+                        }
+                        Image {
+                            source: "buttons/фон2.svg"
+                            anchors.fill: parent
+                            z: 1
                         }
                     }
                 }
