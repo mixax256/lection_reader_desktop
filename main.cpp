@@ -24,9 +24,9 @@ int main(int argc, char *argv[])
     //map <QString, QString> rowsAndVals = {{"tags", "148"}};
     //dataBaseWork.updateInTable(tableName, rowsAndVals, "id = 2");
     /*dataBaseWork.deleteFromTable(tableName, "");*/
-<<<<<<< HEAD
+
     QModelParent model(dbName, tableName);
-=======
+
     /*QModelParent model(dbName);
 >>>>>>> design
     QWidget widget;

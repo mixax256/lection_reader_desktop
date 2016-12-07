@@ -427,19 +427,10 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
 
-                Slider {
-                    id: sliderVertical1
-                    x: parent.width-18
-                    y: 5
-                    width: rectangle1.width
-                    height: parent.height-5-rectangle1.height
-                    orientation: Qt.Vertical
-                }
-
                 GroupBox {
                     id: gBoxAppearOnView
                     x: 0
-                    y: (parent.height-rectangle1.height-47)
+                    y: (parent.height-bottomView.height-47)
                     width: parent.width
                     height: 47
                     visible: true
@@ -452,8 +443,9 @@ Item {
                         width: 130
                         height: 30
 
+
                         Image {
-                            source: "buttons/ok.png"
+                            source: "buttons/ok1.svg"
                             anchors.fill: parent
                         }
                     }
@@ -466,56 +458,42 @@ Item {
                         height: 30
 
                         Image {
-                            source: "buttons/cancel.png"
+                            source: "buttons/cancel1.svg"
                             anchors.fill: parent
                         }
                     }
                 }
 
 
-                RowLayout {
-                    id: rowLayout2
-                    width: parent.width
-                    height: 18
+                Rectangle{
+                    id: bottomView
+
+                    anchors.right: parent.right
+                    anchors.rightMargin: 4
+
+
+                    anchors.left: parent.left
+                    anchors.leftMargin: 4
+
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 4
+
                     x: 0
                     y: parent.height-18
-                    spacing: 0
+                    width: parent.width-8
+                    height: 18
 
                     Slider {
-                        id: sliderHorizontal1
-                        width: 100
-                        height: rectangle1.height
+                        id: sliderH_ScaleView
+                        x: parent.width/2
+                        width: parent.width/2
+                        height: parent.height
 
-                    }
-                    Rectangle {
-                        id: rectangle1
-                        x: 100
-                        width: 18
-                        height: 18
-                        color: "#ffffff"
-                    }
-                    Image {
-                        id: image1
-                        x: 118
-                        width: rectangle1.width
-                        height: rectangle1.height
-                        //source: "qrc:/qtquickplugin/images/template_image.png"
-                    }
-
-                    Slider {
-                        id: sliderHorizontal2
-                        x: 136
-                        width:100
-                        height: rectangle1.height
-                    }
-                    Rectangle {
-                        id: rectangle2
-                        width: rectangle1.width
-                        height: rectangle1.height
-                        color: "#ffffff"
                     }
 
                 }
+
+
             }
         }
     }

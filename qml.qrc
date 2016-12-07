@@ -37,5 +37,7 @@
         <file>buttons/delete1.svg</file>
         <file>buttons/enhance1.svg</file>
         <file>buttons/black_white1.svg</file>
+        <file>buttons/cancel1.svg</file>
+        <file>buttons/ok1.svg</file>
     </qresource>
 </RCC>
