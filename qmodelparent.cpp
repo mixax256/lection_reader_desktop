@@ -58,7 +58,7 @@ int QModelParent::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()){
         const DataWrapper *parent_pointer = &d;
-        return parent_pointer->count;
+        return parent_pointer->children.count();
     }
     const DataWrapper* parentInfo = static_cast<const DataWrapper*>(parent.internalPointer());
     return parentInfo->children.count();
@@ -72,12 +72,9 @@ int QModelParent::columnCount(const QModelIndex &parent) const
 
 QModelIndex QModelParent::index(int row, int column, const QModelIndex &parent) const
 {
-    if (!hasIndex(row, column, parent)){
-        return QModelIndex();
-    }
-    if (!parent.isValid()) {
-        return createIndex(row, column, d.children[row]);
-    }
+   // if (!hasIndex(row, column, parent)){
+   //     return QModelIndex();
+   // }
     const DataWrapper* parentInfo;
     if (!parent.isValid()) {
         parentInfo = &d;
@@ -111,16 +108,12 @@ void QModelParent::fetchAll (const QModelIndex &parent)
     //beginInsertRows(parent, 0, data->children.size());
     //data->children.clear();
     QSqlQuery query;
-    query.prepare ("SELECT COUNT(*) from " + tableName + " where pid = :id order by number");
-    query.bindValue (":id", data->id);
-    query.exec();
-    query.next();
-    data->count = query.value(0).toInt();
 
+    data->count = getChildrenCount(data->type, data->id);
     query.prepare ("SELECT * from " + tableName + " where pid = :id order by number");
     query.bindValue (":id", data->id);
     query.exec();
-    beginInsertRows(parent, 0, data->count);
+    beginInsertRows(parent, 0, data->count-1);
     while (query.next()) {
         auto id = query.value ("id").toUInt();
         auto comment = query.value ("comments").toString();
@@ -149,7 +142,7 @@ void QModelParent::fetchAll (const QModelIndex &parent)
             break;
         }
     }
-    data->count = data->children.size();
+   // data->count = data->children.size();
     endInsertRows();
 }
 
