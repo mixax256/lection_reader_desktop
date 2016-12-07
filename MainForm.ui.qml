@@ -137,6 +137,12 @@ Item {
                     width: parent.width-6
                     height: parent.height-6
                     model: modelTree
+                    onClicked: {
+                        if ( model.data(index, 1) ) {
+                            lection_image.source = model.data(index, 1)
+                        }
+                    }
+
                     x: 3
                     y: 3
                     TableViewColumn {
@@ -432,6 +438,16 @@ Item {
                 anchors.topMargin: spaces_main
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
+
+                Image {
+                    id: lection_image
+                    anchors.fill:parent
+                    anchors.topMargin: 10
+                    anchors.bottomMargin: 50
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
+                    scale: sliderHorizontal2.value
+                    fillMode: PreserveAspectFit  }
 
                 Slider {
                     id: sliderVertical1
