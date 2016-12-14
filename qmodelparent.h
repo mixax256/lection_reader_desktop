@@ -48,7 +48,7 @@ public:
     virtual QModelIndex parent(const QModelIndex &child) const;
 
 private:
-    DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, 0};
+    DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, -1};
     void fetchMore (const QModelIndex &parent);
     bool canFetchMore(const QModelIndex &parent) const;
     int getChildrenCount (h_type type, quint16 pid) const;

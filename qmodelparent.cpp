@@ -37,21 +37,21 @@ QVariant QModelParent::data(const QModelIndex &index, int role) const
                  }
              }
          }
-//        if (role == Qt::DecorationRole||Qt::SizeHintRole){
-//             if (index.isValid()) {
-//                 const DataWrapper *elem = static_cast<DataWrapper *> (index.internalPointer());
-//                     if (elem->type == IMAGE){
-//                         QPixmap pix;
-//                         pix.load(static_cast<IData*> (elem->data)->path);
-//                         if (role == Qt::DecorationRole){
-//                             return pix;
-//                         }
+        if (role == Qt::DecorationRole||Qt::SizeHintRole){
+             if (index.isValid()) {
+                 const DataWrapper *elem = static_cast<DataWrapper *> (index.internalPointer());
+                     if (elem->type == IMAGE){
+                         //QPixmap pix;
+                         //pix.load(static_cast<IData*> (elem->data)->path);
+                         if (role == Qt::DecorationRole){
+                             return QUrl::fromLocalFile(static_cast<IData*> (elem->data)->path);
+                         }
 //                         else {
 //                             return pix.size()/4;
 //                         }
-//                 }
-//             }
-//         }
+                 }
+             }
+         }
         return QVariant();
 }
 int QModelParent::rowCount(const QModelIndex &parent) const

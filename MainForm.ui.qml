@@ -137,6 +137,12 @@ Item {
                     width: parent.width-6
                     height: parent.height-6
                     model: modelTree
+                    onClicked: {
+                        if ( model.data(index, 1) ) {
+                            lection_image.source = model.data(index, 1)
+                        }
+                    }
+
                     x: 3
                     y: 3
                     TableViewColumn {
@@ -425,61 +431,119 @@ Item {
             RectForParts {
                 id: rectForPartsView
 
-                width: parent.width
-
+                width: itemView.width
                 anchors.top: toolBar1View.bottom
                 anchors.topMargin: spaces_main
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
+                anchors.bottom: itemView.bottom
+                anchors.right: itemView.right
+                Rectangle{
+                    id: rectImage
 
-                GroupBox {
-                    id: gBoxAppearOnView
-                    x: 0
-                    y: (parent.height-bottomView.height-47)
-                    width: parent.width
-                    height: 47
-                    visible: true
-                    title: qsTr("Group Box")
+                    //anchors.fill:rectForPartsView.width
+                    anchors.top: rectForPartsView.top
+                    anchors.topMargin: 10
 
-                    ToolButton {
-                        id: buttonOkOnView
-                        x: 130
-                        y: 0
-                        width: 120
-                        height: 30
+                    anchors.rightMargin: 10
+                    anchors.leftMargin: 10
+
+                    height: rectForPartsView.height-rectBottomArea.height-20
 
 
-                        Image {
-                            source: "buttons/ok1.svg"
-                            anchors.fill: parent
-                            z: 2
-                        }
-                        Image {
-                            source: "buttons/фон2.svg"
-                            anchors.fill: parent
-                            z: 1
-                        }
-                    }
-
-                    ToolButton {
-                        id: butCancelOnView
-                        x: 270
-                        y: 0
-                        width: 120
-                        height: 30
+                    ScrollView{
+                        //anchors.centerIn: parent
+                        anchors.fill:rectImage
+                        //contentWidth: lection_image.width;
+                        //contentHeight: lection_image.height
+                       // anchors.topMargin: 10
+                       // anchors.bottomMargin: 60
+                       // anchors.leftMargin: 10
+                       // anchors.rightMargin: 10
+                        //height: parent.height-70
+                        //width: parent.width-20
 
                         Image {
-                            source: "buttons/cancel1.svg"
-                            anchors.fill: parent
-                            z :2
-                        }
-                        Image {
-                            source: "buttons/фон2.svg"
-                            anchors.fill: parent
-                            z: 1
+                            id: lection_image
+                           // anchors.left: parent.left
+                           // anchors.fill: parent
+
+                            //width: sourceSize.width * (  sourceSize.width/( parent.width - 20 ))
+                            //height: sourceSize.height * (sourceSize.height/( parent.height - 60 )  )
+
+                            scale: sliderH_ScaleView.value
+                            //fillMode:PreserveAspectFit
+                           //clip:true
                         }
                     }
+
                 }
+                Rectangle{
+                    id: rectBottomArea
+                    anchors.fill:rectForPartsView.width
+                    anchors.bottom: rectForPartsView.bottom
+                    anchors.rightMargin: 10
+                    anchors.leftMargin: 10
+                    anchors.bottomMargin: 10
+
+                    height:60
+
+                    GroupBox {
+                        id: gBoxAppearOnView
+                        //x: 0
+                        //y: (parent.height-bottomView.height-47)
+                        width: parent.width
+                        height: 47
+                        visible: true
+                        title: qsTr("Group Box")
+
+                        ToolButton {
+                            id: buttonOkOnView
+                            x: 130
+                            y: 0
+                            width: 120
+                            height: 30
+
+
+                            Image {
+                                source: "buttons/ok1.svg"
+                                anchors.fill: parent
+                                z: 2
+                            }
+                            Image {
+                                source: "buttons/фон2.svg"
+                                anchors.fill: parent
+                                z: 1
+                            }
+                        }
+
+                        ToolButton {
+                            id: butCancelOnView
+                            x: 270
+                            y: 0
+                            width: 120
+                            height: 30
+
+                            Image {
+                                source: "buttons/cancel1.svg"
+                                anchors.fill: parent
+                                z :2
+                            }
+                            Image {
+                                source: "buttons/фон2.svg"
+                                anchors.fill: parent
+                                z: 1
+                            }
+                        }
+                    }
+
+
+
+                }
+
+
+
+
+
+
 
 
                 Rectangle{
@@ -505,6 +569,8 @@ Item {
                         x: parent.width/2
                         width: parent.width/2
                         height: parent.height
+                        minimumValue:0.5
+                        maximumValue:2
 
                     }
 
