@@ -41,14 +41,9 @@ QVariant QModelParent::data(const QModelIndex &index, int role) const
              if (index.isValid()) {
                  const DataWrapper *elem = static_cast<DataWrapper *> (index.internalPointer());
                      if (elem->type == IMAGE){
-                         //QPixmap pix;
-                         //pix.load(static_cast<IData*> (elem->data)->path);
                          if (role == Qt::DecorationRole){
                              return QUrl::fromLocalFile(static_cast<IData*> (elem->data)->path);
                          }
-//                         else {
-//                             return pix.size()/4;
-//                         }
                  }
              }
          }
@@ -72,9 +67,6 @@ int QModelParent::columnCount(const QModelIndex &parent) const
 
 QModelIndex QModelParent::index(int row, int column, const QModelIndex &parent) const
 {
-   // if (!hasIndex(row, column, parent)){
-   //     return QModelIndex();
-   // }
     const DataWrapper* parentInfo;
     if (!parent.isValid()) {
         parentInfo = &d;
@@ -105,8 +97,6 @@ void QModelParent::fetchAll (const QModelIndex &parent)
     else {
         data = static_cast<DataWrapper *> (parent.internalPointer());
     }
-    //beginInsertRows(parent, 0, data->children.size());
-    //data->children.clear();
     QSqlQuery query;
 
     data->count = getChildrenCount(data->type, data->id);
@@ -142,7 +132,6 @@ void QModelParent::fetchAll (const QModelIndex &parent)
             break;
         }
     }
-   // data->count = data->children.size();
     endInsertRows();
 }
 
@@ -238,17 +227,29 @@ bool QModelParent::insertRows(int row, int count, const QModelIndex &parent)
 
 bool QModelParent::removeRows(int row, int count, const QModelIndex &parent)
 {
-    DataWrapper *data = static_cast<DataWrapper *> (parent.internalPointer());
+    bool status = false;
+    beginRemoveRows(parent, row, row + count - 1);
+    DataWrapper *data_parent = static_cast<DataWrapper *> (parent.internalPointer());
     int id;
+    QString whereCondition;
     for (int i = 0; i < count; i++) {
         // вытягиваем id дочернего элемента
-        id = data->children[i]->id;
+        id = data_parent->children[row]->id;
+
+        // удаляем его дочерние элементы
+        whereCondition.append("pid = ").append(QString::number(id));
+        status = db.deleteFromTable(tableName, whereCondition);
+
         // удаляем его из базы
-        db.deleteFromTable(tableName, "id = " + id);
+        whereCondition = (new QString("id = "))->append(QString::number(id));
+        status = db.deleteFromTable(tableName, whereCondition);
+
         // удаляем из списка детей
-        data->children.removeAt(row);
+        data_parent->children.removeAt(row);
     }
-    return true;
+    data_parent->count = getChildrenCount(data_parent->type, data_parent->id);
+    endRemoveRows();
+    return status;
 }
 
 bool QModelParent::moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild)
@@ -264,7 +265,7 @@ bool QModelParent::moveRows(const QModelIndex &sourceParent, int sourceRow, int 
         // меняем родителя в базе
         id = oldParent->children.at(sourceRow)->id;
         rowsAndVals["pid"] = newParent->id;
-        db.updateInTable(tableName, rowsAndVals, "id = " + id);
+        db.updateInTable(tableName, rowsAndVals, (new QString("id = "))->append(QString::number(id)));
         //удаляем строку из старого родителя
         removeRow(sourceRow, sourceParent);
     }
@@ -282,6 +283,27 @@ bool QModelParent::hasChildren(const QModelIndex &parent) const
     }
     return parentInfo->count != 0;
 }
+
+bool QModelParent::deleteItem(int row, QModelIndex index)
+{
+    QModelIndex parent = index.parent();
+    bool status = false;
+    DataWrapper *data = static_cast<DataWrapper *> (parent.internalPointer());
+    if (parent.isValid() && data->count > 0) {
+        status = removeRow(row, parent);
+
+        if (data != &d && data->count == 0) {
+            fetchMore(parent);
+        }
+
+        if (data == &d) {
+            beginResetModel();
+            endResetModel();
+        }
+    }
+    return status;
+}
+
 int QModelParent::getChildrenCount (h_type type, quint16 pid) const
 {
     QSqlQuery query;

@@ -85,7 +85,7 @@ void QDataBaseWork::updateInTable(QString tableName, map<QString, QString> rowsN
     }
 }
 
-void QDataBaseWork::deleteFromTable(QString tableName, QString whereCondition) {
+bool QDataBaseWork::deleteFromTable(QString tableName, QString whereCondition) {
     QSqlQuery sqlQuery;
     QString query;
     query.append("DELETE from ").append(tableName);
@@ -101,4 +101,5 @@ void QDataBaseWork::deleteFromTable(QString tableName, QString whereCondition) {
         error.append(tableName).append(" not deleted");
         qDebug() << error;
     }
+    return exec;
 }

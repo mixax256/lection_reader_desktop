@@ -103,6 +103,11 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                onClicked: {
+                                    modelTree.deleteItem(treeView1.currentIndex.row, treeView1.currentIndex);
+                                    treeView1.__currentRow = treeView1.__currentRow - 1;
+                                }
+
                                 Image {
                                     source: "buttons/delete1.svg"
                                     antialiasing: true

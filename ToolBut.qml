@@ -5,9 +5,6 @@ import QtQuick.Controls.Styles 1.4
 Item {
     ToolButton {
         id:button
-        Component.onCompleted: {
-            console.log(width)
-        }
         style: ButtonStyle {
                background:
                    Item{

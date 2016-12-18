@@ -13,7 +13,6 @@ ApplicationWindow {
             title: qsTr("Rotation")
             MenuItem {
                 text: qsTr("Current image")
-                onTriggered: console.log("Open action triggered");
             }
             MenuItem {
                 text: qsTr("Choose \& rotate")
