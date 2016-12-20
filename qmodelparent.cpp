@@ -1,5 +1,9 @@
 #include "qmodelparent.h"
-
+#include <QPrinter>
+#include <QPainter>
+#include <QPrintDialog>
+#include <QPixmap>
+#include <QImage>
 
 QModelParent::QModelParent(QString dbName, QString tableName)
 {
@@ -7,7 +11,22 @@ QModelParent::QModelParent(QString dbName, QString tableName)
     this->tableName = tableName;
     fetchAll (QModelIndex());
 }
+void QModelParent::print(QVariant data)
 
+{
+
+
+    QImage img = qvariant_cast<QImage>(data);
+    QPrinter printer;
+          QPrintDialog *dlg = new QPrintDialog(&printer,0);
+          if(dlg->exec() == QDialog::Accepted) {
+                  QPainter painter(&printer);
+                  painter.drawImage(QPoint(0,0),img);
+                  painter.end();
+          }
+
+
+}
 QModelParent::~QModelParent()
 {
 

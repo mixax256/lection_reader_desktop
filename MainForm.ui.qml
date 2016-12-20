@@ -421,6 +421,13 @@ Item {
                                     anchors.fill: parent
                                     z:2
                                 }
+                                onClicked: {
+                                                    var stat = result_view.grabToImage(function(result) {
+                                                        //result.saveToFile("/home/user/someimage.png"); //saves to a file
+                                                        PRINT.print(result.image); //result.image holds the QVariant
+                                                    });
+                                                    console.log("Success: ", stat);
+                                }
 
                                 Image {
                                     source: "buttons/фон.svg"
