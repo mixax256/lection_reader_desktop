@@ -4,24 +4,23 @@
 #include <QPrintDialog>
 #include <QPixmap>
 #include <QImage>
-
+#include <QUrl>
 QModelParent::QModelParent(QString dbName, QString tableName)
 {
     db.createDataBase(dbName);
     this->tableName = tableName;
     fetchAll (QModelIndex());
 }
-void QModelParent::print(QVariant data)
+void QModelParent::print(QUrl data)
 
 {
-
-
-    QImage img = qvariant_cast<QImage>(data);
+    QPixmap pix;
+    pix.load(data.toLocalFile());
     QPrinter printer;
           QPrintDialog *dlg = new QPrintDialog(&printer,0);
           if(dlg->exec() == QDialog::Accepted) {
                   QPainter painter(&printer);
-                  painter.drawImage(QPoint(0,0),img);
+                  painter.drawPixmap(QPoint(0, 0), pix);
                   painter.end();
           }
 

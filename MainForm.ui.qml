@@ -2,7 +2,7 @@ import QtQuick 2.6
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
-
+import "GlobalVariables.js" as GlobalVariables
 Item {
     property var spaces_main : 3;
     property var toolBarMinHeight : 50;
@@ -422,11 +422,7 @@ Item {
                                     z:2
                                 }
                                 onClicked: {
-                                                    var stat = result_view.grabToImage(function(result) {
-                                                        //result.saveToFile("/home/user/someimage.png"); //saves to a file
-                                                        PRINT.print(result.image); //result.image holds the QVariant
-                                                    });
-                                                    console.log("Success: ", stat);
+                                   modelTree.print(lection_image.source);
                                 }
 
                                 Image {
