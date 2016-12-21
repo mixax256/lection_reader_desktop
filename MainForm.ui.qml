@@ -1,7 +1,10 @@
 import QtQuick 2.6
+import QtQuick 2.0
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
+import Qt.labs.controls 1.0
 import QtQuick.Layouts 1.3
+import QtQuick.Window 2.2
 
 Item {
     property var spaces_main : 3;
@@ -124,18 +127,18 @@ Item {
             RectForParts {
                 id: rectForPartsTree
 
-                width: parent.width
+                width: itemTree.width
                 //implicitHeight: parent.height-toolBar1Tree.height-spaces_main
 
                 anchors.top: toolBar1Tree.bottom
                 anchors.topMargin: spaces_main
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
+                anchors.bottom: itemTree.bottom
+                anchors.left: itemTree.left
 
                 TreeView {
                     id: treeView1
-                    width: parent.width-6
-                    height: parent.height-6
+                    width: rectForPartsTree.width-6
+                    height: rectForPartsTree.height-6
                     model: modelTree
                     onClicked: {
                         if ( model.data(index, 1) ) {
@@ -148,81 +151,54 @@ Item {
                     TableViewColumn {
                         title: ""
                         role: "display"
-                        width: 200
+                        resizable:true
+                        width: treeView1.width-2
+
                     }
 
-                    Slider {
-                        id: sliderVertical2
-                        x: parent.width-18
-                        y: 5
-                        width: 18
-                        height: parent.height-5-22
-                        orientation: Qt.Vertical
-                    }
+//                    Slider {
+//                        id: sliderVertical2
+//                        x: parent.width-18
+//                        y: 5
+//                        width: 18
+//                        height: parent.height-5-22
+//                        orientation: Qt.Vertical
+//                    }
+//                    GroupBox {
+//                        id: gBoxAppearOnTree
+//                        x: 0
+//                        y: (parent.height-sliderHorizontal3.height-47)
+//                        width: parent.width
+//                        height: 47
+//                        title: qsTr("Group Box")
 
-                    GroupBox {
+//                        Button {
+//                            id: butCancelOnTree
+//                            x: 0
+//                            y: 0
+//                            width: 60
+//                            height: 27
+//                            text: qsTr("Button")
+//                        }
 
-                        id: gBoxAppearOnTree
-                        x: 0
-                        y: (parent.height-sliderHorizontal3.height-47)
-                        width: parent.width
-                        height: 47
-                        title: qsTr("Group Box")
+//                    }
+//                    Slider {
+//                        id: sliderHorizontal3
+//                        x: 5
+//                        y: parent.height-18
+//                        width: parent.width-22-5
+//                        height: 18
+//                    }
+//                    Rectangle {
+//                        id: rectangle3
+//                        x: parent.width-22
+//                        y: parent.height-22
+//                        width: 22
+//                        height: 22
+//                        color: "#ffffff"
+//                    }
 
-                        Button {
-                            id: butCancelOnTree
-                            x: 0
-                            y: 0
-                            width: 60
-                            height: 27
-                            text: qsTr("Button")
-                        }
-
-                        ToolBut {
-                            id: toolBut3
-                            x: 66
-                            y: 0
-                            width: 28
-                            height: 27
-                        }
-
-                        ToolBut {
-                            id: toolBut4
-                            x: 100
-                            y: 0
-                            width: 29
-                            height: 27
-                        }
-
-                        ToolBut {
-                            id: toolBut5
-                            x: 135
-                            y: 0
-                            width: 31
-                            height: 27
-                        }
-                    }
-                    Slider {
-                        id: sliderHorizontal3
-                        x: 5
-                        y: parent.height-18
-                        width: parent.width-22-5
-                        height: 18
-                    }
-
-
-                    Rectangle {
-                        id: rectangle3
-                        x: parent.width-22
-                        y: parent.height-22
-                        width: 22
-                        height: 22
-                        color: "#ffffff"
-                    }
                 }
-
-
-
 
             }
         }
@@ -238,7 +214,7 @@ Item {
 
             ToolBar1 {
                 id:toolBar1View
-                width: parent.width
+                width: itemView.width
                 height: toolBarMinHeight
                 //anchors.fill: parent.width
 
@@ -441,19 +417,26 @@ Item {
 
                     //anchors.fill:rectForPartsView.width
                     anchors.top: rectForPartsView.top
-                    anchors.topMargin: 10
+                    anchors.topMargin: 5
 
-                    anchors.rightMargin: 10
-                    anchors.leftMargin: 10
+                    anchors.right: rectForPartsView.right
+                    anchors.rightMargin: 5
+                    anchors.left: rectForPartsView.left
+                    anchors.leftMargin: 5
 
-                    height: rectForPartsView.height-rectBottomArea.height-20
+                    height: rectForPartsView.height-rectBottomArea.height-10
+                    color:"#483D8B" //dark slate blue
+                    //color:"#ffffff"
 
-
-                    ScrollView{
+                    Flickable{
                         //anchors.centerIn: parent
-                        anchors.fill:rectImage
-                        //contentWidth: lection_image.width;
-                        //contentHeight: lection_image.height
+                        anchors.fill:parent
+                        //anchors.centerIn: parent;
+                        width: lection_image.sourceSize.width*0.5
+                        height: lection_image.sourceSize.height*0.5
+                        ScrollBar.vertical: ScrollBar { }
+                        ScrollBar.horizontal: ScrollBar { }
+
                        // anchors.topMargin: 10
                        // anchors.bottomMargin: 60
                        // anchors.leftMargin: 10
@@ -461,39 +444,50 @@ Item {
                         //height: parent.height-70
                         //width: parent.width-20
 
+
+
+
                         Image {
                             id: lection_image
-                           // anchors.left: parent.left
-                           // anchors.fill: parent
+                            //anchors.left: rectImage.left
+                            //anchors.top: rectImage.top
+                            //anchors.fill: parent
 
                             //width: sourceSize.width * (  sourceSize.width/( parent.width - 20 ))
                             //height: sourceSize.height * (sourceSize.height/( parent.height - 60 )  )
 
                             scale: sliderH_ScaleView.value
-                            //fillMode:PreserveAspectFit
+                            fillMode:Item.PreserveAspectCrop
+
+                            transformOrigin: Item.Center
+                            //rotation:45
                            //clip:true
                         }
+
                     }
 
                 }
                 Rectangle{
                     id: rectBottomArea
-                    anchors.fill:rectForPartsView.width
+                    anchors.left:rectForPartsView.left
+                    anchors.right:rectForPartsView.right
                     anchors.bottom: rectForPartsView.bottom
-                    anchors.rightMargin: 10
-                    anchors.leftMargin: 10
-                    anchors.bottomMargin: 10
+                    anchors.rightMargin: 5
+                    anchors.leftMargin: 5
+                    anchors.bottomMargin: 5
 
-                    height:60
+                    height: gBoxAppearOnView.height+bottomView.height
+                    color:"#483D8B" //dark slate blue
 
                     GroupBox {
                         id: gBoxAppearOnView
-                        //x: 0
-                        //y: (parent.height-bottomView.height-47)
-                        width: parent.width
-                        height: 47
+                        x:-1
+                        y:1
+
+                        width: rectBottomArea.width+2
+                        height: toolBarMinHeight-8
                         visible: true
-                        title: qsTr("Group Box")
+                        //title: qsTr("Group Box")
 
                         ToolButton {
                             id: buttonOkOnView
@@ -507,11 +501,13 @@ Item {
                                 source: "buttons/ok1.svg"
                                 anchors.fill: parent
                                 z: 2
+                                antialiasing: true
                             }
                             Image {
                                 source: "buttons/фон2.svg"
                                 anchors.fill: parent
                                 z: 1
+                                antialiasing: true
                             }
                         }
 
@@ -526,55 +522,48 @@ Item {
                                 source: "buttons/cancel1.svg"
                                 anchors.fill: parent
                                 z :2
+                                antialiasing: true
                             }
                             Image {
                                 source: "buttons/фон2.svg"
                                 anchors.fill: parent
                                 z: 1
+                                antialiasing: true
                             }
                         }
                     }
+                    Rectangle{
+                        id: bottomView
 
+                        anchors.left:rectBottomArea.left
+                        anchors.right:rectBottomArea.right
+                        anchors.bottom: rectBottomArea.bottom
 
+                        height: 18
 
-                }
+                        Slider {
+                            id: sliderH_ScaleView
+                            x: parent.width/2
+                            width: parent.width/2
+                            height: parent.height
+                            minimumValue:0.5
+                            maximumValue:2
 
-
-
-
-
-
-
-
-                Rectangle{
-                    id: bottomView
-
-                    anchors.right: parent.right
-                    anchors.rightMargin: 4
-
-
-                    anchors.left: parent.left
-                    anchors.leftMargin: 4
-
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 4
-
-                    x: 0
-                    y: parent.height-18
-                    width: parent.width-8
-                    height: 18
-
-                    Slider {
-                        id: sliderH_ScaleView
-                        x: parent.width/2
-                        width: parent.width/2
-                        height: parent.height
-                        minimumValue:0.5
-                        maximumValue:2
+                        }
 
                     }
 
+
+
+
                 }
+
+
+
+
+
+
+
 
 
             }
