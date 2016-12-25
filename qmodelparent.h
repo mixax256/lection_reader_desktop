@@ -64,6 +64,8 @@ public:
     bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild);
     bool hasChildren(const QModelIndex &parent) const;
     Q_INVOKABLE bool deleteItem(int row, QModelIndex index);
+    Q_INVOKABLE bool addItem(QString name, QModelIndex parent);
+    Q_INVOKABLE int getType(QModelIndex index);
 };
 
 #endif // QMODELPARENT_H

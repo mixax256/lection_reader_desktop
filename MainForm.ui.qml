@@ -2,6 +2,7 @@ import QtQuick 2.6
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
 
 Item {
     property var spaces_main : 3;
@@ -82,6 +83,21 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                onClicked: {
+                                    edtInput.text = "";
+                                    switch(modelTree.getType(treeView1.currentIndex)) {
+                                        case 0: txtDlgAdd.text = "Введите название предмета:";
+                                                dlgAdd.open();
+                                                break;
+                                        case 1: txtDlgAdd.text = "Введите название лекции:";
+                                                dlgAdd.open();
+                                                break;
+                                        case 2: fileDialog.open();
+                                                break;
+                                        default: break;
+                                    }
+                                }
+
                                 Image {
                                     source: "buttons/add1.svg"
                                     antialiasing: true
@@ -452,7 +468,7 @@ Item {
                     anchors.leftMargin: 10
                     anchors.rightMargin: 10
                     scale: sliderHorizontal2.value
-                    fillMode: PreserveAspectFit  }
+                    fillMode: Image.PreserveAspectFit  }
 
                 Slider {
                     id: sliderVertical1
@@ -546,9 +562,40 @@ Item {
             }
         }
     }
+    Dialog {
+        id: dlgAdd
+        visible: false
+        title: "Добавление"
 
+        standardButtons: StandardButton.Ok | StandardButton.Cancel
+        Column {
+            anchors.fill: parent
+            Text {
+                id: txtDlgAdd
+            }
+            TextInput {
+                id: edtInput
+                width: parent.width
+                focus: true
+                activeFocusOnTab: true
+            }
+        }
+        onVisibleChanged: {
+            edtInput.forceActiveFocus();
+        }
 
+        onAccepted: {
+            modelTree.addItem(edtInput.text, treeView1.currentIndex);
+        }
+    }
 
-
-
+    FileDialog {
+        id: fileDialog
+        title: "Выберите изображения лекций"
+        folder: shortcuts.home
+        visible: false
+        onAccepted: {
+            console.log("You chose: " + fileDialog.fileUrls)
+        }
+    }
 }

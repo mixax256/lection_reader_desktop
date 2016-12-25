@@ -57,9 +57,7 @@ int QDataBaseWork::insertInTable(QString tableName, int pid, QString path, QStri
         error.append("Row in ").append(tableName).append(" not inserted");
         qDebug() << error;
     }
-    query.append("SELECT max(id) as id from ").append(tableName);
-    exec = sqlQuery.exec();
-    return sqlQuery.value("id").toInt();
+    return sqlQuery.lastInsertId().toInt();
 }
 
 void QDataBaseWork::updateInTable(QString tableName, map<QString, QString> rowsNamesAndValues, QString whereCondition) {

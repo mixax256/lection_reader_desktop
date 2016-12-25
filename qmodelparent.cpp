@@ -24,6 +24,7 @@ QVariant QModelParent::data(const QModelIndex &index, int role) const
                  const DataWrapper *elem = static_cast<DataWrapper *> (index.internalPointer());
                  int pos;
                  QString path;
+                 char slash = 92;
                  switch (elem->type) {
                      case COURSE:
                      case THEME:
@@ -31,7 +32,10 @@ QVariant QModelParent::data(const QModelIndex &index, int role) const
                      case IMAGE:
                          path = static_cast<IData*> (elem->data)->path;
                          pos = path.lastIndexOf('/') + 1;
-                         return path.mid(pos, path.lastIndexOf('.') - pos);
+                         path = path.mid(pos, path.lastIndexOf('.') - pos);
+                         pos = path.lastIndexOf(slash) + 1;
+                         path = path.mid(pos, path.lastIndexOf('.') - pos);
+                         return path;
                      default:
                          break;
                  }
@@ -137,9 +141,10 @@ void QModelParent::fetchAll (const QModelIndex &parent)
 
 bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    bool status = false;
     DataWrapper *data = static_cast<DataWrapper *> (index.internalPointer());
     // вытягиваем все данные из данного элемента
-    int pid = data->parent->id;
+    int pid;
     QString path;
     QString comment;
     QStringList tags;
@@ -147,80 +152,135 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
     int type = data->type;
     int number = data->number;
 
-    switch (data->type) {
-        case ROOT:
-        case COURSE:
-        case THEME:
-        {
-            path = static_cast<HData*>(data->data)->name;
-            comment = static_cast<HData*>(data->data)->comments;
+    if (data->id != NULL) {
+        switch (data->type) {
+            case ROOT:
+            case COURSE:
+            case THEME:
+            {
+                path = static_cast<HData*>(data->data)->name;
+                comment = static_cast<HData*>(data->data)->comments;
 
-            tags = static_cast<HData*>(data->data)->tags;
-            break;
+                tags = static_cast<HData*>(data->data)->tags;
+                break;
+            }
+            case IMAGE: {
+                path = static_cast<IData*>(data->data)->path;
+                comment = static_cast<IData*>(data->data)->comments;
+                tags = static_cast<IData*>(data->data)->tags;
+                break;
+            }
         }
-        case IMAGE: {
-            path = static_cast<IData*>(data->data)->path;
-            comment = static_cast<IData*>(data->data)->comments;
-            tags = static_cast<IData*>(data->data)->tags;
-            break;
+        for (auto it = tags.begin(); it != tags.end(); it++) {
+            tag = tag.append(*it).append(';');
         }
-    }
-    for (auto it = tags.begin(); it != tags.end(); it++) {
-        tag = tag.append(*it).append(';');
     }
 
     // собираем условие на апдейт (т.к. у нас за один раз можно поставить только одно значение,
     // то мы будем по кускам заполнять апдейт)
     map<QString, QString> rowsNamesAndValues;
-    QString whereCondition = "id = " + data->id;
+    QString whereCondition;
+    whereCondition.append("id = ").append(QString::number(data->id));
     switch (role) {
     case PID:
         pid = value.toInt();
-        rowsNamesAndValues["pid"] = "" + pid;
+        rowsNamesAndValues["pid"] = QString::number(pid);
         break;
     case PATH:
         path = value.toString();
-        rowsNamesAndValues["path"] = path;
+        rowsNamesAndValues["path"] = (new QString("'"))->append(path).append("'");
         break;
     case COMMENT:
         comment = value.toString();
-        rowsNamesAndValues["comment"] = comment;
+        rowsNamesAndValues["comment"] = (new QString("'"))->append(comment).append("'");
         break;
     case TAG:
         tag = value.toString();
-        rowsNamesAndValues["tag"] = tag;
+        rowsNamesAndValues["tag"] = (new QString("'"))->append(tag).append("'");
          break;
     case TYPE:
         type = value.toInt();
-        rowsNamesAndValues["type"] = "" + type;
+        rowsNamesAndValues["type"] = QString::number(type);
         break;
     case NUMBER:
         number = value.toInt();
-        rowsNamesAndValues["number"] = "" + number;
+        rowsNamesAndValues["number"] = QString::number(number);
         break;
     }
     // всё пусто, делаем setData впервые
     if (data->id == NULL) {
         int id = db.insertInTable(tableName, pid, path, comment, tag, type, number);
         data->id = id;
-        return true;
+        if ( type != IMAGE ) {
+            data->data = new HData;
+        }
+        else {
+            data->data = new IData;
+        }
+        status = true;
     }
     else { // иначе докидываем новые данные
             db.updateInTable(tableName, rowsNamesAndValues, whereCondition);
-            return true;
+            status = true;
     }
-    return false;
+    switch (role) {
+    case PID:
+        break;
+    case PATH:
+        if ( data->type != IMAGE ) {
+            static_cast<HData*>(data->data)->name = path;
+        }
+        else {
+            static_cast<IData*>(data->data)->path = path;
+        }
+        break;
+    case COMMENT:
+        if ( data->type != IMAGE ) {
+            static_cast<HData*>(data->data)->comments = comment;
+        }
+        else {
+            static_cast<IData*>(data->data)->comments = comment;
+        }
+        break;
+    case TAG:
+        if ( data->type != IMAGE ) {
+            static_cast<HData*>(data->data)->tags = tags;
+        }
+        else {
+            static_cast<IData*>(data->data)->tags = tags;
+        }
+         break;
+    case TYPE:
+        data->type = h_type(type);
+        break;
+    case NUMBER:
+        data->number = number;
+        break;
+    }
+    return status;
 }
 
 bool QModelParent::insertRows(int row, int count, const QModelIndex &parent)
 {
-    beginInsertRows(parent, row, row + count - 1);
-
-    DataWrapper *data = static_cast<DataWrapper *> (parent.internalPointer());
-    for (int i = 0; i < count; i++) {
-        data->children.insert(row + i, new DataWrapper() );
+    QModelIndex parentIndex;
+    if (!parent.isValid()) {
+        parentIndex = QModelIndex();
     }
-
+    else {
+        parentIndex = parent;
+    }
+    beginInsertRows(parentIndex, row, row + count - 1);
+    DataWrapper *data;
+    if (!parent.isValid()) {
+        data = &d;
+    }
+    else {
+        data = static_cast<DataWrapper *> (parent.internalPointer());
+    }
+    for (int i = 0; i < count; i++) {
+        data->children.insert(row, new DataWrapper() );
+    }
+    data->count = data->count + count;
     endInsertRows();
     return true;
 }
@@ -302,6 +362,47 @@ bool QModelParent::deleteItem(int row, QModelIndex index)
         }
     }
     return status;
+}
+
+bool QModelParent::addItem(QString name, QModelIndex parent)
+{
+    DataWrapper *data;
+    if (!parent.isValid()) {
+        data = &d;
+    }
+    else {
+        data = static_cast<DataWrapper *> (parent.internalPointer());
+    }
+    if (data->type != THEME && data->type != IMAGE) {
+        insertRow(data->count, parent);
+        QModelIndex child = index(data->count - 1, 0, parent);
+        switch (data->type) {
+            case ROOT:
+                setData(child, COURSE, TYPE);
+            break;
+            case COURSE:
+                setData(child, THEME, TYPE);
+            break;
+        }
+        setData(child, data->id, PID);
+        setData(child, name, PATH);
+        //setData(child, "", COMMENT);
+        //setData(child, "", TAG);
+        setData(child, data->count-1, NUMBER);
+    }
+    return true;
+}
+
+int QModelParent::getType(QModelIndex index)
+{
+    DataWrapper* data;
+    if (!index.isValid()) {
+        data = &d;
+    }
+    else {
+        data = static_cast<DataWrapper *> (index.internalPointer());
+    }
+    return (int)data->type;
 }
 
 int QModelParent::getChildrenCount (h_type type, quint16 pid) const
