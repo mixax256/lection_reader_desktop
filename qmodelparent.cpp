@@ -170,6 +170,7 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
     int type = data->type;
     int number = data->number;
 
+    // если не в первый раз заполняем
     if (data->id != NULL) {
         switch (data->type) {
             case ROOT:
@@ -228,6 +229,8 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
     // всё пусто, делаем setData впервые
     if (data->id == NULL) {
         int id = db.insertInTable(tableName, pid, path, comment, tag, type, number);
+        // сразу определяем id в таблице и указываем тип, чтобы в дальнейшем
+        // вытянуть нужные данные
         data->id = id;
         if ( type != IMAGE ) {
             data->data = new HData;
@@ -238,8 +241,7 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
         status = true;
     }
     else { // иначе докидываем новые данные
-            db.updateInTable(tableName, rowsNamesAndValues, whereCondition);
-            status = true;
+            status = db.updateInTable(tableName, rowsNamesAndValues, whereCondition);
     }
     switch (role) {
     case PID:
@@ -315,6 +317,34 @@ bool QModelParent::removeRows(int row, int count, const QModelIndex &parent)
         id = data_parent->children[row]->id;
 
         // удаляем его дочерние элементы
+
+        // удаление локальных изображений (в зависимости от типа текущего элемента)
+        if (data_parent->children[row]->type == IMAGE) {
+            for (int j = 0; j < data_parent->children[row]->children.count(); j++) {
+                QFile::remove(static_cast<IData*>(data_parent->children[row]->children[j]->data)->path);
+            }
+        }
+        if (data_parent->children[row]->type == THEME) {
+            for (int j = 0; j < data_parent->children[row]->children.count(); j++) {
+                QList<DataWrapper*> images = data_parent->children[row]->children;
+                for (int k = 0; k < images.count(); k++) {
+                    QFile::remove(static_cast<IData*>(images[k]->data)->path);
+                }
+            }
+        }
+
+        if (data_parent->children[row]->type == COURSE) {
+            for (int j = 0; j < data_parent->children[row]->children.count(); j++) {
+                QList<DataWrapper*> themes = data_parent->children[row]->children;
+                for (int k = 0; k < themes.count(); k++) {
+                    QList<DataWrapper*> images = themes[k]->children;
+                    for (int l = 0; l < images.count(); l++) {
+                        QFile::remove(static_cast<IData*>(images[l]->data)->path);
+                    }
+                }
+            }
+        }
+        // удаление детей из таблицы
         whereCondition.append("pid = ").append(QString::number(id));
         status = db.deleteFromTable(tableName, whereCondition);
 
@@ -391,7 +421,7 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
     else {
         data = static_cast<DataWrapper *> (parent.internalPointer());
     }
-    if (data->type != THEME && data->type != IMAGE) {
+    if (data->type != IMAGE) {
         insertRow(data->count, parent);
         QModelIndex child = index(data->count - 1, 0, parent);
         switch (data->type) {
@@ -401,12 +431,32 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
             case COURSE:
                 setData(child, THEME, TYPE);
             break;
+            case THEME:
+                setData(child, IMAGE, TYPE);
+            break;
         }
         setData(child, data->id, PID);
-        setData(child, name, PATH);
+        if (data->type != THEME) {
+            setData(child, name, PATH);
+        }
+        else {
+            QUrl url = QUrl(name);
+            QString oldFile = url.path();
+            int indx = oldFile.lastIndexOf('.');
+            QString fileType = oldFile.mid(indx);
+            QString newFileName = (new QString(DEFAULT_PATH))->append('/')
+                    .append(static_cast<HData*>(data->parent->data)->name)
+                    .append('_').append(static_cast<HData*>(data->data)->name)
+                    .append('_').append(QString::number(data->count-1))
+                    .append(fileType);
+            bool st = QFile::copy(oldFile, newFileName);
+            setData(child, newFileName, PATH);
+        }
         //setData(child, "", COMMENT);
         //setData(child, "", TAG);
         setData(child, data->count-1, NUMBER);
+        DataWrapper* data_child = static_cast<DataWrapper *> (child.internalPointer());
+        data_child->parent = data;
     }
     return true;
 }

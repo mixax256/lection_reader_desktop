@@ -1,12 +1,13 @@
 #ifndef QMODELPARENT_H
 #define QMODELPARENT_H
 
-#define PID     1111111
-#define PATH    1111112
-#define COMMENT 1111113
-#define TAG     1111114
-#define TYPE    1111115
-#define NUMBER  1111116
+#define PID           1111111
+#define PATH          1111112
+#define COMMENT       1111113
+#define TAG           1111114
+#define TYPE          1111115
+#define NUMBER        1111116
+#define DEFAULT_PATH  "../LectionReader"
 
 #include "qdatabasework.h"
 #include <QObject>

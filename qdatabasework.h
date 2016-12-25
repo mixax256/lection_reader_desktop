@@ -16,7 +16,7 @@ public:
     void createDataBase(QString dbName);
     void createTable(QString tableName);
     int insertInTable(QString tableName, int pid, QString path, QString commet, QString tag, int type, int number);
-    void updateInTable(QString tableName, map<QString, QString> rowsNamesAndValues, QString whereCondition);
+    bool updateInTable(QString tableName, map<QString, QString> rowsNamesAndValues, QString whereCondition);
     bool deleteFromTable(QString tableName, QString whereCondition);
 };
 

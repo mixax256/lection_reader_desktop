@@ -3,6 +3,7 @@ TEMPLATE = app
 QT += qml quick widgets
 QT += sql
 QT += printsupport
+QT += core
 CONFIG += c++11
 
 SOURCES += main.cpp \

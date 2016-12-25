@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTableView>
 #include <QTreeView>
+#include <QDir>
 #include "qdatabasework.h"
 #include "qmodelparent.h"
 #include <QQmlContext>
@@ -14,6 +15,9 @@ int main(int argc, char *argv[])
     QString dbName = "lections";
     QString tableName = "LECTIONS";
     QApplication app(argc, argv);
+
+    QDir defaultDir(QDir::homePath());
+    defaultDir.mkdir("LectionReader");
 
     QQmlApplicationEngine engine;
     QModelParent model(dbName, tableName);

@@ -597,8 +597,10 @@ Item {
         title: "Выберите изображения лекций"
         folder: shortcuts.home
         visible: false
+        nameFilters: [ "Изображения (*.jpg *.png *.bmp *gif)", "Все файлы (*)" ]
+        selectedNameFilter: "Изображения (*.jpg *.png *.bmp *gif)"
         onAccepted: {
-            console.log("You chose: " + fileDialog.fileUrls)
+            modelTree.addItem(fileDialog.fileUrl, treeView1.currentIndex);
         }
     }
 }

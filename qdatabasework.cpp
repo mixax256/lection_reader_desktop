@@ -60,7 +60,7 @@ int QDataBaseWork::insertInTable(QString tableName, int pid, QString path, QStri
     return sqlQuery.lastInsertId().toInt();
 }
 
-void QDataBaseWork::updateInTable(QString tableName, map<QString, QString> rowsNamesAndValues, QString whereCondition) {
+bool QDataBaseWork::updateInTable(QString tableName, map<QString, QString> rowsNamesAndValues, QString whereCondition) {
     QSqlQuery sqlQuery;
     QString query;
     query.append("UPDATE ").append(tableName).append("\nSET ");
@@ -81,6 +81,7 @@ void QDataBaseWork::updateInTable(QString tableName, map<QString, QString> rowsN
         error.append("Table ").append(tableName).append(" not updated");
         qDebug() << error;
     }
+    return exec;
 }
 
 bool QDataBaseWork::deleteFromTable(QString tableName, QString whereCondition) {
