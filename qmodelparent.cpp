@@ -1,13 +1,31 @@
 #include "qmodelparent.h"
-
-
+#include <QPrinter>
+#include <QPainter>
+#include <QPrintDialog>
+#include <QPixmap>
+#include <QImage>
+#include <QUrl>
 QModelParent::QModelParent(QString dbName, QString tableName)
 {
     db.createDataBase(dbName);
     this->tableName = tableName;
     fetchAll (QModelIndex());
 }
+void QModelParent::print(QUrl data)
 
+{
+    QPixmap pix;
+    pix.load(data.toLocalFile());
+    QPrinter printer;
+          QPrintDialog *dlg = new QPrintDialog(&printer,0);
+          if(dlg->exec() == QDialog::Accepted) {
+                  QPainter painter(&printer);
+                  painter.drawPixmap(QPoint(0, 0), pix);
+                  painter.end();
+          }
+
+
+}
 QModelParent::~QModelParent()
 {
 

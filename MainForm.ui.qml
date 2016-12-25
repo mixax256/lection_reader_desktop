@@ -437,6 +437,9 @@ Item {
                                     anchors.fill: parent
                                     z:2
                                 }
+                                onClicked: {
+                                   modelTree.print(lection_image.source);
+                                }
 
                                 Image {
                                     source: "buttons/фон.svg"
