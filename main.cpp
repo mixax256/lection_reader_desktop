@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     //dataBaseWork.updateInTable(tableName, rowsAndVals, "id = 2");
     /*dataBaseWork.deleteFromTable(tableName, "");*/
     //QModelParent model(dbName);
-    QHBoxLayout layout (&widget);
+    //QHBoxLayout layout (&widget);
     /*QWidget widget;
      //QTableView lview;
      //layout.addWidget(&view);
