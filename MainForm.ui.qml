@@ -428,14 +428,14 @@ Item {
                     color:"#483D8B" //dark slate blue
                     //color:"#ffffff"
 
-                    Flickable{
+                    ScrollView{
                         //anchors.centerIn: parent
                         anchors.fill:parent
                         //anchors.centerIn: parent;
-                        width: lection_image.sourceSize.width*0.5
-                        height: lection_image.sourceSize.height*0.5
-                        ScrollBar.vertical: ScrollBar { }
-                        ScrollBar.horizontal: ScrollBar { }
+                        //width: lection_image.sourceSize.width*0.5
+                        //height: lection_image.sourceSize.height*0.5
+                        //ScrollBar.vertical: ScrollBar { }
+                        //ScrollBar.horizontal: ScrollBar { }
 
                        // anchors.topMargin: 10
                        // anchors.bottomMargin: 60
@@ -546,8 +546,8 @@ Item {
                             x: parent.width/2
                             width: parent.width/2
                             height: parent.height
-                            minimumValue:0.5
-                            maximumValue:2
+                            //minimumValue:0.5
+                            //maximumValue:2
 
                         }
 
