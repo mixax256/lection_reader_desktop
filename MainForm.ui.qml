@@ -2,6 +2,7 @@ import QtQuick 2.6
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
 
 Item {
     property var spaces_main : 3;
@@ -82,6 +83,21 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                onClicked: {
+                                    edtInput.text = "";
+                                    switch(modelTree.getType(treeView1.currentIndex)) {
+                                        case 0: txtDlgAdd.text = "Введите название предмета:";
+                                                dlgAdd.open();
+                                                break;
+                                        case 1: txtDlgAdd.text = "Введите название лекции:";
+                                                dlgAdd.open();
+                                                break;
+                                        case 2: fileDialog.open();
+                                                break;
+                                        default: break;
+                                    }
+                                }
+
                                 Image {
                                     source: "buttons/add1.svg"
                                     antialiasing: true
@@ -103,6 +119,11 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                onClicked: {
+                                    modelTree.deleteItem(treeView1.currentIndex.row, treeView1.currentIndex);
+                                    treeView1.__currentRow = treeView1.__currentRow - 1;
+                                }
+
                                 Image {
                                     source: "buttons/delete1.svg"
                                     antialiasing: true
@@ -136,8 +157,20 @@ Item {
                     id: treeView1
                     width: parent.width-6
                     height: parent.height-6
+                    model: modelTree
+                    onClicked: {
+                        if ( model.data(index, 1) ) {
+                            lection_image.source = model.data(index, 1)
+                        }
+                    }
+
                     x: 3
                     y: 3
+                    TableViewColumn {
+                        title: ""
+                        role: "display"
+                        width: 200
+                    }
 
                     Slider {
                         id: sliderVertical2
@@ -404,6 +437,9 @@ Item {
                                     anchors.fill: parent
                                     z:2
                                 }
+                                onClicked: {
+                                   modelTree.print(lection_image.source);
+                                }
 
                                 Image {
                                     source: "buttons/фон.svg"
@@ -426,6 +462,16 @@ Item {
                 anchors.topMargin: spaces_main
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
+
+                Image {
+                    id: lection_image
+                    anchors.fill:parent
+                    anchors.topMargin: 10
+                    anchors.bottomMargin: 50
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
+                    scale: sliderHorizontal2.value
+                    fillMode: Image.PreserveAspectFit  }
 
                 Slider {
                     id: sliderVertical1
@@ -519,9 +565,42 @@ Item {
             }
         }
     }
+    Dialog {
+        id: dlgAdd
+        visible: false
+        title: "Добавление"
 
+        standardButtons: StandardButton.Ok | StandardButton.Cancel
+        Column {
+            anchors.fill: parent
+            Text {
+                id: txtDlgAdd
+            }
+            TextInput {
+                id: edtInput
+                width: parent.width
+                focus: true
+                activeFocusOnTab: true
+            }
+        }
+        onVisibleChanged: {
+            edtInput.forceActiveFocus();
+        }
 
+        onAccepted: {
+            modelTree.addItem(edtInput.text, treeView1.currentIndex);
+        }
+    }
 
-
-
+    FileDialog {
+        id: fileDialog
+        title: "Выберите изображения лекций"
+        folder: shortcuts.home
+        visible: false
+        nameFilters: [ "Изображения (*.jpg *.png *.bmp *gif)", "Все файлы (*)" ]
+        selectedNameFilter: "Изображения (*.jpg *.png *.bmp *gif)"
+        onAccepted: {
+            modelTree.addItem(fileDialog.fileUrl, treeView1.currentIndex);
+        }
+    }
 }

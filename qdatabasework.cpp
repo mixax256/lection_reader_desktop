@@ -57,12 +57,10 @@ int QDataBaseWork::insertInTable(QString tableName, int pid, QString path, QStri
         error.append("Row in ").append(tableName).append(" not inserted");
         qDebug() << error;
     }
-    query.append("SELECT max(id) as id from ").append(tableName);
-    exec = sqlQuery.exec();
-    return sqlQuery.value("id").toInt();
+    return sqlQuery.lastInsertId().toInt();
 }
 
-void QDataBaseWork::updateInTable(QString tableName, map<QString, QString> rowsNamesAndValues, QString whereCondition) {
+bool QDataBaseWork::updateInTable(QString tableName, map<QString, QString> rowsNamesAndValues, QString whereCondition) {
     QSqlQuery sqlQuery;
     QString query;
     query.append("UPDATE ").append(tableName).append("\nSET ");
@@ -83,9 +81,10 @@ void QDataBaseWork::updateInTable(QString tableName, map<QString, QString> rowsN
         error.append("Table ").append(tableName).append(" not updated");
         qDebug() << error;
     }
+    return exec;
 }
 
-void QDataBaseWork::deleteFromTable(QString tableName, QString whereCondition) {
+bool QDataBaseWork::deleteFromTable(QString tableName, QString whereCondition) {
     QSqlQuery sqlQuery;
     QString query;
     query.append("DELETE from ").append(tableName);
@@ -101,4 +100,5 @@ void QDataBaseWork::deleteFromTable(QString tableName, QString whereCondition) {
         error.append(tableName).append(" not deleted");
         qDebug() << error;
     }
+    return exec;
 }

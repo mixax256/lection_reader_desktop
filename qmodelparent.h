@@ -1,12 +1,13 @@
 #ifndef QMODELPARENT_H
 #define QMODELPARENT_H
 
-#define PID     1111111
-#define PATH    1111112
-#define COMMENT 1111113
-#define TAG     1111114
-#define TYPE    1111115
-#define NUMBER  1111116
+#define PID           1111111
+#define PATH          1111112
+#define COMMENT       1111113
+#define TAG           1111114
+#define TYPE          1111115
+#define NUMBER        1111116
+#define DEFAULT_PATH  "../LectionReader"
 
 #include "qdatabasework.h"
 #include <QObject>
@@ -48,7 +49,7 @@ public:
     virtual QModelIndex parent(const QModelIndex &child) const;
 
 private:
-    DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, -1};
+    DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, 0};
     void fetchMore (const QModelIndex &parent);
     bool canFetchMore(const QModelIndex &parent) const;
     int getChildrenCount (h_type type, quint16 pid) const;
@@ -62,6 +63,11 @@ public:
     bool insertRows(int row, int count, const QModelIndex &parent);
     bool removeRows(int row, int count, const QModelIndex &parent);
     bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild);
+    bool hasChildren(const QModelIndex &parent) const;
+    Q_INVOKABLE bool deleteItem(int row, QModelIndex index);
+    Q_INVOKABLE void print(QUrl data);
+    Q_INVOKABLE bool addItem(QString name, QModelIndex parent);
+    Q_INVOKABLE int getType(QModelIndex index);
 };
 
 #endif // QMODELPARENT_H
