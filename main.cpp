@@ -6,6 +6,7 @@
 #include <QTreeView>
 #include "qdatabasework.h"
 #include "qmodelparent.h"
+#include <QQmlContext>
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+    QModelParent model(dbName, tableName);
+    engine.rootContext()->setContextProperty("modelTree", &model);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     //QDataBaseWork dataBaseWork;
     //dataBaseWork.createDataBase(dbName);
@@ -26,8 +29,7 @@ int main(int argc, char *argv[])
     /*dataBaseWork.deleteFromTable(tableName, "");*/
     QModelParent model(dbName, tableName);
 
-    /*QModelParent model(dbName);
-     QWidget widget;
+    /*QWidget widget;
      QHBoxLayout layout (&widget);
      QTreeView view;
      QTableView lview;

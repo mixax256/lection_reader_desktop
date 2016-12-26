@@ -7,7 +7,8 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     qdatabasework.cpp \
-    qmodelparent.cpp
+    qmodelparent.cpp \
+    qmlbuttonclicks.cpp
 
 RESOURCES += qml.qrc
 
@@ -21,4 +22,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     qdatabasework.h \
-    qmodelparent.h
+    qmodelparent.h \
+    qmlbuttonclicks.h
