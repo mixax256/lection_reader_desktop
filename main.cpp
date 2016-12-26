@@ -32,13 +32,13 @@ int main(int argc, char *argv[])
     //dataBaseWork.updateInTable(tableName, rowsAndVals, "id = 2");
     /*dataBaseWork.deleteFromTable(tableName, "");*/
     //QModelParent model(dbName);
-    /*QWidget widget;
     QHBoxLayout layout (&widget);
+    /*QWidget widget;
      //QTableView lview;
-    QTreeView view;
      //layout.addWidget(&view);
+    QTreeView view;
      //layout.addWidget(&lview);
-     //view.setModel(&model);
+         view.setModel(&model);
          //lview.setModel(&model);
        //  lview.setRootIndex(ip->index(0,0,ip->index(0,0,QModelIndex())));
     // QObject::connect (&view,SIGNAL(clicked(QModelIndex)),&lview,SLOT(setRootIndex(QModelIndex)));
