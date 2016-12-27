@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QDir defaultDir(QDir::homePath());
-    defaultDir.mkdir("LectionReader");
+    defaultDir.mkdir(DEFAULT_PATH);
 
     QQmlApplicationEngine engine;
     QModelParent model(dbName, tableName);

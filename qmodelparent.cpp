@@ -40,20 +40,12 @@ QVariant QModelParent::data(const QModelIndex &index, int role) const
                      return &d;
                  }
                  const DataWrapper *elem = static_cast<DataWrapper *> (index.internalPointer());
-                 int pos;
-                 QString path;
-                 char slash = 92;
                  switch (elem->type) {
                      case COURSE:
                      case THEME:
                          return static_cast<HData*> (elem->data)->name;
                      case IMAGE:
-                         path = static_cast<IData*> (elem->data)->path;
-                         pos = path.lastIndexOf('/') + 1;
-                         path = path.mid(pos, path.lastIndexOf('.') - pos);
-                         pos = path.lastIndexOf(slash) + 1;
-                         path = path.mid(pos, path.lastIndexOf('.') - pos);
-                         return path;
+                         return (new QUrl(static_cast<IData*> (elem->data)->path))->fileName();
                      default:
                          break;
                  }
@@ -444,12 +436,13 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
             QString oldFile = url.path();
             int indx = oldFile.lastIndexOf('.');
             QString fileType = oldFile.mid(indx);
-            QString newFileName = (new QString(DEFAULT_PATH))->append('/')
+            QString newFileName = QDir::homePath().append(QDir::separator())
+                    .append(new QString(DEFAULT_PATH)).append(QDir::separator())
                     .append(static_cast<HData*>(data->parent->data)->name)
                     .append('_').append(static_cast<HData*>(data->data)->name)
                     .append('_').append(QString::number(data->count-1))
                     .append(fileType);
-            bool st = QFile::copy(oldFile, newFileName);
+            QFile::copy(oldFile, newFileName);
             setData(child, newFileName, PATH);
         }
         //setData(child, "", COMMENT);
