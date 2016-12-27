@@ -3,6 +3,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
+import QtQml.Models 2.2
 
 Item {
     property var spaces_main : 3;
@@ -85,7 +86,7 @@ Item {
                                 height: 30
                                 onClicked: {
                                     edtInput.text = "";
-                                    switch(modelTree.getType(treeView1.currentIndex)) {
+                                    switch(modelTree.getType(selectionModel.currentIndex)) {
                                         case 0: txtDlgAdd.text = "Введите название предмета:";
                                                 dlgAdd.open();
                                                 break;
@@ -120,8 +121,8 @@ Item {
                                 width: 30
                                 height: 30
                                 onClicked: {
-                                    modelTree.deleteItem(treeView1.currentIndex.row, treeView1.currentIndex);
-                                    treeView1.__currentRow = treeView1.__currentRow - 1;
+                                    modelTree.deleteItem(selectionModel.currentIndex.row, selectionModel.currentIndex);
+                                    treeView1.__currentRow = selectionModel.__currentRow - 1;
                                 }
 
                                 Image {
@@ -158,14 +159,28 @@ Item {
                     width: parent.width-6
                     height: parent.height-6
                     model: modelTree
-                    onClicked: {
-                        if ( model.data(index, 1) ) {
-                            lection_image.source = model.data(index, 1)
+                    selection: ItemSelectionModel{
+                        id: selectionModel
+                        model: treeView1.model
+                    }
+                    x: 3
+                    y: 3
+                    MouseArea {
+                        id: mouseArea
+                        anchors.fill: parent
+                        acceptedButtons: Qt.LeftButton
+                        onClicked: {
+                            var index_item = parent.indexAt(mouse.x, mouse.y);
+                            if (index_item.valid) {
+                                parent.isExpanded(index_item) ? parent.collapse(index_item) : parent.expand(index_item);
+                                if (parent.model.data(index_item, 1)) {
+                                    lection_image.source = parent.model.data(index_item, 1);
+                                }
+                            }
+                            parent.selection.setCurrentIndex(index_item, ItemSelectionModel.ClearAndSelect);
                         }
                     }
 
-                    x: 3
-                    y: 3
                     TableViewColumn {
                         title: ""
                         role: "display"
@@ -588,7 +603,7 @@ Item {
         }
 
         onAccepted: {
-            modelTree.addItem(edtInput.text, treeView1.currentIndex);
+            modelTree.addItem(edtInput.text, selectionModel.currentIndex);
         }
     }
 
@@ -600,7 +615,7 @@ Item {
         nameFilters: [ "Изображения (*.jpg *.png *.bmp *gif)", "Все файлы (*)" ]
         selectedNameFilter: "Изображения (*.jpg *.png *.bmp *gif)"
         onAccepted: {
-            modelTree.addItem(fileDialog.fileUrl, treeView1.currentIndex);
+            modelTree.addItem(fileDialog.fileUrl, selectionModel.currentIndex);
         }
     }
 }
