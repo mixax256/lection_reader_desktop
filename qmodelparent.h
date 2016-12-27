@@ -7,7 +7,7 @@
 #define TAG           1111114
 #define TYPE          1111115
 #define NUMBER        1111116
-#define DEFAULT_PATH  "../LectionReader"
+#define DEFAULT_PATH  "LectionReader"
 
 #include "qdatabasework.h"
 #include <QObject>
