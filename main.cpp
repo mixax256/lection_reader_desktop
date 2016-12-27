@@ -8,10 +8,17 @@
 #include "qdatabasework.h"
 #include "qmodelparent.h"
 #include <QQmlContext>
+
+#include <QTextCodec>
 using namespace std;
 
 int main(int argc, char *argv[])
 {
+    QTextCodec* codec = QTextCodec::codecForName("UTF-8");
+//    QTextCodec::setCodecForTr(codec);
+//    QTextCodec::setCodecForCStrings(codec);
+    QTextCodec::setCodecForLocale(codec);
+
     QString dbName = "lections";
     QString tableName = "LECTIONS";
     QApplication app(argc, argv);

@@ -434,6 +434,10 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
         else {
             QUrl url = QUrl(name);
             QString oldFile = url.path();
+            //костыль для работы с виндовс
+            if (!QFile::exists(oldFile)){
+                oldFile = oldFile.mid(oldFile.indexOf('/')+1);
+            }
             int indx = oldFile.lastIndexOf('.');
             QString fileType = oldFile.mid(indx);
             QString newFileName = QDir::homePath().append(QDir::separator())
