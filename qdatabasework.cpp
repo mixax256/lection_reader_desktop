@@ -10,11 +10,14 @@ QDataBaseWork::~QDataBaseWork(){
     this->dbase.close();
 }
 
-void QDataBaseWork::createDataBase(QString dbName) {
+void QDataBaseWork::createDataBase(QString dbName, QString tableName) {
     this->dbase = QSqlDatabase::addDatabase("QSQLITE");
     this->dbase.setDatabaseName(dbName);
     if (!this->dbase.open()) {
         qDebug() << this->dbase.lastError().text();
+    }
+    if (dbase.tables().isEmpty()) {
+        createTable(tableName);
     }
 }
 

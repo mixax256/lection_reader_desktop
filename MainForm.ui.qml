@@ -2,7 +2,6 @@ import QtQuick 2.6
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
-import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.2
 import QtQml.Models 2.2
 
@@ -147,18 +146,18 @@ Item {
             RectForParts {
                 id: rectForPartsTree
 
-                width: itemTree.width
+                width: parent.width
                 //implicitHeight: parent.height-toolBar1Tree.height-spaces_main
 
                 anchors.top: toolBar1Tree.bottom
                 anchors.topMargin: spaces_main
-                anchors.bottom: itemTree.bottom
-                anchors.left: itemTree.left
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
 
                 TreeView {
                     id: treeView1
-                    width: rectForPartsTree.width-6
-                    height: rectForPartsTree.height-6
+                    width: parent.width-6
+                    height: parent.height-6
                     model: modelTree
                     selection: ItemSelectionModel{
                         id: selectionModel
@@ -177,6 +176,9 @@ Item {
                                 if (parent.model.data(index_item, 1)) {
                                     lection_image.source = parent.model.data(index_item, 1);
                                 }
+                                else {
+                                    lection_image.source = "";
+                                }
                             }
                             parent.selection.setCurrentIndex(index_item, ItemSelectionModel.ClearAndSelect);
                         }
@@ -185,54 +187,81 @@ Item {
                     TableViewColumn {
                         title: ""
                         role: "display"
-                        resizable:true
-                        width: treeView1.width-2
-
+                        width: 200
                     }
 
-//                    Slider {
-//                        id: sliderVertical2
-//                        x: parent.width-18
-//                        y: 5
-//                        width: 18
-//                        height: parent.height-5-22
-//                        orientation: Qt.Vertical
-//                    }
-//                    GroupBox {
-//                        id: gBoxAppearOnTree
-//                        x: 0
-//                        y: (parent.height-sliderHorizontal3.height-47)
-//                        width: parent.width
-//                        height: 47
-//                        title: qsTr("Group Box")
+                    Slider {
+                        id: sliderVertical2
+                        x: parent.width-18
+                        y: 5
+                        width: 18
+                        height: parent.height-5-22
+                        orientation: Qt.Vertical
+                    }
 
-//                        Button {
-//                            id: butCancelOnTree
-//                            x: 0
-//                            y: 0
-//                            width: 60
-//                            height: 27
-//                            text: qsTr("Button")
-//                        }
+                    GroupBox {
 
-//                    }
-//                    Slider {
-//                        id: sliderHorizontal3
-//                        x: 5
-//                        y: parent.height-18
-//                        width: parent.width-22-5
-//                        height: 18
-//                    }
-//                    Rectangle {
-//                        id: rectangle3
-//                        x: parent.width-22
-//                        y: parent.height-22
-//                        width: 22
-//                        height: 22
-//                        color: "#ffffff"
-//                    }
+                        id: gBoxAppearOnTree
+                        x: 0
+                        y: (parent.height-sliderHorizontal3.height-47)
+                        width: parent.width
+                        height: 47
+                        title: qsTr("Group Box")
 
+                        Button {
+                            id: butCancelOnTree
+                            x: 0
+                            y: 0
+                            width: 60
+                            height: 27
+                            text: qsTr("Button")
+                        }
+
+                        ToolBut {
+                            id: toolBut3
+                            x: 66
+                            y: 0
+                            width: 28
+                            height: 27
+                        }
+
+                        ToolBut {
+                            id: toolBut4
+                            x: 100
+                            y: 0
+                            width: 29
+                            height: 27
+                        }
+
+                        ToolBut {
+                            id: toolBut5
+                            x: 135
+                            y: 0
+                            width: 31
+                            height: 27
+                        }
+                    }
+                    Slider {
+                        id: sliderHorizontal3
+                        x: 5
+                        y: parent.height-18
+                        width: parent.width-22-5
+                        height: 18
+                    }
+
+
+                    Rectangle {
+                        id: rectangle3
+                        x: parent.width-22
+                        y: parent.height-22
+                        width: 22
+                        height: 22
+                        color: "#ffffff"
+                    }
                 }
+
+
+
 
             }
         }
@@ -248,7 +277,7 @@ Item {
 
             ToolBar1 {
                 id:toolBar1View
-                width: itemView.width
+                width: parent.width
                 height: toolBarMinHeight
                 //anchors.fill: parent.width
 
@@ -444,165 +473,113 @@ Item {
             RectForParts {
                 id: rectForPartsView
 
-                width: itemView.width
+                width: parent.width
+                //implicitHeight: parent.height-toolBar1View.height-spaces_main
+
                 anchors.top: toolBar1View.bottom
                 anchors.topMargin: spaces_main
-                anchors.bottom: itemView.bottom
-                anchors.right: itemView.right
-                Rectangle{
-                    id: rectImage
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
 
-                    //anchors.fill:rectForPartsView.width
-                    anchors.top: rectForPartsView.top
-                    anchors.topMargin: 5
+                Image {
+                    id: lection_image
+                    anchors.fill:parent
+                    anchors.topMargin: 10
+                    anchors.bottomMargin: 50
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
+                    scale: sliderHorizontal2.value
+                    fillMode: Image.PreserveAspectFit  }
 
-                    anchors.right: rectForPartsView.right
-                    anchors.rightMargin: 5
-                    anchors.left: rectForPartsView.left
-                    anchors.leftMargin: 5
+                Slider {
+                    id: sliderVertical1
+                    x: parent.width-18
+                    y: 5
+                    width: rectangle1.width
+                    height: parent.height-5-rectangle1.height
+                    orientation: Qt.Vertical
+                }
 
-                    height: rectForPartsView.height-rectBottomArea.height-10
-                    color:"#483D8B" //dark slate blue
-                    //color:"#ffffff"
+                GroupBox {
+                    id: gBoxAppearOnView
+                    x: 0
+                    y: (parent.height-rectangle1.height-47)
+                    width: parent.width
+                    height: 47
+                    visible: true
+                    title: qsTr("Group Box")
 
-                    ScrollView{
-                        //anchors.centerIn: parent
-                        anchors.fill:parent
-                        //anchors.centerIn: parent;
-                        //width: lection_image.sourceSize.width*0.5
-                        //height: lection_image.sourceSize.height*0.5
-                        //ScrollBar.vertical: ScrollBar { }
-                        //ScrollBar.horizontal: ScrollBar { }
-
-                       // anchors.topMargin: 10
-                       // anchors.bottomMargin: 60
-                       // anchors.leftMargin: 10
-                       // anchors.rightMargin: 10
-                        //height: parent.height-70
-                        //width: parent.width-20
-
-
-
+                    ToolButton {
+                        id: buttonOkOnView
+                        x: 130
+                        y: 0
+                        width: 130
+                        height: 30
 
                         Image {
-                            id: lection_image
-                            //anchors.left: rectImage.left
-                            //anchors.top: rectImage.top
-                            //anchors.fill: parent
-
-                            //width: sourceSize.width * (  sourceSize.width/( parent.width - 20 ))
-                            //height: sourceSize.height * (sourceSize.height/( parent.height - 60 )  )
-
-                            scale: sliderH_ScaleView.value
-                            fillMode: Item.PreserveAspectCrop
-
-                            transformOrigin: Item.Center
-                            //rotation:45
-                           //clip:true
+                            source: "buttons/ok.png"
+                            anchors.fill: parent
                         }
-
                     }
 
+                    ToolButton {
+                        id: butCancelOnView
+                        x: 270
+                        y: 0
+                        width: 130
+                        height: 30
+
+                        Image {
+                            source: "buttons/cancel.png"
+                            anchors.fill: parent
+                        }
+                    }
                 }
-                Rectangle{
-                    id: rectBottomArea
-                    anchors.left:rectForPartsView.left
-                    anchors.right:rectForPartsView.right
-                    anchors.bottom: rectForPartsView.bottom
-                    anchors.rightMargin: 5
-                    anchors.leftMargin: 5
-                    anchors.bottomMargin: 5
-
-                    height: gBoxAppearOnView.height+bottomView.height
-                    color:"#483D8B" //dark slate blue
-
-                    GroupBox {
-                        id: gBoxAppearOnView
-                        x:-1
-                        y:1
-
-                        width: rectBottomArea.width+2
-                        height: toolBarMinHeight-8
-                        visible: true
-                        //title: qsTr("Group Box")
-
-                        ToolButton {
-                            id: buttonOkOnView
-                            x: 130
-                            y: 0
-                            width: 120
-                            height: 30
 
 
-                            Image {
-                                source: "buttons/ok1.svg"
-                                anchors.fill: parent
-                                z: 2
-                                antialiasing: true
-                            }
-                            Image {
-                                source: "buttons/фон2.svg"
-                                anchors.fill: parent
-                                z: 1
-                                antialiasing: true
-                            }
-                        }
+                RowLayout {
+                    id: rowLayout2
+                    width: parent.width
+                    height: 18
+                    x: 0
+                    y: parent.height-18
+                    spacing: 0
 
-                        ToolButton {
-                            id: butCancelOnView
-                            x: 270
-                            y: 0
-                            width: 120
-                            height: 30
+                    Slider {
+                        id: sliderHorizontal1
+                        width: 100
+                        height: rectangle1.height
 
-                            Image {
-                                source: "buttons/cancel1.svg"
-                                anchors.fill: parent
-                                z :2
-                                antialiasing: true
-                            }
-                            Image {
-                                source: "buttons/фон2.svg"
-                                anchors.fill: parent
-                                z: 1
-                                antialiasing: true
-                            }
-                        }
                     }
-                    Rectangle{
-                        id: bottomView
-
-                        anchors.left:rectBottomArea.left
-                        anchors.right:rectBottomArea.right
-                        anchors.bottom: rectBottomArea.bottom
-
+                    Rectangle {
+                        id: rectangle1
+                        x: 100
+                        width: 18
                         height: 18
-
-                        Slider {
-                            id: sliderH_ScaleView
-                            x: parent.width/2
-                            width: parent.width/2
-                            height: parent.height
-                            //minimumValue:0.5
-                            //maximumValue:2
-
-                        }
-
+                        color: "#ffffff"
+                    }
+                    Image {
+                        id: image1
+                        x: 118
+                        width: rectangle1.width
+                        height: rectangle1.height
+                        //source: "qrc:/qtquickplugin/images/template_image.png"
                     }
 
-
-
+                    Slider {
+                        id: sliderHorizontal2
+                        x: 136
+                        width:100
+                        height: rectangle1.height
+                    }
+                    Rectangle {
+                        id: rectangle2
+                        width: rectangle1.width
+                        height: rectangle1.height
+                        color: "#ffffff"
+                    }
 
                 }
-
-
-
-
-
-
-
-
-
             }
         }
     }
