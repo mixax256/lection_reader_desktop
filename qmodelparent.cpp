@@ -7,7 +7,7 @@
 #include <QUrl>
 QModelParent::QModelParent(QString dbName, QString tableName)
 {
-    db.createDataBase(dbName);
+    db.createDataBase(dbName, tableName);
     this->tableName = tableName;
     fetchAll (QModelIndex());
 }

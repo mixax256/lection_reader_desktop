@@ -176,6 +176,9 @@ Item {
                                 if (parent.model.data(index_item, 1)) {
                                     lection_image.source = parent.model.data(index_item, 1);
                                 }
+                                else {
+                                    lection_image.source = "";
+                                }
                             }
                             parent.selection.setCurrentIndex(index_item, ItemSelectionModel.ClearAndSelect);
                         }
