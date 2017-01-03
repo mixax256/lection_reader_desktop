@@ -462,27 +462,6 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
 
-                Image {
-                    id: lection_image
-                    anchors.fill:parent
-                    anchors.topMargin: 10
-                    anchors.bottomMargin: 50
-                    anchors.leftMargin: 10
-                    anchors.rightMargin: 10
-                    scale: sliderHorizontal2.value
-                    fillMode: Image.PreserveAspectFit
-                    rotation: sliderRotation.value * 360
-                }
-
-                Slider {
-                    id: sliderVertical1
-                    x: parent.width-18
-                    y: 5
-                    width: rectangle1.width
-                    height: parent.height-5-rectangle1.height
-                    orientation: Qt.Vertical
-                }
-
                 Rectangle{
                     id: rectImage
                     //anchors.fill:rectForPartsView.width
@@ -498,8 +477,18 @@ Item {
                     color:"#483D8B" //dark slate blue
                     //color:"#ffffff"
 
+                    Slider {
+                        id: sliderVertical1
+                        x: rectForPartsView.width-18
+                        y: 5
+                        width: rectImage.width
+                        height: rectForPartsView.height-5-rectImage.height
+                        orientation: Qt.Vertical
+                    }
+
                     ScrollView{
-                        //anchors.centerIn: parent
+                        id: scrollView
+                        anchors.centerIn: parent
                         anchors.fill:parent
                         //anchors.centerIn: parent;
                         //width: lection_image.sourceSize.width*0.5
@@ -514,25 +503,19 @@ Item {
                         //height: parent.height-70
                         //width: parent.width-20
 
-
-
-
-                        Image {
+                       Image {
                             id: lection_image
-                            //anchors.left: rectImage.left
-                            //anchors.top: rectImage.top
-                            //anchors.fill: parent
-
-                            //width: sourceSize.width * (  sourceSize.width/( parent.width - 20 ))
-                            //height: sourceSize.height * (sourceSize.height/( parent.height - 60 )  )
-
-                            scale: sliderH_ScaleView.value
-                            fillMode: Item.PreserveAspectCrop
-
+//                            anchors.fill:parent
+//                            anchors.topMargin: 10
+//                            anchors.bottomMargin: 50
+//                            anchors.leftMargin: 10
+//                            anchors.rightMargin: 10
+                            scale: sliderH_ScaleView.value + 0.5
+                            fillMode: Image.PreserveAspectCrop
                             transformOrigin: Item.Center
-                            //rotation:45
-                           //clip:true
+                            rotation: sliderRotation.value * 360
                         }
+
 
                     }
 
