@@ -340,13 +340,23 @@ Item {
 
                             }
 
-                            ToolBut {
+                            ToolButton {
                                 id: toolButRotate
                                 anchors { top: parent.top; left: parent.left }
                                 anchors.leftMargin: gBoxFor1-5
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+
+                                onClicked: {
+                                    if ( lection_image.status != Image.Null ) {
+                                        if (sliderRotation.visible == false)
+                                            sliderRotation.visible = true
+                                        else
+                                            sliderRotation.visible = false
+                                    }
+
+                               }
                                 Image {
                                     source: "buttons/rotate1.svg"
                                     antialiasing: true
@@ -374,7 +384,9 @@ Item {
                                     anchors.fill: parent
                                     z:2
                                 }
-
+                                onClicked: {
+                                    lection_image.source=modelTree.toBlack(lection_image.source);
+                                }
                                 Image {
                                     source: "buttons/фон.svg"
                                     anchors.fill: parent
@@ -447,11 +459,32 @@ Item {
                 width: itemView.width
                 anchors.top: toolBar1View.bottom
                 anchors.topMargin: spaces_main
-                anchors.bottom: itemView.bottom
-                anchors.right: itemView.right
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+
+                Image {
+                    id: lection_image
+                    anchors.fill:parent
+                    anchors.topMargin: 10
+                    anchors.bottomMargin: 50
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
+                    scale: sliderHorizontal2.value
+                    fillMode: Image.PreserveAspectFit
+                    rotation: sliderRotation.value * 360
+                }
+
+                Slider {
+                    id: sliderVertical1
+                    x: parent.width-18
+                    y: 5
+                    width: rectangle1.width
+                    height: parent.height-5-rectangle1.height
+                    orientation: Qt.Vertical
+                }
+
                 Rectangle{
                     id: rectImage
-
                     //anchors.fill:rectForPartsView.width
                     anchors.top: rectForPartsView.top
                     anchors.topMargin: 5
@@ -644,4 +677,13 @@ Item {
             modelTree.addItem(fileDialog.fileUrl, selectionModel.currentIndex);
         }
     }
+    Slider {
+            id: sliderRotation
+            x: 220
+            y:150
+            width:100
+            height: 100
+            visible: false
+            orientation: Qt.Vertical
+        }
 }

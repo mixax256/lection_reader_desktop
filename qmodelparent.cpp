@@ -11,6 +11,36 @@ QModelParent::QModelParent(QString dbName, QString tableName)
     this->tableName = tableName;
     fetchAll (QModelIndex());
 }
+QUrl QModelParent::toBlack(QUrl data)
+
+{
+    QString path;
+    int begin = data.toString().lastIndexOf(":") + 1;
+    path = data.toString().mid(begin);
+    QImage converted, image;
+    image.load(path);
+    converted = image;
+    QRgb col;
+    int gray;
+    int width  = image.width();
+    int height = image.height();\
+    for (int i = 0; i < width; ++i)
+      {
+          for (int j = 0; j < height; ++j)
+          {
+              col = image.pixel(i, j);
+              gray = qGray(col);
+              converted.setPixel(i, j, qRgb(gray, gray, gray));
+          }
+      }
+    converted = converted.convertToFormat(QImage::Format_RGB32).
+            convertToFormat(QImage::Format_Indexed8);
+    path = path.mid(0, path.indexOf(".")) + "_grey" + path.mid(path.indexOf("."));
+    converted.save(path);
+    QString beginFile = data.toString().mid(0, begin);
+    QUrl newUrl = QUrl::fromUserInput(beginFile + path);
+    return newUrl;
+}
 void QModelParent::print(QUrl data)
 
 {
