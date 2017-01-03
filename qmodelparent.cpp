@@ -480,7 +480,6 @@ QUrl QModelParent::imageImprovment(QUrl image)
     cvtColor(src, src, CV_BGR2GRAY);        // перевод в оттенки серого
     GaussianBlur(src, dst, Size(99,99), 0, 0);  // Гаусово размытие
     src = src / dst;                        // делим исходное изображение на Гаусово размытие, получаем нужный результат
-    imshow("Result", src);
     src.convertTo(src, CV_16U, 255);        // преобразование в 16 битное изображение (для сохранения)
     QString path = image.path();
     path = path.mid(0, path.lastIndexOf('.') - 1)
