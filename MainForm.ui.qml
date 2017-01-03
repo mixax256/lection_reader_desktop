@@ -403,7 +403,9 @@ Item {
                                     anchors.fill: parent
                                     z:2
                                 }
-
+                                onClicked: {
+                                    modelTree.toBlack(lection_image.source);
+                                }
                                 Image {
                                     source: "buttons/фон.svg"
                                     anchors.fill: parent

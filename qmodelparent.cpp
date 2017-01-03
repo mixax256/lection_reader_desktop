@@ -11,6 +11,20 @@ QModelParent::QModelParent(QString dbName, QString tableName)
     this->tableName = tableName;
     fetchAll (QModelIndex());
 }
+void QModelParent::toBlack(QUrl data)
+
+{
+    QString path;
+    int begin = data.toString().lastIndexOf(":") + 1;
+    path = data.toString().mid(begin);
+    QImage image;
+    image.load(path);
+    image.copy();
+    image.convertToFormat(QImage::Format_Grayscale8);
+
+    image.save(path.mid(0, path.indexOf(".")) + "_grey" + path.mid(path.indexOf(".")));
+
+}
 void QModelParent::print(QUrl data)
 
 {
