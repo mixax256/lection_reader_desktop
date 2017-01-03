@@ -369,13 +369,23 @@ Item {
 
                             }
 
-                            ToolBut {
+                            ToolButton {
                                 id: toolButRotate
                                 anchors { top: parent.top; left: parent.left }
                                 anchors.leftMargin: gBoxFor1-5
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+
+                                onClicked: {
+                                    if ( lection_image.status != Image.Null ) {
+                                        if (sliderRotation.visible == false)
+                                            sliderRotation.visible = true
+                                        else
+                                            sliderRotation.visible = false
+                                    }
+
+                               }
                                 Image {
                                     source: "buttons/rotate1.svg"
                                     antialiasing: true
@@ -491,7 +501,9 @@ Item {
                     anchors.leftMargin: 10
                     anchors.rightMargin: 10
                     scale: sliderHorizontal2.value
-                    fillMode: Image.PreserveAspectFit  }
+                    fillMode: Image.PreserveAspectFit
+                    rotation: sliderRotation.value * 360
+                }
 
                 Slider {
                     id: sliderVertical1
@@ -623,4 +635,13 @@ Item {
             modelTree.addItem(fileDialog.fileUrl, selectionModel.currentIndex);
         }
     }
+    Slider {
+            id: sliderRotation
+            x: 220
+            y:150
+            width:100
+            height: 100
+            visible: false
+            orientation: Qt.Vertical
+        }
 }
