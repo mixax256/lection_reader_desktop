@@ -7,7 +7,6 @@
 #include <QUrl>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
-#include "opencv2/imgcodecs.hpp"
 #include <opencv2/highgui/highgui_c.h>
 
 using namespace cv;
@@ -475,13 +474,20 @@ int QModelParent::getType(QModelIndex index)
 
 QUrl QModelParent::imageImprovment(QUrl image)
 {
-    Mat src = imread(image.path().toStdString(), 1);
+    Mat src = imread(image.path().toStdString(), 1); // исходное изображение
     Mat dst;
-    src.convertTo(src, CV_32FC1,1.0/255.0);
-    GaussianBlur(src, dst, Size(100,100), 0, 0);
-    src = 256 * src / ( dst + 1 );
-    //imshow("Res", src);
-    return image;
+    src.convertTo(src, CV_32FC1,1.0/255.0); // преобразование в 32 битное изображение
+    cvtColor(src, src, CV_BGR2GRAY);        // перевод в оттенки серого
+    GaussianBlur(src, dst, Size(99,99), 0, 0);  // Гаусово размытие
+    src = src / dst;                        // делим исходное изображение на Гаусово размытие, получаем нужный результат
+    imshow("Result", src);
+    src.convertTo(src, CV_16U, 255);        // преобразование в 16 битное изображение (для сохранения)
+    QString path = image.path();
+    path = path.mid(0, path.lastIndexOf('.') - 1)
+               .append("imp")
+               .append(path.mid(path.lastIndexOf('.')));
+    imwrite(path.toStdString(), src);
+    return QUrl::fromLocalFile(path);
 }
 
 int QModelParent::getChildrenCount (h_type type, quint16 pid) const

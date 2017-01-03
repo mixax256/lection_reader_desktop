@@ -419,6 +419,10 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                onClicked: {
+                                    lection_image.source = modelTree.imageImprovment(lection_image.source);
+                                }
+
                                 Image {
                                     source: "buttons/enhance1.svg"
                                     antialiasing: true
