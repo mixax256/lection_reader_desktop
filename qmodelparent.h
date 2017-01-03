@@ -5,7 +5,7 @@
 #define PATH          1111112
 #define COMMENT       1111113
 #define TAG           1111114
-#define TYPE          1111115
+#define TYPE_MODEL    1111115
 #define NUMBER        1111116
 #define DEFAULT_PATH  "LectionReader"
 
@@ -68,6 +68,7 @@ public:
     Q_INVOKABLE void print(QUrl data);
     Q_INVOKABLE bool addItem(QString name, QModelIndex parent);
     Q_INVOKABLE int getType(QModelIndex index);
+    Q_INVOKABLE QUrl imageImprovment(QUrl image);
 };
 
 #endif // QMODELPARENT_H

@@ -1,5 +1,7 @@
 TEMPLATE = app
 
+INCLUDEPATH += /usr/local/opencv2/
+LIBS += -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc
 QT += qml quick widgets
 QT += sql
 QT += printsupport

@@ -5,6 +5,13 @@
 #include <QPixmap>
 #include <QImage>
 #include <QUrl>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/opencv.hpp>
+#include "opencv2/imgcodecs.hpp"
+#include <opencv2/highgui/highgui_c.h>
+
+using namespace cv;
+
 QModelParent::QModelParent(QString dbName, QString tableName)
 {
     db.createDataBase(dbName, tableName);
@@ -209,7 +216,7 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
         tag = value.toString();
         rowsNamesAndValues["tag"] = (new QString("'"))->append(tag).append("'");
          break;
-    case TYPE:
+    case TYPE_MODEL:
         type = value.toInt();
         rowsNamesAndValues["type"] = QString::number(type);
         break;
@@ -262,7 +269,7 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
             static_cast<IData*>(data->data)->tags = tags;
         }
          break;
-    case TYPE:
+    case TYPE_MODEL:
         data->type = h_type(type);
         break;
     case NUMBER:
@@ -418,13 +425,13 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
         QModelIndex child = index(data->count - 1, 0, parent);
         switch (data->type) {
             case ROOT:
-                setData(child, COURSE, TYPE);
+                setData(child, COURSE, TYPE_MODEL);
             break;
             case COURSE:
-                setData(child, THEME, TYPE);
+                setData(child, THEME, TYPE_MODEL);
             break;
             case THEME:
-                setData(child, IMAGE, TYPE);
+                setData(child, IMAGE, TYPE_MODEL);
             break;
         }
         setData(child, data->id, PID);
@@ -464,6 +471,17 @@ int QModelParent::getType(QModelIndex index)
         data = static_cast<DataWrapper *> (index.internalPointer());
     }
     return (int)data->type;
+}
+
+QUrl QModelParent::imageImprovment(QUrl image)
+{
+    Mat src = imread(image.path().toStdString(), 1);
+    Mat dst;
+    src.convertTo(src, CV_32FC1,1.0/255.0);
+    GaussianBlur(src, dst, Size(100,100), 0, 0);
+    src = 256 * src / ( dst + 1 );
+    //imshow("Res", src);
+    return image;
 }
 
 int QModelParent::getChildrenCount (h_type type, quint16 pid) const
