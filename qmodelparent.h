@@ -66,7 +66,7 @@ public:
     bool hasChildren(const QModelIndex &parent) const;
     Q_INVOKABLE bool deleteItem(int row, QModelIndex index);
     Q_INVOKABLE void print(QUrl data);
-    Q_INVOKABLE void toBlack(QUrl data);
+    Q_INVOKABLE QUrl toBlack(QUrl data);
     Q_INVOKABLE bool addItem(QString name, QModelIndex parent);
     Q_INVOKABLE int getType(QModelIndex index);
 };

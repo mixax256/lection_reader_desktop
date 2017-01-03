@@ -414,7 +414,7 @@ Item {
                                     z:2
                                 }
                                 onClicked: {
-                                    modelTree.toBlack(lection_image.source);
+                                    lection_image.source=modelTree.toBlack(lection_image.source);
                                 }
                                 Image {
                                     source: "buttons/фон.svg"
