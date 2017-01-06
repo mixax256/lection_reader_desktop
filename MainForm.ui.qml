@@ -123,6 +123,12 @@ Item {
                                 onClicked: {
                                     modelTree.deleteItem(selectionModel.currentIndex.row, selectionModel.currentIndex);
                                     treeView1.__currentRow = selectionModel.__currentRow - 1;
+                                    if (modelTree.data(selectionModel.currentIndex, 1)) {
+                                        lection_image.source = modelTree.data(selectionModel.currentIndex, 1);
+                                    }
+                                    else {
+                                        lection_image.source = "";
+                                    }
                                 }
 
                                 Image {
