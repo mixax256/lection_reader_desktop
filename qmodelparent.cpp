@@ -359,9 +359,7 @@ bool QModelParent::removeRows(int row, int count, const QModelIndex &parent)
 
         // удаление локальных изображений (в зависимости от типа текущего элемента)
         if (data_parent->children[row]->type == IMAGE) {
-            for (int j = 0; j < data_parent->children[row]->children.count(); j++) {
-                QFile::remove(static_cast<IData*>(data_parent->children[row]->children[j]->data)->path);
-            }
+            QFile::remove(static_cast<IData*>(data_parent->children[row]->data)->path);
         }
         if (data_parent->children[row]->type == THEME) {
             for (int j = 0; j < data_parent->children[row]->children.count(); j++) {
@@ -515,6 +513,24 @@ int QModelParent::getType(QModelIndex index)
         data = static_cast<DataWrapper *> (index.internalPointer());
     }
     return (int)data->type;
+}
+
+QModelIndex QModelParent::getImage(QModelIndex curIndex, int pressedKey)
+{
+    QModelIndex parent = curIndex.parent();
+    DataWrapper* data = static_cast<DataWrapper *> (parent.internalPointer());
+    if ( (curIndex.row() == 0 && pressedKey == Qt::Key_Left)
+         || (curIndex.row() == data->count - 1 && pressedKey == Qt::Key_Right) ){
+        return curIndex;
+    }
+    else {
+        if (pressedKey == Qt::Key_Left) {
+            return index(curIndex.row() - 1, 0, parent);
+        }
+        else {
+            return index(curIndex.row() + 1, 0, parent);
+        }
+    }
 }
 
 int QModelParent::getChildrenCount (h_type type, quint16 pid) const

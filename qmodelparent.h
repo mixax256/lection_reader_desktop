@@ -69,6 +69,7 @@ public:
     Q_INVOKABLE QUrl toBlack(QUrl data);
     Q_INVOKABLE bool addItem(QString name, QModelIndex parent);
     Q_INVOKABLE int getType(QModelIndex index);
+    Q_INVOKABLE QModelIndex getImage(QModelIndex curIndex, int pressedKey);
 };
 
 #endif // QMODELPARENT_H

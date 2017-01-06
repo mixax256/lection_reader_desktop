@@ -29,29 +29,16 @@ Item {
         anchors.fill: parent
         focus: true
         Keys.onPressed: {
-            if ( lection_image.status != Image.Null ) {
-                if (event.key == Qt.Key_Left) {
-                    selectionModel.__currentRow--;
-                    if (modelTree.data(selectionModel.currentIndex, 1)){
-                        treeView1.__currentRow = selectionModel.__currentRow;
-                        lection_image.source=modelTree.data(selectionModel.currentIndex, 1);
-                    }
-                    else{
-                        selectionModel.__currentRow++;
-                    }
-                }
-                if (event.key == Qt.Key_Right) {
-                    selectionModel.__currentRow++;
-                    if (modelTree.data(selectionModel.currentIndex, 1)){
-                        treeView1.__currentRow = selectionModel.__currentRow;
-                        lection_image.source=modelTree.data(selectionModel.currentIndex, 1);
-                    }
-                    else{
-                        selectionModel.__currentRow--;
+                if ( lection_image.status != Image.Null ) {
+                    if (event.key == Qt.Key_Left || event.key == Qt.Key_Right) {
+                        selectionModel.setCurrentIndex(modelTree.getImage(selectionModel.currentIndex, event.key),
+                                                         ItemSelectionModel.ClearAndSelect);
+                        treeView1.__currentRow = selectionModel.currentIndex.row;
+                        lection_image.source = modelTree.data(selectionModel.currentIndex, 1);
                     }
                 }
             }
-        }
+
         Item {
             id: itemTree
             width: treeMinWidth
@@ -144,8 +131,17 @@ Item {
                                 width: 30
                                 height: 30
                                 onClicked: {
+                                    var parent = selectionModel.currentIndex.parent;
                                     modelTree.deleteItem(selectionModel.currentIndex.row, selectionModel.currentIndex);
-                                    treeView1.__currentRow = selectionModel.__currentRow - 1;
+                                    if (selectionModel.currentIndex.row == -1) {
+                                        selectionModel.setCurrentIndex(parent, ItemSelectionModel.ClearAndSelect);
+                                    }
+                                    if (modelTree.data(selectionModel.currentIndex,1)) {
+                                        lection_image.source = modelTree.data(selectionModel.currentIndex,1);
+                                    }
+                                    else {
+                                        lection_image.source = "";
+                                    }
                                 }
 
                                 Image {
