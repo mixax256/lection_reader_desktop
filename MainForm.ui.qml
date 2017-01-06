@@ -27,7 +27,31 @@ Item {
         color: "black"
 
         anchors.fill: parent
-
+        focus: true
+        Keys.onPressed: {
+            if ( lection_image.status != Image.Null ) {
+                if (event.key == Qt.Key_Left) {
+                    selectionModel.__currentRow--;
+                    if (modelTree.data(selectionModel.currentIndex, 1)){
+                        treeView1.__currentRow = selectionModel.__currentRow;
+                        lection_image.source=modelTree.data(selectionModel.currentIndex, 1);
+                    }
+                    else{
+                        selectionModel.__currentRow++;
+                    }
+                }
+                if (event.key == Qt.Key_Right) {
+                    selectionModel.__currentRow++;
+                    if (modelTree.data(selectionModel.currentIndex, 1)){
+                        treeView1.__currentRow = selectionModel.__currentRow;
+                        lection_image.source=modelTree.data(selectionModel.currentIndex, 1);
+                    }
+                    else{
+                        selectionModel.__currentRow--;
+                    }
+                }
+            }
+        }
         Item {
             id: itemTree
             width: treeMinWidth
@@ -498,6 +522,7 @@ Item {
                             fillMode: Image.PreserveAspectCrop
                             transformOrigin: Item.Center
                             rotation: sliderRotation.value * 360
+
                         }
 
 

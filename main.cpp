@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
 
     QDir defaultDir(QDir::homePath());
     defaultDir.mkdir(DEFAULT_PATH);
-
     QQmlApplicationEngine engine;
     QModelParent model(dbName, tableName);
     engine.rootContext()->setContextProperty("modelTree", &model);

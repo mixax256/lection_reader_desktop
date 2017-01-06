@@ -5,6 +5,12 @@
 #include <QPixmap>
 #include <QImage>
 #include <QUrl>
+#include <QKeyEvent>
+#include <QEvent>
+#include <QDebug>
+
+
+
 QModelParent::QModelParent(QString dbName, QString tableName)
 {
     db.createDataBase(dbName);
@@ -12,7 +18,6 @@ QModelParent::QModelParent(QString dbName, QString tableName)
     fetchAll (QModelIndex());
 }
 QUrl QModelParent::toBlack(QUrl data)
-
 {
     QString path;
     int begin = data.toString().lastIndexOf(":") + 1;
