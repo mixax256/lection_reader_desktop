@@ -468,7 +468,7 @@ Item {
                     height: parent.height-5-rectImage.height
                     orientation: Qt.Vertical
                 }
-
+                
                 Rectangle{
                     id: rectImage
                     //anchors.fill:rectForPartsView.width
@@ -485,16 +485,18 @@ Item {
                     //color:"#ffffff"
 
                     ScrollView{
+                        id: scrollView
                         anchors.centerIn: parent
                         anchors.fill:parent
 
-                        Image {
+                       Image {
                             id: lection_image
                             scale: sliderH_ScaleView.value + 0.5
-                            fillMode: Image.PreserveAspectFit
-                            rotation: sliderRotation.value * 360
+                            fillMode: Image.PreserveAspectCrop
                             transformOrigin: Item.Center
+                            rotation: sliderRotation.value * 360
                         }
+
 
                     }
 
