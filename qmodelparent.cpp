@@ -489,6 +489,21 @@ QUrl QModelParent::imageImprovment(QUrl image)
     return QUrl::fromLocalFile(path);
 }
 
+QUrl QModelParent::cutImage(QUrl image)
+{
+    IplImage* img = cvLoadImage(image.path().toStdString().c_str(), 1);
+    cvSetImageROI(img, cvRect(10,15,150,250));
+    IplImage* subImg = cvCreateImage(cvGetSize(img), img->depth, img->nChannels);
+    cvCopy(img, subImg, NULL);
+    cvResetImageROI(img);
+    QString path = image.path();
+    path = path.mid(0, path.lastIndexOf('.') - 1)
+               .append("cut")
+               .append(path.mid(path.lastIndexOf('.')));
+    cvSaveImage(path.toStdString().c_str(), subImg);
+    return QUrl::fromLocalFile(path);
+}
+
 int QModelParent::getChildrenCount (h_type type, quint16 pid) const
 {
     QSqlQuery query;

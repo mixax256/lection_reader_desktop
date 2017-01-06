@@ -347,13 +347,17 @@ Item {
                             anchors.bottomMargin: 4
                             width: gBoxFor1*4-10
                             visible: true
-                            ToolBut {
+                            ToolButton {
                                 id: toolButCut
                                 anchors { top: parent.top; left: parent.left }
                                 anchors.leftMargin: 0
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                onClicked: {
+                                    lection_image.source = modelTree.cutImage(lection_image.source);
+                                }
+
                                 Image {
                                     source: "buttons/cut.svg"
                                     antialiasing: true

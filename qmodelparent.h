@@ -69,6 +69,7 @@ public:
     Q_INVOKABLE bool addItem(QString name, QModelIndex parent);
     Q_INVOKABLE int getType(QModelIndex index);
     Q_INVOKABLE QUrl imageImprovment(QUrl image);
+    Q_INVOKABLE QUrl cutImage(QUrl image);
 };
 
 #endif // QMODELPARENT_H
