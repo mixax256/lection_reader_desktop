@@ -13,7 +13,6 @@ Item {
     property var treeMinWidth : 193;
     property var treeMinHeight : 300;
 
-
     property var viewMinWidth : 428;
     property var viewMinHeight : 300;
 
@@ -21,7 +20,6 @@ Item {
 
     width:  640 //ApplicationWindow.__width
     height: 450 //ApplicationWindow.__height
-
     Rectangle {
         width: parent.width
         height: parent.height
@@ -462,6 +460,15 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
 
+                Slider {
+                    id: sliderVertical1
+                    x: parent.width-18
+                    y: 5
+                    width: rectImage.width
+                    height: parent.height-5-rectImage.height
+                    orientation: Qt.Vertical
+                }
+                
                 Rectangle{
                     id: rectImage
                     //anchors.fill:rectForPartsView.width
@@ -477,39 +484,13 @@ Item {
                     color:"#483D8B" //dark slate blue
                     //color:"#ffffff"
 
-                    Slider {
-                        id: sliderVertical1
-                        x: rectForPartsView.width-18
-                        y: 5
-                        width: rectImage.width
-                        height: rectForPartsView.height-5-rectImage.height
-                        orientation: Qt.Vertical
-                    }
-
                     ScrollView{
                         id: scrollView
                         anchors.centerIn: parent
                         anchors.fill:parent
-                        //anchors.centerIn: parent;
-                        //width: lection_image.sourceSize.width*0.5
-                        //height: lection_image.sourceSize.height*0.5
-                        //ScrollBar.vertical: ScrollBar { }
-                        //ScrollBar.horizontal: ScrollBar { }
-
-                       // anchors.topMargin: 10
-                       // anchors.bottomMargin: 60
-                       // anchors.leftMargin: 10
-                       // anchors.rightMargin: 10
-                        //height: parent.height-70
-                        //width: parent.width-20
 
                        Image {
                             id: lection_image
-//                            anchors.fill:parent
-//                            anchors.topMargin: 10
-//                            anchors.bottomMargin: 50
-//                            anchors.leftMargin: 10
-//                            anchors.rightMargin: 10
                             scale: sliderH_ScaleView.value + 0.5
                             fillMode: Image.PreserveAspectCrop
                             transformOrigin: Item.Center
