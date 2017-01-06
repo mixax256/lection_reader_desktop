@@ -12,7 +12,6 @@ Item {
     property var treeMinWidth : 193;
     property var treeMinHeight : 300;
 
-
     property var viewMinWidth : 428;
     property var viewMinHeight : 300;
 
@@ -20,7 +19,6 @@ Item {
 
     width:  640 //ApplicationWindow.__width
     height: 450 //ApplicationWindow.__height
-
     Rectangle {
         width: parent.width
         height: parent.height

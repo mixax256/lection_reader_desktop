@@ -56,6 +56,18 @@ void QModelParent::print(QUrl data)
 
 
 }
+QModelIndex QModelParent::sibling(int row, int column, const QModelIndex &idx) const
+{
+    const DataWrapper *data;
+    if (!hasIndex(row,column,idx.parent())) return {};
+    if (!idx.parent().isValid()) {
+        data = &d;
+    }
+    else {
+        data = static_cast<DataWrapper *> (idx.parent().internalPointer());
+    }
+    return createIndex(row,column,data->children[row]);
+}
 QModelParent::~QModelParent()
 {
 

@@ -56,7 +56,7 @@ private:
     void fetchAll (const QModelIndex &parent);
     QDataBaseWork db;
     QString tableName;
-
+    QModelIndex sibling(int row, int column, const QModelIndex &idx) const;
     // QAbstractItemModel interface
 public:
     bool setData(const QModelIndex &index, const QVariant &value, int role);
