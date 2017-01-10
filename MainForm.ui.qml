@@ -17,6 +17,11 @@ Item {
     property var viewMinHeight : 300;
 
     property var gBoxFor1 : 40 ;
+    property var rectX;
+    property var rectY;
+    property var rectWidth;
+    property var rectHeight;
+    property var lectImage;
 
     width:  640 //ApplicationWindow.__width
     height: 450 //ApplicationWindow.__height
@@ -186,6 +191,7 @@ Item {
                                     lection_image.source = "";
                                 }
                             }
+                            lectImage = lection_image.source;
                             parent.selection.setCurrentIndex(index_item, ItemSelectionModel.ClearAndSelect);
                         }
                     }
@@ -361,7 +367,7 @@ Item {
                                 width: 30
                                 height: 30
                                 onClicked: {
-                                    lection_image.source = modelTree.cutImage(lection_image.source);
+                                    lection_image.source = modelTree.cutImage(lectImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
                                 }
 
                                 Image {
@@ -494,7 +500,6 @@ Item {
                 anchors.topMargin: spaces_main
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
-
                 Image {
                     id: lection_image
                     anchors.fill:parent
@@ -503,7 +508,34 @@ Item {
                     anchors.leftMargin: 10
                     anchors.rightMargin: 10
                     scale: sliderHorizontal2.value
-                    fillMode: Image.PreserveAspectFit  }
+                    fillMode: Image.PreserveAspectFit
+                }
+                MouseArea{
+                    id: imageMouseArea
+                    width: lection_image.width
+                    height: lection_image.height
+                    onPositionChanged: {
+                        rectWidth = mouse.x - rectX;
+                        rectHeight = mouse.y - rectY;
+                    }
+
+                    onPressed: {
+                        rectX = mouse.x;
+                        rectY = mouse.y;
+                        rectWidth = 0;
+                        rectHeight = 0;
+                    }
+
+                    onReleased: {
+                        rectX = rectX - (imageMouseArea.width - lection_image.paintedWidth) / 2 - 10;
+                        rectY = rectY - (imageMouseArea.height - lection_image.paintedHeight) / 2 - 10;
+                        rectX = (rectX < 0) ? 0 : (rectX > lection_image.paintedWidth) ? lection_image.paintedWidth : rectX;
+                        rectY = (rectY < 0) ? 0 : (rectY > lection_image.paintedHeight) ? lection_image.paintedHeight : rectY;
+                        lection_image.source = (rectWidth == 0 || rectHeight == 0) ? lectImage : modelTree.drawRect(lectImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                    }
+
+
+                }
 
                 Slider {
                     id: sliderVertical1
