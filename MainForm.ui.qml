@@ -17,6 +17,11 @@ Item {
     property var viewMinHeight : 300;
 
     property var gBoxFor1 : 40 ;
+    property var rectX;
+    property var rectY;
+    property var rectWidth;
+    property var rectHeight;
+    property var lectImage;
 
     width:  640 //ApplicationWindow.__width
     height: 450 //ApplicationWindow.__height
@@ -133,6 +138,7 @@ Item {
                                 onClicked: {
                                     var parent = selectionModel.currentIndex.parent;
                                     modelTree.deleteItem(selectionModel.currentIndex.row, selectionModel.currentIndex);
+                                    
                                     if (selectionModel.currentIndex.row == -1) {
                                         selectionModel.setCurrentIndex(parent, ItemSelectionModel.ClearAndSelect);
                                     }
@@ -199,6 +205,7 @@ Item {
                                     lection_image.source = "";
                                 }
                             }
+                            lectImage = lection_image.source;
                             parent.selection.setCurrentIndex(index_item, ItemSelectionModel.ClearAndSelect);
                         }
                     }
@@ -339,13 +346,17 @@ Item {
                             anchors.bottomMargin: 4
                             width: gBoxFor1*4-10
                             visible: true
-                            ToolBut {
+                            ToolButton {
                                 id: toolButCut
                                 anchors { top: parent.top; left: parent.left }
                                 anchors.leftMargin: 0
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                onClicked: {
+                                    lection_image.source = modelTree.cutImage(lectImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                                }
+
                                 Image {
                                     source: "buttons/cut.svg"
                                     antialiasing: true
@@ -423,6 +434,10 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                onClicked: {
+                                    lection_image.source = modelTree.imageImprovment(lection_image.source);
+                                }
+
                                 Image {
                                     source: "buttons/enhance1.svg"
                                     antialiasing: true
@@ -482,7 +497,7 @@ Item {
                 anchors.topMargin: spaces_main
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
-
+                
                 Slider {
                     id: sliderVertical1
                     x: parent.width-18
@@ -520,7 +535,31 @@ Item {
                             rotation: sliderRotation.value * 360
 
                         }
+                       MouseArea{
+                            id: imageMouseArea
+                            width: lection_image.width
+                            height: lection_image.height
+                            onPositionChanged: {
+                                rectWidth = mouse.x - rectX;
+                                rectHeight = mouse.y - rectY;
+                            }
 
+                            onPressed: {
+                                rectX = mouse.x;
+                                rectY = mouse.y;
+                                rectWidth = 0;
+                                rectHeight = 0;
+                            }
+
+                            onReleased: {
+                                rectX = rectX - (imageMouseArea.width - lection_image.paintedWidth) / 2 - 10;
+                                rectY = rectY - (imageMouseArea.height - lection_image.paintedHeight) / 2 - 10;
+                                rectX = (rectX < 0) ? 0 : (rectX > lection_image.paintedWidth) ? lection_image.paintedWidth : rectX;
+                                rectY = (rectY < 0) ? 0 : (rectY > lection_image.paintedHeight) ? lection_image.paintedHeight : rectY;
+                                lection_image.source = (rectWidth == 0 || rectHeight == 0) ? lectImage : modelTree.drawRect(lectImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                            }
+
+                       }
 
                     }
 

@@ -5,7 +5,7 @@
 #define PATH          1111112
 #define COMMENT       1111113
 #define TAG           1111114
-#define TYPE          1111115
+#define TYPE_MODEL    1111115
 #define NUMBER        1111116
 #define DEFAULT_PATH  "LectionReader"
 
@@ -69,6 +69,9 @@ public:
     Q_INVOKABLE QUrl toBlack(QUrl data);
     Q_INVOKABLE bool addItem(QString name, QModelIndex parent);
     Q_INVOKABLE int getType(QModelIndex index);
+    Q_INVOKABLE QUrl imageImprovment(QUrl image);
+    Q_INVOKABLE QUrl drawRect(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight);
+    Q_INVOKABLE QUrl cutImage(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight);
     Q_INVOKABLE QModelIndex getImage(QModelIndex curIndex, int pressedKey);
 };
 

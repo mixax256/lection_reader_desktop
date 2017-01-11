@@ -5,11 +5,14 @@
 #include <QPixmap>
 #include <QImage>
 #include <QUrl>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui/highgui_c.h>
 #include <QKeyEvent>
 #include <QEvent>
 #include <QDebug>
 
-
+using namespace cv;
 
 QModelParent::QModelParent(QString dbName, QString tableName)
 {
@@ -256,7 +259,7 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
         tag = value.toString();
         rowsNamesAndValues["tag"] = (new QString("'"))->append(tag).append("'");
          break;
-    case TYPE:
+    case TYPE_MODEL:
         type = value.toInt();
         rowsNamesAndValues["type"] = QString::number(type);
         break;
@@ -309,7 +312,7 @@ bool QModelParent::setData(const QModelIndex &index, const QVariant &value, int 
             static_cast<IData*>(data->data)->tags = tags;
         }
          break;
-    case TYPE:
+    case TYPE_MODEL:
         data->type = h_type(type);
         break;
     case NUMBER:
@@ -463,13 +466,13 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
         QModelIndex child = index(data->count - 1, 0, parent);
         switch (data->type) {
             case ROOT:
-                setData(child, COURSE, TYPE);
+                setData(child, COURSE, TYPE_MODEL);
             break;
             case COURSE:
-                setData(child, THEME, TYPE);
+                setData(child, THEME, TYPE_MODEL);
             break;
             case THEME:
-                setData(child, IMAGE, TYPE);
+                setData(child, IMAGE, TYPE_MODEL);
             break;
         }
         setData(child, data->id, PID);
@@ -513,6 +516,64 @@ int QModelParent::getType(QModelIndex index)
         data = static_cast<DataWrapper *> (index.internalPointer());
     }
     return (int)data->type;
+}
+
+QUrl QModelParent::imageImprovment(QUrl image)
+{
+    Mat src = imread(image.path().toStdString(), 1); // исходное изображение
+    Mat dst;
+    src.convertTo(src, CV_32FC1,1.0/255.0); // преобразование в 32 битное изображение
+    cvtColor(src, src, CV_BGR2GRAY);        // перевод в оттенки серого
+    GaussianBlur(src, dst, Size(99,99), 0, 0);  // Гаусово размытие
+    src = src / dst;                        // делим исходное изображение на Гаусово размытие, получаем нужный результат
+    src.convertTo(src, CV_16U, 255);        // преобразование в 16 битное изображение (для сохранения)
+    QString path = image.path();
+    path = path.mid(0, path.lastIndexOf('.') - 1)
+               .append("imp")
+               .append(path.mid(path.lastIndexOf('.')));
+    imwrite(path.toStdString(), src);
+    return QUrl::fromLocalFile(path);
+}
+
+QUrl QModelParent::drawRect(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight)
+{
+    QPixmap pix;
+    pix.load(image.toLocalFile());
+    double propWidth = (double) pix.width() / showedWidth;
+    double propHeight = (double) pix.height() / showedHeight;
+    QPainter painter;
+    painter.begin(&pix);
+    painter.setPen(QPen(Qt::DashLine));
+    painter.fillRect(x * propWidth, y * propHeight, width * propWidth, height * propHeight, QBrush(QColor(128, 128, 255, 100)));
+    painter.end();
+    QString path = image.path();
+    path = path.mid(0, path.lastIndexOf('.'))
+               .append("rect")
+               .append(path.mid(path.lastIndexOf('.')));
+    QFile file(path);
+    if (file.exists()) {
+        QFile::remove(path);
+    }
+    file.open(QIODevice::WriteOnly);
+    pix.save(&file);
+    return QUrl::fromLocalFile(path);
+}
+
+QUrl QModelParent::cutImage(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight)
+{
+    IplImage* img = cvLoadImage(image.path().toStdString().c_str(), 1);
+    double propWidth = (double) img->width / showedWidth;
+    double propHeight = (double) img->height / showedHeight;
+    cvSetImageROI(img, cvRect(x * propWidth, y * propHeight, width * propWidth, height * propHeight));
+    IplImage* subImg = cvCreateImage(cvGetSize(img), img->depth, img->nChannels);
+    cvCopy(img, subImg, NULL);
+    cvResetImageROI(img);
+    QString path = image.path();
+    path = path.mid(0, path.lastIndexOf('.'))
+               .append("cut")
+               .append(path.mid(path.lastIndexOf('.')));
+    cvSaveImage(path.toStdString().c_str(), subImg);
+    return QUrl::fromLocalFile(path);
 }
 
 QModelIndex QModelParent::getImage(QModelIndex curIndex, int pressedKey)
