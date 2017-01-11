@@ -507,6 +507,7 @@ Item {
                     anchors.bottomMargin: 50
                     anchors.leftMargin: 10
                     anchors.rightMargin: 10
+                    cache: false
                     scale: sliderHorizontal2.value
                     fillMode: Image.PreserveAspectFit
                 }
