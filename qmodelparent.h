@@ -49,14 +49,14 @@ public:
     virtual QModelIndex parent(const QModelIndex &child) const;
 
 private:
-    DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, 0};
+    DataWrapper d{0, ROOT, nullptr, 0, nullptr, {}, -1};
     void fetchMore (const QModelIndex &parent);
     bool canFetchMore(const QModelIndex &parent) const;
     int getChildrenCount (h_type type, quint16 pid) const;
     void fetchAll (const QModelIndex &parent);
     QDataBaseWork db;
     QString tableName;
-
+    QModelIndex sibling(int row, int column, const QModelIndex &idx) const;
     // QAbstractItemModel interface
 public:
     bool setData(const QModelIndex &index, const QVariant &value, int role);
@@ -66,11 +66,13 @@ public:
     bool hasChildren(const QModelIndex &parent) const;
     Q_INVOKABLE bool deleteItem(int row, QModelIndex index);
     Q_INVOKABLE void print(QUrl data);
+    Q_INVOKABLE QUrl toBlack(QUrl data);
     Q_INVOKABLE bool addItem(QString name, QModelIndex parent);
     Q_INVOKABLE int getType(QModelIndex index);
     Q_INVOKABLE QUrl imageImprovment(QUrl image);
     Q_INVOKABLE QUrl drawRect(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight);
     Q_INVOKABLE QUrl cutImage(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight);
+    Q_INVOKABLE QModelIndex getImage(QModelIndex curIndex, int pressedKey);
 };
 
 #endif // QMODELPARENT_H

@@ -11,34 +11,33 @@ ApplicationWindow {
     title: qsTr("Lection Reader")
     x: Screen.width / 2 - mainWindow.width / 2;
     y: Screen.height / 2 - mainWindow.height / 2;
-
-    menuBar: MenuBar {
-        Menu {
-            title: qsTr("Rotation")
-            MenuItem {
-                text: qsTr("Current image")
-            }
-            MenuItem {
-                text: qsTr("Choose \& rotate")
-                onTriggered: Qt.quit();
-            }
-        }
-    }
+//    menuBar: MenuBar {
+//        Menu {
+//            title: qsTr("Rotation")
+//            MenuItem {
+//                text: qsTr("Current image")
+//                onTriggered: console.log("Open action triggered");
+//            }
+//            MenuItem {
+//                text: qsTr("Choose \& rotate")
+//                onTriggered: Qt.quit();
+//            }
+//        }
+//    }
 
     MainForm {
         id: mainForm
         anchors.fill: parent
      }
 
+//    MessageDialog {
+//        id: messageDialog
+//        title: qsTr("May I have your attention, please?")
 
-    MessageDialog {
-        id: messageDialog
-        title: qsTr("May I have your attention, please?")
-
-        function show(caption) {
-            messageDialog.text = caption;
-            messageDialog.open();
-        }
-    }
+//        function show(caption) {
+//            messageDialog.text = caption;
+//            messageDialog.open();
+//        }
+//    }
 
 }

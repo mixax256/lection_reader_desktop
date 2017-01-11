@@ -8,14 +8,46 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui_c.h>
+#include <QKeyEvent>
+#include <QEvent>
+#include <QDebug>
 
 using namespace cv;
 
 QModelParent::QModelParent(QString dbName, QString tableName)
 {
-    db.createDataBase(dbName, tableName);
+    db.createDataBase(dbName);
     this->tableName = tableName;
     fetchAll (QModelIndex());
+}
+QUrl QModelParent::toBlack(QUrl data)
+{
+    QString path;
+    int begin = data.toString().lastIndexOf(":") + 1;
+    path = data.toString().mid(begin);
+    QImage converted, image;
+    image.load(path);
+    converted = image;
+    QRgb col;
+    int gray;
+    int width  = image.width();
+    int height = image.height();\
+    for (int i = 0; i < width; ++i)
+      {
+          for (int j = 0; j < height; ++j)
+          {
+              col = image.pixel(i, j);
+              gray = qGray(col);
+              converted.setPixel(i, j, qRgb(gray, gray, gray));
+          }
+      }
+    converted = converted.convertToFormat(QImage::Format_RGB32).
+            convertToFormat(QImage::Format_Indexed8);
+    path = path.mid(0, path.indexOf(".")) + "_grey" + path.mid(path.indexOf("."));
+    converted.save(path);
+    QString beginFile = data.toString().mid(0, begin);
+    QUrl newUrl = QUrl::fromUserInput(beginFile + path);
+    return newUrl;
 }
 void QModelParent::print(QUrl data)
 
@@ -31,6 +63,18 @@ void QModelParent::print(QUrl data)
           }
 
 
+}
+QModelIndex QModelParent::sibling(int row, int column, const QModelIndex &idx) const
+{
+    const DataWrapper *data;
+    if (!hasIndex(row,column,idx.parent())) return {};
+    if (!idx.parent().isValid()) {
+        data = &d;
+    }
+    else {
+        data = static_cast<DataWrapper *> (idx.parent().internalPointer());
+    }
+    return createIndex(row,column,data->children[row]);
 }
 QModelParent::~QModelParent()
 {
@@ -318,9 +362,7 @@ bool QModelParent::removeRows(int row, int count, const QModelIndex &parent)
 
         // удаление локальных изображений (в зависимости от типа текущего элемента)
         if (data_parent->children[row]->type == IMAGE) {
-            for (int j = 0; j < data_parent->children[row]->children.count(); j++) {
-                QFile::remove(static_cast<IData*>(data_parent->children[row]->children[j]->data)->path);
-            }
+            QFile::remove(static_cast<IData*>(data_parent->children[row]->data)->path);
         }
         if (data_parent->children[row]->type == THEME) {
             for (int j = 0; j < data_parent->children[row]->children.count(); j++) {
@@ -440,6 +482,10 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
         else {
             QUrl url = QUrl(name);
             QString oldFile = url.path();
+            //костыль для работы с виндовс
+            if (!QFile::exists(oldFile)){
+                oldFile = oldFile.mid(oldFile.indexOf('/')+1);
+            }
             int indx = oldFile.lastIndexOf('.');
             QString fileType = oldFile.mid(indx);
             QString newFileName = QDir::homePath().append(QDir::separator())
@@ -528,6 +574,24 @@ QUrl QModelParent::cutImage(QUrl image, int x, int y, int width, int height, int
                .append(path.mid(path.lastIndexOf('.')));
     cvSaveImage(path.toStdString().c_str(), subImg);
     return QUrl::fromLocalFile(path);
+}
+
+QModelIndex QModelParent::getImage(QModelIndex curIndex, int pressedKey)
+{
+    QModelIndex parent = curIndex.parent();
+    DataWrapper* data = static_cast<DataWrapper *> (parent.internalPointer());
+    if ( (curIndex.row() == 0 && pressedKey == Qt::Key_Left)
+         || (curIndex.row() == data->count - 1 && pressedKey == Qt::Key_Right) ){
+        return curIndex;
+    }
+    else {
+        if (pressedKey == Qt::Key_Left) {
+            return index(curIndex.row() - 1, 0, parent);
+        }
+        else {
+            return index(curIndex.row() + 1, 0, parent);
+        }
+    }
 }
 
 int QModelParent::getChildrenCount (h_type type, quint16 pid) const
