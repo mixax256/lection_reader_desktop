@@ -522,6 +522,33 @@ Item {
                     color:"#483D8B" //dark slate blue
                     //color:"#ffffff"
 
+                    MouseArea {
+                         id: imageMouseArea
+                         width: lection_image.width
+                         height: lection_image.height
+                         onPositionChanged: {
+                             rectWidth = mouse.x - rectX;
+                             rectHeight = mouse.y - rectY;
+                         }
+
+                         onPressed: {
+                             rectX = mouse.x;
+                             rectY = mouse.y;
+                             rectWidth = 0;
+                             rectHeight = 0;
+                         }
+
+                         onReleased: {
+                             rectX = rectX - (imageMouseArea.width - lection_image.paintedWidth) / 2 - 10;
+                             rectY = rectY - (imageMouseArea.height - lection_image.paintedHeight) / 2 - 10;
+                             rectX = (rectX < 0) ? 0 : (rectX > lection_image.paintedWidth) ? lection_image.paintedWidth : rectX;
+                             rectY = (rectY < 0) ? 0 : (rectY > lection_image.paintedHeight) ? lection_image.paintedHeight : rectY;
+                             lection_image.source = (rectWidth == 0 || rectHeight == 0) ? lectImage : modelTree.drawRect(lectImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                             //Image.sourceChanged;
+                         }
+
+                    }
+
                     ScrollView{
                         id: scrollView
                         anchors.centerIn: parent
@@ -530,39 +557,13 @@ Item {
                        Image {
                             id: lection_image
                             scale: sliderH_ScaleView.value + 0.5
-                            fillMode: Image.PreserveAspectCrop
+                            fillMode: Image.PreserveAspectFit
                             transformOrigin: Item.Center
+                            cache: false
                             rotation: sliderRotation.value * 360
-
                         }
-                       MouseArea{
-                            id: imageMouseArea
-                            width: lection_image.width
-                            height: lection_image.height
-                            onPositionChanged: {
-                                rectWidth = mouse.x - rectX;
-                                rectHeight = mouse.y - rectY;
-                            }
-
-                            onPressed: {
-                                rectX = mouse.x;
-                                rectY = mouse.y;
-                                rectWidth = 0;
-                                rectHeight = 0;
-                            }
-
-                            onReleased: {
-                                rectX = rectX - (imageMouseArea.width - lection_image.paintedWidth) / 2 - 10;
-                                rectY = rectY - (imageMouseArea.height - lection_image.paintedHeight) / 2 - 10;
-                                rectX = (rectX < 0) ? 0 : (rectX > lection_image.paintedWidth) ? lection_image.paintedWidth : rectX;
-                                rectY = (rectY < 0) ? 0 : (rectY > lection_image.paintedHeight) ? lection_image.paintedHeight : rectY;
-                                lection_image.source = (rectWidth == 0 || rectHeight == 0) ? lectImage : modelTree.drawRect(lectImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
-                            }
-
-                       }
 
                     }
-
                 }
                 Rectangle{
                     id: rectBottomArea
