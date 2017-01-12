@@ -22,6 +22,8 @@ Item {
     property var rectWidth;
     property var rectHeight;
     property var lectImage;
+    property var lastImage;
+    property var hasChanges: false;
 
     width:  640 //ApplicationWindow.__width
     height: 450 //ApplicationWindow.__height
@@ -206,6 +208,8 @@ Item {
                                 }
                             }
                             lectImage = lection_image.source;
+                            lastImage = lectImage;
+                            hasChanges = false;
                             parent.selection.setCurrentIndex(index_item, ItemSelectionModel.ClearAndSelect);
                         }
                     }
@@ -354,7 +358,9 @@ Item {
                                 width: 30
                                 height: 30
                                 onClicked: {
-                                    lection_image.source = modelTree.cutImage(lectImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                                    lection_image.source = modelTree.cutImage(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                                    lastImage = lection_image.source;
+                                    hasChanges = true;
                                 }
 
                                 Image {
@@ -381,11 +387,16 @@ Item {
                                 height: 30
 
                                 onClicked: {
+                                    lastImage = lection_image.source;
                                     if ( lection_image.status != Image.Null ) {
                                         if (sliderRotation.visible == false)
                                             sliderRotation.visible = true
                                         else
                                             sliderRotation.visible = false
+                                    }
+
+                                    if (sliderRotation.value != 0) {
+                                        hasChanges = true;
                                     }
 
                                }
@@ -418,6 +429,8 @@ Item {
                                 }
                                 onClicked: {
                                     lection_image.source=modelTree.toBlack(lection_image.source);
+                                    lastImage = lection_image.source;
+                                    hasChanges = true;
                                 }
                                 Image {
                                     source: "buttons/фон.svg"
@@ -436,6 +449,8 @@ Item {
                                 height: 30
                                 onClicked: {
                                     lection_image.source = modelTree.imageImprovment(lection_image.source);
+                                    lastImage = lection_image.source;
+                                    hasChanges = true;
                                 }
 
                                 Image {
@@ -552,7 +567,7 @@ Item {
                                  }
 
                                  onReleased: {
-                                     lection_image.source = (rectWidth == 0 || rectHeight == 0) ? lectImage : modelTree.drawRect(lectImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                                     lection_image.source = (rectWidth == 0 || rectHeight == 0) ? lastImage : modelTree.drawRect(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
                                  }
 
                             }
@@ -589,6 +604,12 @@ Item {
                             width: 120
                             height: 30
 
+                            onClicked: {
+                                modelTree.saveChanges(lastImage, sliderRotation.value * 360, lectImage);
+                                lection_image.source = "";
+                                lection_image.source = lectImage;
+                                sliderRotation.value = 0;
+                            }
 
                             Image {
                                 source: "buttons/ok1.svg"
@@ -610,6 +631,11 @@ Item {
                             y: 0
                             width: 120
                             height: 30
+
+                            onClicked: {
+                                lection_image.source = lectImage;
+                                modelTree.cancelChanges(lectImage);
+                            }
 
                             Image {
                                 source: "buttons/cancel1.svg"

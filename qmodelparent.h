@@ -73,6 +73,8 @@ public:
     Q_INVOKABLE QUrl drawRect(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight);
     Q_INVOKABLE QUrl cutImage(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight);
     Q_INVOKABLE QModelIndex getImage(QModelIndex curIndex, int pressedKey);
+    Q_INVOKABLE void saveChanges(QUrl lastImage, int rotationAngle, QUrl originalImage);
+    Q_INVOKABLE void cancelChanges(QUrl originalImage);
 };
 
 #endif // QMODELPARENT_H
