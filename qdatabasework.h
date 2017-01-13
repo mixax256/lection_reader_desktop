@@ -13,7 +13,7 @@ private:
 public:
     QDataBaseWork();
     ~QDataBaseWork();
-    void createDataBase(QString dbName);
+    void createDataBase(QString dbName, QString tableName);
     void createTable(QString tableName);
     int insertInTable(QString tableName, int pid, QString path, QString commet, QString tag, int type, int number);
     bool updateInTable(QString tableName, map<QString, QString> rowsNamesAndValues, QString whereCondition);
