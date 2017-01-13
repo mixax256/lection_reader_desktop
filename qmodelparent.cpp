@@ -31,7 +31,7 @@ QUrl QModelParent::toBlack(QUrl data)
     QRgb col;
     int gray;
     int width  = image.width();
-    int height = image.height();\
+    int height = image.height();
     for (int i = 0; i < width; ++i)
       {
           for (int j = 0; j < height; ++j)
@@ -430,16 +430,31 @@ bool QModelParent::removeRows(int row, int count, const QModelIndex &parent)
         id = data_parent->children[row]->id;
 
         // удаляем его дочерние элементы
-
+        QString path;
         // удаление локальных изображений (в зависимости от типа текущего элемента)
         if (data_parent->children[row]->type == IMAGE) {
-            QFile::remove(static_cast<IData*>(data_parent->children[row]->data)->path);
+            path = static_cast<IData*>(data_parent->children[row]->data)->path;
+            QUrl url = QUrl(path);
+            QDirIterator it(path.mid(0, path.lastIndexOf('/')),
+                            QStringList() << url.fileName().mid(0, url.fileName().lastIndexOf('.')).append('*').append(path.mid(path.lastIndexOf('.'))),
+                            QDir::Files, QDirIterator::Subdirectories);
+            while (it.hasNext()) {
+                QFile::remove(it.next());
+            }
         }
+
         if (data_parent->children[row]->type == THEME) {
             for (int j = 0; j < data_parent->children[row]->children.count(); j++) {
                 QList<DataWrapper*> images = data_parent->children[row]->children;
                 for (int k = 0; k < images.count(); k++) {
-                    QFile::remove(static_cast<IData*>(images[k]->data)->path);
+                    path = static_cast<IData*>(images[k]->data)->path;
+                    QUrl url = QUrl(path);
+                    QDirIterator it(path.mid(0, path.lastIndexOf('/')),
+                                    QStringList() << url.fileName().mid(0, url.fileName().lastIndexOf('.')).append('*').append(path.mid(path.lastIndexOf('.'))),
+                                    QDir::Files, QDirIterator::Subdirectories);
+                    while (it.hasNext()) {
+                        QFile::remove(it.next());
+                    }
                 }
             }
         }
@@ -450,7 +465,14 @@ bool QModelParent::removeRows(int row, int count, const QModelIndex &parent)
                 for (int k = 0; k < themes.count(); k++) {
                     QList<DataWrapper*> images = themes[k]->children;
                     for (int l = 0; l < images.count(); l++) {
-                        QFile::remove(static_cast<IData*>(images[l]->data)->path);
+                        path = static_cast<IData*>(images[l]->data)->path;
+                        QUrl url = QUrl(path);
+                        QDirIterator it(path.mid(0, path.lastIndexOf('/')),
+                                        QStringList() << url.fileName().mid(0, url.fileName().lastIndexOf('.')).append('*').append(path.mid(path.lastIndexOf('.'))),
+                                        QDir::Files, QDirIterator::Subdirectories);
+                        while (it.hasNext()) {
+                            QFile::remove(it.next());
+                        }
                     }
                 }
             }
@@ -565,6 +587,10 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
                     .append('_').append(static_cast<HData*>(data->data)->name)
                     .append('_').append(QString::number(data->count-1))
                     .append(fileType);
+            if (QFile::exists(newFileName)) {  // нужно для случая, когда удаляли предпоследний файл, а потом снова добавили
+                newFileName = newFileName.mid(0, newFileName.lastIndexOf('_') + 1)
+                               .append(QString::number(data->count)).append(fileType);
+            }
             QFile::copy(oldFile, newFileName);
             setData(child, newFileName, PATH);
         }
@@ -595,11 +621,11 @@ QUrl QModelParent::imageImprovment(QUrl image)
     Mat dst;
     src.convertTo(src, CV_32FC1,1.0/255.0); // преобразование в 32 битное изображение
     cvtColor(src, src, CV_BGR2GRAY);        // перевод в оттенки серого
-    GaussianBlur(src, dst, Size(99,99), 0, 0);  // Гаусово размытие
+    GaussianBlur(src, dst, Size(51,51), 0, 0);  // Гаусово размытие
     src = src / dst;                        // делим исходное изображение на Гаусово размытие, получаем нужный результат
     src.convertTo(src, CV_16U, 255);        // преобразование в 16 битное изображение (для сохранения)
     QString path = image.path();
-    path = path.mid(0, path.lastIndexOf('.') - 1)
+    path = path.mid(0, path.lastIndexOf('.'))
                .append("imp")
                .append(path.mid(path.lastIndexOf('.')));
     imwrite(path.toStdString(), src);
@@ -662,6 +688,41 @@ QModelIndex QModelParent::getImage(QModelIndex curIndex, int pressedKey)
         else {
             return index(curIndex.row() + 1, 0, parent);
         }
+    }
+}
+
+void QModelParent::saveChanges(QUrl lastImage, int rotationAngle, QUrl originalImage)
+{
+    IplImage *src = 0;
+    src = cvLoadImage(lastImage.path().toStdString().c_str(), 1);
+    if (rotationAngle) {
+        IplImage *dst = cvCloneImage(src);
+        CvMat* rotMat = cvCreateMat(2, 3, CV_32FC1);
+        CvPoint2D32f center = cvPoint2D32f(src->width/2, src->height/2);
+        cv2DRotationMatrix(center, -rotationAngle, 0.7, rotMat); // -угол -- для поворота по часовой стрелке
+        cvWarpAffine(src, dst, rotMat);
+        cvCopy(dst, src);
+    }
+
+    QString path = originalImage.path();
+    cvSaveImage(path.toStdString().c_str(), src);
+
+    QDirIterator it(path.mid(0, path.lastIndexOf('/')),
+                    QStringList() << originalImage.fileName().mid(0, originalImage.fileName().lastIndexOf('.')).append("?*").append(path.mid(path.lastIndexOf('.'))),
+                    QDir::Files, QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        QFile::remove(it.next());
+    }
+}
+
+void QModelParent::cancelChanges(QUrl originalImage)
+{
+    QString path = originalImage.path();
+    QDirIterator it(path.mid(0, path.lastIndexOf('/')),
+                    QStringList() << originalImage.fileName().mid(0, originalImage.fileName().lastIndexOf('.')).append("?*").append(path.mid(path.lastIndexOf('.'))),
+                    QDir::Files, QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        QFile::remove(it.next());
     }
 }
 

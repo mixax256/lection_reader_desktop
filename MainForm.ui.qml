@@ -22,6 +22,8 @@ Item {
     property var rectWidth;
     property var rectHeight;
     property var lectImage;
+    property var lastImage;
+    property var hasChanges: false;
 
     width:  640 //ApplicationWindow.__width
     height: 450 //ApplicationWindow.__height
@@ -70,32 +72,32 @@ Item {
                             visible: true
 
 
-                            ToolButton {
-                                id: toolButCheck
-                                anchors { top: parent.top; left: parent.left }
-                                anchors.leftMargin: 0
-                                anchors.topMargin: 0
-                                width: 30
-                                height: 30
+//                            ToolButton {
+//                                id: toolButCheck
+//                                anchors { top: parent.top; left: parent.left }
+//                                anchors.leftMargin: 0
+//                                anchors.topMargin: 0
+//                                width: 30
+//                                height: 30
 
 
-                                Image {
-                                    source: "buttons/check1.svg"
-                                    antialiasing: true
-                                    anchors.fill: parent
-                                    z:2
-                                }
+//                                Image {
+//                                    source: "buttons/check1.svg"
+//                                    antialiasing: true
+//                                    anchors.fill: parent
+//                                    z:2
+//                                }
 
-                                Image {
-                                    source: "buttons/фон.svg"
-                                    anchors.fill: parent
-                                    z: 1
-                                }
-                            }
+//                                Image {
+//                                    source: "buttons/фон.svg"
+//                                    anchors.fill: parent
+//                                    z: 1
+//                                }
+//                            }
                             ToolButton {
                                 id: toolButAdd
                                 anchors { top: parent.top; left: parent.left }
-                                anchors.leftMargin: gBoxFor1-5
+                                anchors.leftMargin: 0/*gBoxFor1-5*/
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
@@ -131,7 +133,7 @@ Item {
                             ToolButton {
                                 id: toolButDelete
                                 anchors { top: parent.top; left: parent.left }
-                                anchors.leftMargin: gBoxFor1*2-10
+                                anchors.leftMargin: gBoxFor1-5/*gBoxFor1*2-10*/
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
@@ -203,9 +205,13 @@ Item {
                                 }
                                 else {
                                     lection_image.source = "";
+                                    buttonOkOnView.visible = false;
+                                    butCancelOnView.visible = false;
                                 }
                             }
                             lectImage = lection_image.source;
+                            lastImage = lectImage;
+                            hasChanges = false;
                             parent.selection.setCurrentIndex(index_item, ItemSelectionModel.ClearAndSelect);
                         }
                     }
@@ -280,68 +286,68 @@ Item {
                 height: toolBarMinHeight
                 //anchors.fill: parent.width
 
-                GroupBox {
-                    id: gBoxTViewUndoRedo
-                    anchors { bottom: parent.bottom; top: parent.top; left: parent.left }
-                    anchors.leftMargin: 4
-                    anchors.topMargin: 4
-                    anchors.bottomMargin: 4
-                    width: gBoxFor1*2
-                    visible: true
+//                GroupBox {
+//                    id: gBoxTViewUndoRedo
+//                    anchors { bottom: parent.bottom; top: parent.top; left: parent.left }
+//                    anchors.leftMargin: 4
+//                    anchors.topMargin: 4
+//                    anchors.bottomMargin: 4
+//                    width: gBoxFor1*2
+//                    visible: true
 
-                    ToolButton {
-                        id: toolButUndo
-                        anchors { top: parent.top; left: parent.left }
-                        anchors.leftMargin: 0
-                        anchors.topMargin: 0
-                        //anchors.bottomMargin: 4
-                        //children[1].
-                        width: 30
-                        height: 30
+//                    ToolButton {
+//                        id: toolButUndo
+//                        anchors { top: parent.top; left: parent.left }
+//                        anchors.leftMargin: 0
+//                        anchors.topMargin: 0
+//                        //anchors.bottomMargin: 4
+//                        //children[1].
+//                        width: 30
+//                        height: 30
 
-                        Image {
-                            source: "buttons/undo1.svg"
-                            antialiasing: true
-                            anchors.fill: parent
-                            z:2
-                        }
+//                        Image {
+//                            source: "buttons/undo1.svg"
+//                            antialiasing: true
+//                            anchors.fill: parent
+//                            z:2
+//                        }
 
-                        Image {
-                            source: "buttons/фон.svg"
-                            anchors.fill: parent
-                            z: 1
-                        }
+//                        Image {
+//                            source: "buttons/фон.svg"
+//                            anchors.fill: parent
+//                            z: 1
+//                        }
 
-                    }
+//                    }
 
-                    ToolButton {
-                        id: toolButRedo
-                        anchors { top: parent.top; left: parent.left }
-                        anchors.leftMargin: gBoxFor1-5
-                        anchors.topMargin: 0
-                        width: 30
-                        height: 30
+//                    ToolButton {
+//                        id: toolButRedo
+//                        anchors { top: parent.top; left: parent.left }
+//                        anchors.leftMargin: gBoxFor1-5
+//                        anchors.topMargin: 0
+//                        width: 30
+//                        height: 30
 
-                        Image {
-                            source: "buttons/redo1.svg"
-                            antialiasing: true
-                            anchors.fill: parent
-                            z:2
-                        }
+//                        Image {
+//                            source: "buttons/redo1.svg"
+//                            antialiasing: true
+//                            anchors.fill: parent
+//                            z:2
+//                        }
 
-                        Image {
-                            source: "buttons/фон.svg"
-                            anchors.fill: parent
-                            z: 1
-                        }
+//                        Image {
+//                            source: "buttons/фон.svg"
+//                            anchors.fill: parent
+//                            z: 1
+//                        }
 
-                    }
+//                    }
 
-                }
+//                }
                 GroupBox {
                             id: gBoxTViewEdit
-                            anchors { bottom: parent.bottom; top: parent.top; left: gBoxTViewUndoRedo.right }
-                            anchors.leftMargin: -1
+                            anchors { bottom: parent.bottom; top: parent.top; left: parent.left/*gBoxTViewUndoRedo.right*/ }
+                            anchors.leftMargin: 4/*-1*/
                             anchors.topMargin: 4
                             anchors.bottomMargin: 4
                             width: gBoxFor1*4-10
@@ -354,7 +360,11 @@ Item {
                                 width: 30
                                 height: 30
                                 onClicked: {
-                                    lection_image.source = modelTree.cutImage(lectImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                                    lection_image.source = modelTree.cutImage(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                                    lastImage = lection_image.source;
+                                    hasChanges = true;
+                                    buttonOkOnView.visible = true;
+                                    butCancelOnView.visible = true;
                                 }
 
                                 Image {
@@ -381,11 +391,18 @@ Item {
                                 height: 30
 
                                 onClicked: {
+                                    lastImage = lection_image.source;
                                     if ( lection_image.status != Image.Null ) {
                                         if (sliderRotation.visible == false)
                                             sliderRotation.visible = true
                                         else
                                             sliderRotation.visible = false
+                                    }
+
+                                    if (sliderRotation.value != 0) {
+                                        hasChanges = true;
+                                        buttonOkOnView.visible = true;
+                                        butCancelOnView.visible = true;
                                     }
 
                                }
@@ -418,6 +435,10 @@ Item {
                                 }
                                 onClicked: {
                                     lection_image.source=modelTree.toBlack(lection_image.source);
+                                    lastImage = lection_image.source;
+                                    hasChanges = true;
+                                    buttonOkOnView.visible = true;
+                                    butCancelOnView.visible = true;
                                 }
                                 Image {
                                     source: "buttons/фон.svg"
@@ -436,6 +457,10 @@ Item {
                                 height: 30
                                 onClicked: {
                                     lection_image.source = modelTree.imageImprovment(lection_image.source);
+                                    lastImage = lection_image.source;
+                                    hasChanges = true;
+                                    buttonOkOnView.visible = true;
+                                    butCancelOnView.visible = true;
                                 }
 
                                 Image {
@@ -552,7 +577,7 @@ Item {
                                  }
 
                                  onReleased: {
-                                     lection_image.source = (rectWidth == 0 || rectHeight == 0) ? lectImage : modelTree.drawRect(lectImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                                     lection_image.source = (rectWidth == 0 || rectHeight == 0) ? lastImage : modelTree.drawRect(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
                                  }
 
                             }
@@ -588,7 +613,16 @@ Item {
                             y: 0
                             width: 120
                             height: 30
+                            visible: false
 
+                            onClicked: {
+                                modelTree.saveChanges(lastImage, sliderRotation.value * 360, lectImage);
+                                lection_image.source = "";
+                                lection_image.source = lectImage;
+                                sliderRotation.value = 0;
+                                buttonOkOnView.visible = false;
+                                butCancelOnView.visible = false;
+                            }
 
                             Image {
                                 source: "buttons/ok1.svg"
@@ -610,6 +644,14 @@ Item {
                             y: 0
                             width: 120
                             height: 30
+                            visible: false
+
+                            onClicked: {
+                                lection_image.source = lectImage;
+                                modelTree.cancelChanges(lectImage);
+                                buttonOkOnView.visible = false;
+                                butCancelOnView.visible = false;
+                            }
 
                             Image {
                                 source: "buttons/cancel1.svg"
