@@ -475,7 +475,7 @@ Item {
                                     z:2
                                 }
                                 onClicked: {
-                                   modelTree.print(lection_image.source);
+                                   modelTree.print(selectionModel.currentIndex.row, selectionModel.currentIndex);
                                 }
 
                                 Image {

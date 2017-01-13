@@ -49,19 +49,90 @@ QUrl QModelParent::toBlack(QUrl data)
     QUrl newUrl = QUrl::fromUserInput(beginFile + path);
     return newUrl;
 }
-void QModelParent::print(QUrl data)
+void QModelParent::print(int row, QModelIndex index){
+    QModelIndex parent = index.parent();
+    DataWrapper *elem = static_cast<DataWrapper *> (parent.internalPointer());
+    if (elem->children[row]->type == IMAGE){
+        if (parent.isValid() && elem->count > 0) {
+            QUrl addr = (new QUrl(static_cast<IData*>(elem->children[row]->data)->path))->toString();
+            QPixmap pix;
+            pix.load(addr.toString());
+            QPrinter printer;
+            QPrintDialog *dlg = new QPrintDialog(&printer,0);
+            if(dlg->exec() == QDialog::Accepted) {
+              QPainter painter(&printer);
+              painter.drawPixmap(QPoint(0, 0), pix);
+              painter.end();
+            }
+            if (elem != &d && elem->count == 0) {
+                fetchMore(parent);
+            }
 
-{
-    QPixmap pix;
-    pix.load(data.toLocalFile());
-    QPrinter printer;
-          QPrintDialog *dlg = new QPrintDialog(&printer,0);
-          if(dlg->exec() == QDialog::Accepted) {
-                  QPainter painter(&printer);
-                  painter.drawPixmap(QPoint(0, 0), pix);
-                  painter.end();
-          }
+            if (elem == &d) {
+                beginResetModel();
+                endResetModel();
+            }
+        }
+    }
+    if (elem->children[row]->type == THEME && elem->children[row]->children.count() > 0) {
+        QPrinter printer;
+        double yCoord = 0;
+        QPrintDialog *dlg = new QPrintDialog(&printer,0);
+        int lengthPage = 2300;
+        if(dlg->exec() == QDialog::Accepted){
+            QPainter painter(&printer);
+            QList<DataWrapper*> images = elem->children[row]->children;
+              for (int k = 0; k < images.count(); k++) {
+                  QUrl addr = (new QUrl(static_cast<IData*>(images[k]->data)->path))->toString();
+                  QPixmap pix;
+                  pix.load(addr.toString());
 
+                  QRect rect = painter.viewport();
+                  QSize size = pix.size();
+                  size.scale(rect.size(), Qt::KeepAspectRatio);
+                  painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
+                  if (( yCoord + rect.height()) > lengthPage){
+                      printer.newPage();
+                      yCoord = 0;
+                  }
+                  painter.setWindow(pix.rect());
+                  painter.drawPixmap(QPoint(0, yCoord), pix);
+                  yCoord +=  pix.height();
+              }
+        }
+
+    }
+
+    if (elem->children[row]->type == COURSE && elem->children[row]->children.count() > 0) {
+            QPrinter printer;
+            double yCoord = 0;
+            QPrintDialog *dlg = new QPrintDialog(&printer,0);
+            int lengthPage = 2300;
+            if(dlg->exec() == QDialog::Accepted){
+            QPainter painter(&printer);
+            QList<DataWrapper*> themes = elem->children[row]->children;
+            for (int k = 0; k < themes.count(); k++) {
+                QList<DataWrapper*> images = themes[k]->children;
+                for (int l = 0; l < images.count(); l++) {
+                    QUrl addr = (new QUrl(static_cast<IData*>(images[l]->data)->path))->toString();
+                    QPixmap pix;
+                    pix.load(addr.toString());
+
+                    QRect rect = painter.viewport();
+                    QSize size = pix.size();
+                    size.scale(rect.size(), Qt::KeepAspectRatio);
+                    painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
+                    if (( yCoord + rect.height()) > lengthPage){
+                        printer.newPage();
+                        yCoord = 0;
+                    }
+                    painter.setWindow(pix.rect());
+                    painter.drawPixmap(QPoint(0, yCoord), pix);
+                    yCoord +=  pix.height();
+                }
+            }
+      }
+  }
 
 }
 QModelIndex QModelParent::sibling(int row, int column, const QModelIndex &idx) const
