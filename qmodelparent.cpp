@@ -516,6 +516,10 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
                     .append('_').append(static_cast<HData*>(data->data)->name)
                     .append('_').append(QString::number(data->count-1))
                     .append(fileType);
+            if (QFile::exists(newFileName)) {  // нужно для случая, когда удаляли предпоследний файл, а потом снова добавили
+                newFileName = newFileName.mid(0, newFileName.lastIndexOf('_') + 1)
+                               .append(QString::number(data->count)).append(fileType);
+            }
             QFile::copy(oldFile, newFileName);
             setData(child, newFileName, PATH);
         }
@@ -546,7 +550,7 @@ QUrl QModelParent::imageImprovment(QUrl image)
     Mat dst;
     src.convertTo(src, CV_32FC1,1.0/255.0); // преобразование в 32 битное изображение
     cvtColor(src, src, CV_BGR2GRAY);        // перевод в оттенки серого
-    GaussianBlur(src, dst, Size(99,99), 0, 0);  // Гаусово размытие
+    GaussianBlur(src, dst, Size(51,51), 0, 0);  // Гаусово размытие
     src = src / dst;                        // делим исходное изображение на Гаусово размытие, получаем нужный результат
     src.convertTo(src, CV_16U, 255);        // преобразование в 16 битное изображение (для сохранения)
     QString path = image.path();
