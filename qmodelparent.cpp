@@ -65,9 +65,15 @@ void QModelParent::print(QModelIndex indx){
     }
     if (elem->type == THEME && elem->children.count() > 0) {
         QPrinter printer;
+        double yCoord = 0;
+        double xCoord = 0;
+
+        double lengthPage = 1000;
         QPrintDialog *dlg = new QPrintDialog(&printer,0);
         if(dlg->exec() == QDialog::Accepted){
             QPainter painter(&printer);
+
+            QPrinter::Orientation orient;
             QList<DataWrapper*> images = elem->children;
               for (int k = 0; k < images.count(); k++) {
                   QUrl addr = (new QUrl(static_cast<IData*>(images[k]->data)->path))->toString();
@@ -76,19 +82,96 @@ void QModelParent::print(QModelIndex indx){
 
                   QRect rect = painter.viewport();
                   QSize size = pix.size();
-                  size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
-                  painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
-                  painter.setWindow(pix.rect());
-                  painter.drawPixmap(QPoint(0, 0), pix);
-                  if (k != images.count() - 1)
-                      printer.newPage();
+                  if (printer.height() > printer.width()){
+                      if (( yCoord + size.height()) > lengthPage && !(size.width() > printer.width())){
+                         printer.newPage();
+                         yCoord = 0;
+                      }
+                         if (size.width() > printer.width()){
+                             if (k)
+                               printer.newPage();
+                             int w, h, x, y;
+                             x=pix.width();
+                             y=pix.height();
+                             size=pix.size();
+                             w=rect.width();
+                             h=rect.height();
+                             rect.setWidth(h);
+                             rect.setHeight(w);
+                             QPixmap rotatePixmap(size*2);
+                             QPainter p(&rotatePixmap);
+                             p.translate(rotatePixmap.size().width()/2,   rotatePixmap.size().height()/2);
+                             p.rotate(90);
+                             p.translate(-rotatePixmap.size().width()/2, -rotatePixmap.size().height()/2);
+                             p.drawPixmap(y, x, pix);
+                             pix=rotatePixmap.copy(0, y*2-x, y, x);
+                             size=pix.size();
+                             size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
+                             painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
+                             painter.setWindow(pix.rect());
+                             painter.drawPixmap(QPoint(0, 0), pix);
+                             yCoord = 0;
+                             if ((k) && (k != images.count() - 1))
+                               printer.newPage();
+                         }
+                      else{
+                          size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
+                          painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
+                          painter.setWindow(pix.rect());
+                          painter.drawPixmap(QPoint(0, yCoord), pix);
+                          yCoord +=  size.height();
+                      }
+                  }
+                  else{
+                      if (( xCoord + size.width()) > lengthPage && !(size.height() > printer.height()) ){
+                          printer.newPage();
+                          xCoord = 0;
+                      }
+                      if (size.height() > printer.height()){
+                          if (k)
+                            printer.newPage();
+                          int w, h, x, y;
+                          x=pix.width();
+                          y=pix.height();
+                          size=pix.size();
+                          w=rect.width();
+                          h=rect.height();
+                          rect.setWidth(h);
+                          rect.setHeight(w);
+                          QPixmap rotatePixmap(size*2);
+                          QPainter p(&rotatePixmap);
+                          p.translate(rotatePixmap.size().width()/2,   rotatePixmap.size().height()/2);
+                          p.rotate(90);
+                          p.translate(-rotatePixmap.size().width()/2, -rotatePixmap.size().height()/2);
+                          p.drawPixmap(y, x, pix);
+                          pix=rotatePixmap.copy(0, y*2-x, y, x);
+                          size=pix.size();
+                          size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
+                          painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
+                          painter.setWindow(pix.rect());
+                          painter.drawPixmap(QPoint(0, 0), pix);
+                          xCoord = 0;
+                          if ((k) && (k != images.count() - 1))
+                            printer.newPage();
+                      }
+                      else{
+                          size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
+                          painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
+                          painter.setWindow(pix.rect());
+                          painter.drawPixmap(QPoint(xCoord, 0), pix);
+                          xCoord +=  size.width();
+                      }
+                  }
               }
+            }
         }
-
-    }
 
     if (elem->type == COURSE && elem->children.count() > 0) {
             QPrinter printer;
+            double yCoord = 0;
+            double xCoord = 0;
+
+            double lengthPage = 1000;
             QPrintDialog *dlg = new QPrintDialog(&printer,0);
             if(dlg->exec() == QDialog::Accepted){
             QPainter painter(&printer);
@@ -97,8 +180,6 @@ void QModelParent::print(QModelIndex indx){
                 if (themes[k]->children.count() == 0) {
                     fetchMore(index(k, 0, indx));
                 }
-                if ( k != 0)
-                    printer.newPage();
                 QList<DataWrapper*> images = themes[k]->children;
                 for (int l = 0; l < images.count(); l++) {
                     QUrl addr = (new QUrl(static_cast<IData*>(images[l]->data)->path))->toString();
@@ -106,16 +187,90 @@ void QModelParent::print(QModelIndex indx){
                     pix.load(addr.toString());
                     QRect rect = painter.viewport();
                     QSize size = pix.size();
-                    size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
-                    painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
-                    painter.setWindow(pix.rect());
-                    painter.drawPixmap(QPoint(0, 0), pix);
-                    if (l != images.count() - 1)
-                        printer.newPage();
-                }
+                    if (printer.height() > printer.width()){
+                        if (( yCoord + size.height()) > lengthPage){
+                           printer.newPage();
+                           yCoord = 0;
+                        }
+                           if (size.width() > printer.width()){
+                               if (l || k)
+                                 printer.newPage();
+                               int w, h, x, y;
+                               x=pix.width();
+                               y=pix.height();
+                               size=pix.size();
+                               w=rect.width();
+                               h=rect.height();
+                               rect.setWidth(h);
+                               rect.setHeight(w);
+                               QPixmap rotatePixmap(size*2);
+                               QPainter p(&rotatePixmap);
+                               p.translate(rotatePixmap.size().width()/2,   rotatePixmap.size().height()/2);
+                               p.rotate(90);
+                               p.translate(-rotatePixmap.size().width()/2, -rotatePixmap.size().height()/2);
+                               p.drawPixmap(y, x, pix);
+                               pix=rotatePixmap.copy(0, y*2-x, y, x);
+                               size=pix.size();
+                               size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
+                               painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
+                               painter.setWindow(pix.rect());
+                               painter.drawPixmap(QPoint(0, 0), pix);
+                               yCoord = 0;
+                               if (((l) && (l != (images.count() - 1) ) && k != (themes.count() - 1)) || (1 == images.count() ))
+                                 printer.newPage();
+                        }
+                        else{
+                            size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
+                            painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
+                            painter.setWindow(pix.rect());
+                            painter.drawPixmap(QPoint(0, yCoord), pix);
+                            yCoord +=  size.height();
+                        }
+                    }
+                    else{
+                        if (( xCoord + size.width() && !(size.height() > printer.height())) > lengthPage){
+                            printer.newPage();
+                            xCoord = 0;
+                        }
+                        if (size.height() > printer.height()){
+                            if (l || k)
+                              printer.newPage();
+                            int w, h, x, y;
+                            x=pix.width();
+                            y=pix.height();
+                            size=pix.size();
+                            w=rect.width();
+                            h=rect.height();
+                            rect.setWidth(h);
+                            rect.setHeight(w);
+                            QPixmap rotatePixmap(size*2);
+                            QPainter p(&rotatePixmap);
+                            p.translate(rotatePixmap.size().width()/2,   rotatePixmap.size().height()/2);
+                            p.rotate(90);
+                            p.translate(-rotatePixmap.size().width()/2, -rotatePixmap.size().height()/2);
+                            p.drawPixmap(y, x, pix);
+                            pix=rotatePixmap.copy(0, y*2-x, y, x);
+                            size=pix.size();
+                            size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
+                            painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
+                            painter.setWindow(pix.rect());
+                            painter.drawPixmap(QPoint(0, 0), pix);
+                            xCoord = 0;
+                            if (((l) && (l != images.count() - 1) && k != themes.count() - 1) || ( 1 == images.count()) )
+                              printer.newPage();
+                        }
+                        else{
+                            size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
+                            painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
+                            painter.setWindow(pix.rect());
+                            painter.drawPixmap(QPoint(xCoord, 0), pix);
+                            xCoord +=  size.width();
+                        }
+                    }
+                 }
             }
+          }
       }
-  }
 
 }
 QModelIndex QModelParent::sibling(int row, int column, const QModelIndex &idx) const
