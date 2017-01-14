@@ -65,9 +65,7 @@ void QModelParent::print(QModelIndex indx){
     }
     if (elem->type == THEME && elem->children.count() > 0) {
         QPrinter printer;
-        double yCoord = 0;
         QPrintDialog *dlg = new QPrintDialog(&printer,0);
-        int lengthPage = 2300;
         if(dlg->exec() == QDialog::Accepted){
             QPainter painter(&printer);
             QList<DataWrapper*> images = elem->children;
@@ -81,10 +79,9 @@ void QModelParent::print(QModelIndex indx){
                   size.scale(rect.size(), Qt::KeepAspectRatio);
                   painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
                   painter.setWindow(pix.rect());
-                  painter.drawPixmap(QPoint(0, yCoord), pix);
+                  painter.drawPixmap(QPoint(0, 0), pix);
                   if (k != images.count() - 1)
                       printer.newPage();
-                  yCoord =  0;
               }
         }
 
@@ -92,9 +89,7 @@ void QModelParent::print(QModelIndex indx){
 
     if (elem->type == COURSE && elem->children.count() > 0) {
             QPrinter printer;
-            double yCoord = 0;
             QPrintDialog *dlg = new QPrintDialog(&printer,0);
-            int lengthPage = 2300;
             if(dlg->exec() == QDialog::Accepted){
             QPainter painter(&printer);
             QList<DataWrapper*> themes = elem->children;
@@ -109,16 +104,17 @@ void QModelParent::print(QModelIndex indx){
                     QUrl addr = (new QUrl(static_cast<IData*>(images[l]->data)->path))->toString();
                     QPixmap pix;
                     pix.load(addr.toString());
-
                     QRect rect = painter.viewport();
                     QSize size = pix.size();
-                    size.scale(rect.size(), Qt::KeepAspectRatio);
+//                    if (k != 0)
+                        size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
+//                    else
+//                        size.scale(rect.size(), Qt::KeepAspectRatio);
                     painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
                     painter.setWindow(pix.rect());
-                    painter.drawPixmap(QPoint(0, yCoord), pix);
+                    painter.drawPixmap(QPoint(0, 0), pix);
                     if (l != images.count() - 1)
                         printer.newPage();
-                    yCoord =  0;
                 }
             }
       }
