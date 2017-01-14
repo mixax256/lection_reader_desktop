@@ -91,13 +91,13 @@ void QModelParent::print(int row, QModelIndex index){
                   QSize size = pix.size();
                   size.scale(rect.size(), Qt::KeepAspectRatio);
                   painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
-                  if (( yCoord + rect.height()) > lengthPage){
+                  if (( yCoord + size.rheight() + size.height() + pix.height() / 2) > lengthPage){
                       printer.newPage();
                       yCoord = 0;
                   }
                   painter.setWindow(pix.rect());
                   painter.drawPixmap(QPoint(0, yCoord), pix);
-                  yCoord +=  pix.height();
+                  yCoord +=  size.rheight() + size.height() + pix.height() / 2;
               }
         }
 
@@ -122,13 +122,13 @@ void QModelParent::print(int row, QModelIndex index){
                     QSize size = pix.size();
                     size.scale(rect.size(), Qt::KeepAspectRatio);
                     painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
-                    if (( yCoord + rect.height()) > lengthPage){
+                    if (( yCoord + size.rheight() + size.height() + pix.height() / 2) > lengthPage){
                         printer.newPage();
                         yCoord = 0;
                     }
                     painter.setWindow(pix.rect());
                     painter.drawPixmap(QPoint(0, yCoord), pix);
-                    yCoord +=  pix.height();
+                    yCoord +=  size.rheight() + size.height() + pix.height() / 2;;
                 }
             }
       }
