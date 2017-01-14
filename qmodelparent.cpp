@@ -101,7 +101,9 @@ void QModelParent::print(QModelIndex indx){
             QPainter painter(&printer);
             QList<DataWrapper*> themes = elem->children;
             for (int k = 0; k < themes.count(); k++) {
-                fetchMore(index(k, 0, indx));
+                if (themes[k]->children.count() == 0) {
+                    fetchMore(index(k, 0, indx));
+                }
                 QList<DataWrapper*> images = themes[k]->children;
                 for (int l = 0; l < images.count(); l++) {
                     QUrl addr = (new QUrl(static_cast<IData*>(images[l]->data)->path))->toString();
