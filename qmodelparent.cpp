@@ -76,7 +76,7 @@ void QModelParent::print(QModelIndex indx){
 
                   QRect rect = painter.viewport();
                   QSize size = pix.size();
-                  size.scale(rect.size(), Qt::KeepAspectRatio);
+                  size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
                   painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
                   painter.setWindow(pix.rect());
                   painter.drawPixmap(QPoint(0, 0), pix);
@@ -106,10 +106,7 @@ void QModelParent::print(QModelIndex indx){
                     pix.load(addr.toString());
                     QRect rect = painter.viewport();
                     QSize size = pix.size();
-//                    if (k != 0)
-                        size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
-//                    else
-//                        size.scale(rect.size(), Qt::KeepAspectRatio);
+                    size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
                     painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
                     painter.setWindow(pix.rect());
                     painter.drawPixmap(QPoint(0, 0), pix);
