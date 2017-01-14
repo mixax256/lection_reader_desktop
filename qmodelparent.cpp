@@ -80,13 +80,11 @@ void QModelParent::print(QModelIndex indx){
                   QSize size = pix.size();
                   size.scale(rect.size(), Qt::KeepAspectRatio);
                   painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
-                  if (( yCoord + size.rheight() + size.height() + pix.height() / 2) > lengthPage){
-                      printer.newPage();
-                      yCoord = 0;
-                  }
                   painter.setWindow(pix.rect());
                   painter.drawPixmap(QPoint(0, yCoord), pix);
-                  yCoord +=  size.rheight() + size.height() + pix.height() / 2;
+                  if (k != images.count() - 1)
+                      printer.newPage();
+                  yCoord =  0;
               }
         }
 
@@ -104,6 +102,8 @@ void QModelParent::print(QModelIndex indx){
                 if (themes[k]->children.count() == 0) {
                     fetchMore(index(k, 0, indx));
                 }
+                if ( k != 0)
+                    printer.newPage();
                 QList<DataWrapper*> images = themes[k]->children;
                 for (int l = 0; l < images.count(); l++) {
                     QUrl addr = (new QUrl(static_cast<IData*>(images[l]->data)->path))->toString();
@@ -114,13 +114,11 @@ void QModelParent::print(QModelIndex indx){
                     QSize size = pix.size();
                     size.scale(rect.size(), Qt::KeepAspectRatio);
                     painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
-                    if (( yCoord + size.rheight() + size.height() + pix.height() / 2) > lengthPage){
-                        printer.newPage();
-                        yCoord = 0;
-                    }
                     painter.setWindow(pix.rect());
                     painter.drawPixmap(QPoint(0, yCoord), pix);
-                    yCoord +=  size.rheight() + size.height() + pix.height() / 2;;
+                    if (l != images.count() - 1)
+                        printer.newPage();
+                    yCoord =  0;
                 }
             }
       }
