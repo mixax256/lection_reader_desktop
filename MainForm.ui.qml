@@ -500,7 +500,9 @@ Item {
                                     z:2
                                 }
                                 onClicked: {
-                                   modelTree.print(selectionModel.currentIndex.row, selectionModel.currentIndex);
+                                    if (selectionModel.currentIndex.valid) {
+                                        modelTree.print(selectionModel.currentIndex);
+                                    }
                                 }
 
                                 Image {

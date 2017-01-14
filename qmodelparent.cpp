@@ -49,39 +49,28 @@ QUrl QModelParent::toBlack(QUrl data)
     QUrl newUrl = QUrl::fromUserInput(beginFile + path);
     return newUrl;
 }
-void QModelParent::print(int row, QModelIndex index){
-    QModelIndex parent = index.parent();
-    DataWrapper *elem = static_cast<DataWrapper *> (parent.internalPointer());
-    if (elem->children[row]->type == IMAGE){
-        if (parent.isValid() && elem->count > 0) {
-            QUrl addr = (new QUrl(static_cast<IData*>(elem->children[row]->data)->path))->toString();
-            QPixmap pix;
-            pix.load(addr.toString());
-            QPrinter printer;
-            QPrintDialog *dlg = new QPrintDialog(&printer,0);
-            if(dlg->exec() == QDialog::Accepted) {
-              QPainter painter(&printer);
-              painter.drawPixmap(QPoint(0, 0), pix);
-              painter.end();
-            }
-            if (elem != &d && elem->count == 0) {
-                fetchMore(parent);
-            }
-
-            if (elem == &d) {
-                beginResetModel();
-                endResetModel();
-            }
+void QModelParent::print(QModelIndex indx){
+    DataWrapper *elem = static_cast<DataWrapper *> (indx.internalPointer());
+    if (elem->type == IMAGE){
+        QUrl addr = (new QUrl(static_cast<IData*>(elem->data)->path))->toString();
+        QPixmap pix;
+        pix.load(addr.toString());
+        QPrinter printer;
+        QPrintDialog *dlg = new QPrintDialog(&printer,0);
+        if(dlg->exec() == QDialog::Accepted) {
+            QPainter painter(&printer);
+            painter.drawPixmap(QPoint(0, 0), pix);
+            painter.end();
         }
     }
-    if (elem->children[row]->type == THEME && elem->children[row]->children.count() > 0) {
+    if (elem->type == THEME && elem->children.count() > 0) {
         QPrinter printer;
         double yCoord = 0;
         QPrintDialog *dlg = new QPrintDialog(&printer,0);
         int lengthPage = 2300;
         if(dlg->exec() == QDialog::Accepted){
             QPainter painter(&printer);
-            QList<DataWrapper*> images = elem->children[row]->children;
+            QList<DataWrapper*> images = elem->children;
               for (int k = 0; k < images.count(); k++) {
                   QUrl addr = (new QUrl(static_cast<IData*>(images[k]->data)->path))->toString();
                   QPixmap pix;
@@ -103,15 +92,16 @@ void QModelParent::print(int row, QModelIndex index){
 
     }
 
-    if (elem->children[row]->type == COURSE && elem->children[row]->children.count() > 0) {
+    if (elem->type == COURSE && elem->children.count() > 0) {
             QPrinter printer;
             double yCoord = 0;
             QPrintDialog *dlg = new QPrintDialog(&printer,0);
             int lengthPage = 2300;
             if(dlg->exec() == QDialog::Accepted){
             QPainter painter(&printer);
-            QList<DataWrapper*> themes = elem->children[row]->children;
+            QList<DataWrapper*> themes = elem->children;
             for (int k = 0; k < themes.count(); k++) {
+                fetchMore(index(k, 0, indx));
                 QList<DataWrapper*> images = themes[k]->children;
                 for (int l = 0; l < images.count(); l++) {
                     QUrl addr = (new QUrl(static_cast<IData*>(images[l]->data)->path))->toString();
