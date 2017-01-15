@@ -25,8 +25,8 @@ Item {
     property var lastImage;
     property var hasChanges: false;
 
-    width:  640 //ApplicationWindow.__width
-    height: 450 //ApplicationWindow.__height
+    width:  640
+    height: 480
     Rectangle {
         width: parent.width
         height: parent.height
@@ -49,7 +49,6 @@ Item {
         Item {
             id: itemTree
             width: treeMinWidth
-            //height: parent.height
             height: (parent.height < treeMinHeight) ? treeMinHeight: parent.height
             anchors.left: parent.left
 
@@ -58,8 +57,6 @@ Item {
                 id: toolBar1Tree
                 width: parent.width
                 height: toolBarMinHeight
-                //anchors.fill: parent.width
-
 
                  GroupBox {
                             id: gBoxToolsTree
@@ -68,40 +65,17 @@ Item {
                             anchors.topMargin: 4
                             anchors.bottomMargin: 4
                             anchors.rightMargin: 4
-                            //width: gBoxFor1*2
                             visible: true
 
-
-//                            ToolButton {
-//                                id: toolButCheck
-//                                anchors { top: parent.top; left: parent.left }
-//                                anchors.leftMargin: 0
-//                                anchors.topMargin: 0
-//                                width: 30
-//                                height: 30
-
-
-//                                Image {
-//                                    source: "buttons/check1.svg"
-//                                    antialiasing: true
-//                                    anchors.fill: parent
-//                                    z:2
-//                                }
-
-//                                Image {
-//                                    source: "buttons/фон.svg"
-//                                    anchors.fill: parent
-//                                    z: 1
-//                                }
-//                            }
                             ToolButton {
                                 id: toolButAdd
                                 anchors { top: parent.top; left: parent.left }
-                                anchors.leftMargin: 0/*gBoxFor1-5*/
+                                anchors.leftMargin: 0
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
                                 opacity: 0.9
+
                                 MouseArea {
                                     hoverEnabled:true
                                     anchors.fill: parent
@@ -140,11 +114,12 @@ Item {
                             ToolButton {
                                 id: toolButDelete
                                 anchors { top: parent.top; left: parent.left }
-                                anchors.leftMargin: gBoxFor1-5/*gBoxFor1*2-10*/
+                                anchors.leftMargin: gBoxFor1-5
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
                                 opacity: 0.9
+
                                 MouseArea {
                                     hoverEnabled:true
                                     anchors.fill: parent
@@ -186,10 +161,7 @@ Item {
 
             RectForParts {
                 id: rectForPartsTree
-
                 width: itemTree.width
-                //implicitHeight: parent.height-toolBar1Tree.height-spaces_main
-
                 anchors.top: toolBar1Tree.bottom
                 anchors.topMargin: spaces_main
                 anchors.bottom: itemTree.bottom
@@ -208,7 +180,8 @@ Item {
                     y: 3
                     MouseArea {
                         id: mouseArea
-                        anchors.fill: parent
+                        width: parent.width
+                        height: parent.height - 30
                         acceptedButtons: Qt.LeftButton
                         onClicked: {
                             var index_item = parent.indexAt(mouse.x, mouse.y);
@@ -216,11 +189,13 @@ Item {
                                 parent.isExpanded(index_item) ? parent.collapse(index_item) : parent.expand(index_item);
                                 if (parent.model.data(index_item, 1)) {
                                     lection_image.source = parent.model.data(index_item, 1);
+                                    sliderH_ScaleView.visible = true;
                                 }
                                 else {
                                     lection_image.source = "";
                                     buttonOkOnView.visible = false;
                                     butCancelOnView.visible = false;
+                                    sliderH_ScaleView.visible = false;
                                 }
                             }
                             lectImage = lection_image.source;
@@ -234,51 +209,9 @@ Item {
                         title: ""
                         role: "display"
                         resizable:true
-                        width: treeView1.width-2
+                        width: 400/*treeView1.width-2*/
 
                     }
-
-//                    Slider {
-//                        id: sliderVertical2
-//                        x: parent.width-18
-//                        y: 5
-//                        width: 18
-//                        height: parent.height-5-22
-//                        orientation: Qt.Vertical
-//                    }
-//                    GroupBox {
-//                        id: gBoxAppearOnTree
-//                        x: 0
-//                        y: (parent.height-sliderHorizontal3.height-47)
-//                        width: parent.width
-//                        height: 47
-//                        title: qsTr("Group Box")
-
-//                        Button {
-//                            id: butCancelOnTree
-//                            x: 0
-//                            y: 0
-//                            width: 60
-//                            height: 27
-//                            text: qsTr("Button")
-//                        }
-
-//                    }
-//                    Slider {
-//                        id: sliderHorizontal3
-//                        x: 5
-//                        y: parent.height-18
-//                        width: parent.width-22-5
-//                        height: 18
-//                    }
-//                    Rectangle {
-//                        id: rectangle3
-//                        x: parent.width-22
-//                        y: parent.height-22
-//                        width: 22
-//                        height: 22
-//                        color: "#ffffff"
-//                    }
 
                 }
 
@@ -287,9 +220,7 @@ Item {
 
         Item {
             id: itemView
-            //width: viewMinWidth
             width: (parent.width-treeMinWidth-spaces_main < viewMinWidth) ? viewMinWidth: parent.width-treeMinWidth-spaces_main
-            //height: parent.height
             height: (parent.height < viewMinHeight) ? viewMinHeight: parent.height
             anchors.left: itemTree.right
             anchors.leftMargin: spaces_main
@@ -298,70 +229,11 @@ Item {
                 id:toolBar1View
                 width: itemView.width
                 height: toolBarMinHeight
-                //anchors.fill: parent.width
 
-//                GroupBox {
-//                    id: gBoxTViewUndoRedo
-//                    anchors { bottom: parent.bottom; top: parent.top; left: parent.left }
-//                    anchors.leftMargin: 4
-//                    anchors.topMargin: 4
-//                    anchors.bottomMargin: 4
-//                    width: gBoxFor1*2
-//                    visible: true
-
-//                    ToolButton {
-//                        id: toolButUndo
-//                        anchors { top: parent.top; left: parent.left }
-//                        anchors.leftMargin: 0
-//                        anchors.topMargin: 0
-//                        //anchors.bottomMargin: 4
-//                        //children[1].
-//                        width: 30
-//                        height: 30
-
-//                        Image {
-//                            source: "buttons/undo1.svg"
-//                            antialiasing: true
-//                            anchors.fill: parent
-//                            z:2
-//                        }
-
-//                        Image {
-//                            source: "buttons/фон.svg"
-//                            anchors.fill: parent
-//                            z: 1
-//                        }
-
-//                    }
-
-//                    ToolButton {
-//                        id: toolButRedo
-//                        anchors { top: parent.top; left: parent.left }
-//                        anchors.leftMargin: gBoxFor1-5
-//                        anchors.topMargin: 0
-//                        width: 30
-//                        height: 30
-
-//                        Image {
-//                            source: "buttons/redo1.svg"
-//                            antialiasing: true
-//                            anchors.fill: parent
-//                            z:2
-//                        }
-
-//                        Image {
-//                            source: "buttons/фон.svg"
-//                            anchors.fill: parent
-//                            z: 1
-//                        }
-
-//                    }
-
-//                }
                 GroupBox {
                             id: gBoxTViewEdit
-                            anchors { bottom: parent.bottom; top: parent.top; left: parent.left/*gBoxTViewUndoRedo.right*/ }
-                            anchors.leftMargin: 4/*-1*/
+                            anchors { bottom: parent.bottom; top: parent.top; left: parent.left }
+                            anchors.leftMargin: 4
                             anchors.topMargin: 4
                             anchors.bottomMargin: 4
                             width: gBoxFor1*4-10
@@ -374,17 +246,20 @@ Item {
                                 width: 30
                                 height: 30
                                 opacity: 0.9
+
                                 MouseArea {
                                     hoverEnabled:true
                                     anchors.fill: parent
                                     onEntered: { parent.opacity = 1 }
                                     onExited: { parent.opacity = 0.9 }
                                     onClicked: {
-                                        lection_image.source = modelTree.cutImage(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
-                                        lastImage = lection_image.source;
-                                        hasChanges = true;
-                                        buttonOkOnView.visible = true;
-                                        butCancelOnView.visible = true;
+                                        if ( lection_image.status != Image.Null ) {
+                                            lection_image.source = modelTree.cutImage(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                                            lastImage = lection_image.source;
+                                            hasChanges = true;
+                                            buttonOkOnView.visible = true;
+                                            butCancelOnView.visible = true;
+                                        }
                                     }
                                 }
 
@@ -411,6 +286,7 @@ Item {
                                 width: 30
                                 height: 30
                                 opacity: 0.9
+
                                 MouseArea {
                                     hoverEnabled:true
                                     anchors.fill: parent
@@ -447,6 +323,7 @@ Item {
                                 }
 
                             }
+
                             ToolButton {
                                 id: toolButBlackWhite
                                 anchors { top: parent.top; left: parent.left }
@@ -461,11 +338,13 @@ Item {
                                     onEntered: { parent.opacity = 1 }
                                     onExited: { parent.opacity = 0.9 }
                                     onClicked: {
-                                        lection_image.source=modelTree.toBlack(lection_image.source);
-                                        lastImage = lection_image.source;
-                                        hasChanges = true;
-                                        buttonOkOnView.visible = true;
-                                        butCancelOnView.visible = true;
+                                        if ( lection_image.status != Image.Null ) {
+                                            lection_image.source=modelTree.toBlack(lection_image.source);
+                                            lastImage = lection_image.source;
+                                            hasChanges = true;
+                                            buttonOkOnView.visible = true;
+                                            butCancelOnView.visible = true;
+                                        }
                                     }
                                 }
 
@@ -498,11 +377,13 @@ Item {
                                     onEntered: { parent.opacity = 1 }
                                     onExited: { parent.opacity = 0.9 }
                                     onClicked: {
-                                        lection_image.source = modelTree.imageImprovment(lection_image.source);
-                                        lastImage = lection_image.source;
-                                        hasChanges = true;
-                                        buttonOkOnView.visible = true;
-                                        butCancelOnView.visible = true;
+                                        if ( lection_image.status != Image.Null ) {
+                                            lection_image.source = modelTree.imageImprovment(lection_image.source);
+                                            lastImage = lection_image.source;
+                                            hasChanges = true;
+                                            buttonOkOnView.visible = true;
+                                            butCancelOnView.visible = true;
+                                        }
                                     }
                                 }
 
@@ -521,6 +402,7 @@ Item {
 
                             }
                         }
+
                 GroupBox {
                             id: gBoxTViewPrint
                             anchors { bottom: parent.bottom; top: parent.top; left: gBoxTViewEdit.right; right: toolBar1View.right }
@@ -537,6 +419,7 @@ Item {
                                 width: 30
                                 height: 30
                                 opacity: 0.9
+
                                 MouseArea {
                                     hoverEnabled:true
                                     anchors.fill: parent
@@ -548,6 +431,7 @@ Item {
                                         }
                                     }
                                 }
+
                                 Image {
                                     source: "buttons/print1.svg"
                                     antialiasing: true
@@ -562,8 +446,7 @@ Item {
                                 }
 
                             }
-                        }
-
+                }
             }
 
             RectForParts {
@@ -586,7 +469,6 @@ Item {
                 
                 Rectangle{
                     id: rectImage
-                    //anchors.fill:rectForPartsView.width
                     anchors.top: rectForPartsView.top
                     anchors.topMargin: 5
 
@@ -597,7 +479,6 @@ Item {
 
                     height: rectForPartsView.height-rectBottomArea.height-10
                     color:"#483D8B" //dark slate blue
-                    //color:"#ffffff"
 
                     ScrollView{
                         id: scrollView
@@ -637,6 +518,7 @@ Item {
 
                     }
                 }
+
                 Rectangle{
                     id: rectBottomArea
                     anchors.left:rectForPartsView.left
@@ -731,7 +613,8 @@ Item {
                             }
                         }
                     }
-                    Rectangle{
+
+                    Rectangle {
                         id: bottomView
 
                         anchors.left:rectBottomArea.left
@@ -745,27 +628,15 @@ Item {
                             anchors.right: parent.right
                             width: buttonOkOnView.width*2+14
                             height: parent.height
+                            visible: false
                             value:0.0
-                            minimumValue:0.5
+                            minimumValue:0.2
                             maximumValue:2
 
                         }
 
                     }
-
-
-
-
                 }
-
-
-
-
-
-
-
-
-
             }
         }
     }
