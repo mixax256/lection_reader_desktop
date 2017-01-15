@@ -101,18 +101,25 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
-                                onClicked: {
-                                    edtInput.text = "";
-                                    switch(modelTree.getType(selectionModel.currentIndex)) {
-                                        case 0: txtDlgAdd.text = "Введите название предмета:";
-                                                dlgAdd.open();
-                                                break;
-                                        case 1: txtDlgAdd.text = "Введите название лекции:";
-                                                dlgAdd.open();
-                                                break;
-                                        case 2: fileDialog.open();
-                                                break;
-                                        default: break;
+                                opacity: 0.9
+                                MouseArea {
+                                    hoverEnabled:true
+                                    anchors.fill: parent
+                                    onEntered: { parent.opacity = 1 }
+                                    onExited: { parent.opacity = 0.9 }
+                                    onClicked: {
+                                        edtInput.text = "";
+                                        switch(modelTree.getType(selectionModel.currentIndex)) {
+                                            case 0: txtDlgAdd.text = "Введите название предмета:";
+                                                    dlgAdd.open();
+                                                    break;
+                                            case 1: txtDlgAdd.text = "Введите название лекции:";
+                                                    dlgAdd.open();
+                                                    break;
+                                            case 2: fileDialog.open();
+                                                    break;
+                                            default: break;
+                                        }
                                     }
                                 }
 
@@ -137,18 +144,25 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
-                                onClicked: {
-                                    var parent = selectionModel.currentIndex.parent;
-                                    modelTree.deleteItem(selectionModel.currentIndex.row, selectionModel.currentIndex);
-                                    
-                                    if (selectionModel.currentIndex.row == -1) {
-                                        selectionModel.setCurrentIndex(parent, ItemSelectionModel.ClearAndSelect);
-                                    }
-                                    if (modelTree.data(selectionModel.currentIndex,1)) {
-                                        lection_image.source = modelTree.data(selectionModel.currentIndex,1);
-                                    }
-                                    else {
-                                        lection_image.source = "";
+                                opacity: 0.9
+                                MouseArea {
+                                    hoverEnabled:true
+                                    anchors.fill: parent
+                                    onEntered: { parent.opacity = 1 }
+                                    onExited: { parent.opacity = 0.9 }
+                                    onClicked: {
+                                        var parent = selectionModel.currentIndex.parent;
+                                        modelTree.deleteItem(selectionModel.currentIndex.row, selectionModel.currentIndex);
+
+                                        if (selectionModel.currentIndex.row == -1) {
+                                            selectionModel.setCurrentIndex(parent, ItemSelectionModel.ClearAndSelect);
+                                        }
+                                        if (modelTree.data(selectionModel.currentIndex,1)) {
+                                            lection_image.source = modelTree.data(selectionModel.currentIndex,1);
+                                        }
+                                        else {
+                                            lection_image.source = "";
+                                        }
                                     }
                                 }
 
@@ -359,12 +373,19 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
-                                onClicked: {
-                                    lection_image.source = modelTree.cutImage(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
-                                    lastImage = lection_image.source;
-                                    hasChanges = true;
-                                    buttonOkOnView.visible = true;
-                                    butCancelOnView.visible = true;
+                                opacity: 0.9
+                                MouseArea {
+                                    hoverEnabled:true
+                                    anchors.fill: parent
+                                    onEntered: { parent.opacity = 1 }
+                                    onExited: { parent.opacity = 0.9 }
+                                    onClicked: {
+                                        lection_image.source = modelTree.cutImage(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                                        lastImage = lection_image.source;
+                                        hasChanges = true;
+                                        buttonOkOnView.visible = true;
+                                        butCancelOnView.visible = true;
+                                    }
                                 }
 
                                 Image {
@@ -389,23 +410,29 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                opacity: 0.9
+                                MouseArea {
+                                    hoverEnabled:true
+                                    anchors.fill: parent
+                                    onEntered: { parent.opacity = 1 }
+                                    onExited: { parent.opacity = 0.9 }
+                                    onClicked: {
+                                        lastImage = lection_image.source;
+                                        if ( lection_image.status != Image.Null ) {
+                                            if (sliderRotation.visible == false)
+                                                sliderRotation.visible = true
+                                            else
+                                                sliderRotation.visible = false
+                                        }
 
-                                onClicked: {
-                                    lastImage = lection_image.source;
-                                    if ( lection_image.status != Image.Null ) {
-                                        if (sliderRotation.visible == false)
-                                            sliderRotation.visible = true
-                                        else
-                                            sliderRotation.visible = false
-                                    }
+                                        if (sliderRotation.value != 0) {
+                                            hasChanges = true;
+                                            buttonOkOnView.visible = true;
+                                            butCancelOnView.visible = true;
+                                        }
+                                   }
+                                }
 
-                                    if (sliderRotation.value != 0) {
-                                        hasChanges = true;
-                                        buttonOkOnView.visible = true;
-                                        butCancelOnView.visible = true;
-                                    }
-
-                               }
                                 Image {
                                     source: "buttons/rotate1.svg"
                                     antialiasing: true
@@ -427,19 +454,28 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                opacity: 0.9
+                                MouseArea {
+                                    hoverEnabled:true
+                                    anchors.fill: parent
+                                    onEntered: { parent.opacity = 1 }
+                                    onExited: { parent.opacity = 0.9 }
+                                    onClicked: {
+                                        lection_image.source=modelTree.toBlack(lection_image.source);
+                                        lastImage = lection_image.source;
+                                        hasChanges = true;
+                                        buttonOkOnView.visible = true;
+                                        butCancelOnView.visible = true;
+                                    }
+                                }
+
                                 Image {
                                     source: "buttons/black_white1.svg"
                                     antialiasing: true
                                     anchors.fill: parent
                                     z:2
                                 }
-                                onClicked: {
-                                    lection_image.source=modelTree.toBlack(lection_image.source);
-                                    lastImage = lection_image.source;
-                                    hasChanges = true;
-                                    buttonOkOnView.visible = true;
-                                    butCancelOnView.visible = true;
-                                }
+
                                 Image {
                                     source: "buttons/фон.svg"
                                     anchors.fill: parent
@@ -455,12 +491,19 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
-                                onClicked: {
-                                    lection_image.source = modelTree.imageImprovment(lection_image.source);
-                                    lastImage = lection_image.source;
-                                    hasChanges = true;
-                                    buttonOkOnView.visible = true;
-                                    butCancelOnView.visible = true;
+                                opacity: 0.9
+                                MouseArea {
+                                    hoverEnabled:true
+                                    anchors.fill: parent
+                                    onEntered: { parent.opacity = 1 }
+                                    onExited: { parent.opacity = 0.9 }
+                                    onClicked: {
+                                        lection_image.source = modelTree.imageImprovment(lection_image.source);
+                                        lastImage = lection_image.source;
+                                        hasChanges = true;
+                                        buttonOkOnView.visible = true;
+                                        butCancelOnView.visible = true;
+                                    }
                                 }
 
                                 Image {
@@ -493,16 +536,23 @@ Item {
                                 anchors.topMargin: 0
                                 width: 30
                                 height: 30
+                                opacity: 0.9
+                                MouseArea {
+                                    hoverEnabled:true
+                                    anchors.fill: parent
+                                    onEntered: { parent.opacity = 1 }
+                                    onExited: { parent.opacity = 0.9 }
+                                    onClicked: {
+                                        if (selectionModel.currentIndex.valid) {
+                                            modelTree.print(selectionModel.currentIndex);
+                                        }
+                                    }
+                                }
                                 Image {
                                     source: "buttons/print1.svg"
                                     antialiasing: true
                                     anchors.fill: parent
                                     z:2
-                                }
-                                onClicked: {
-                                    if (selectionModel.currentIndex.valid) {
-                                        modelTree.print(selectionModel.currentIndex);
-                                    }
                                 }
 
                                 Image {
@@ -607,7 +657,6 @@ Item {
                         width: rectBottomArea.width+2
                         height: toolBarMinHeight-8
                         visible: true
-                        //title: qsTr("Group Box")
 
                         ToolButton {
                             id: buttonOkOnView
@@ -617,14 +666,20 @@ Item {
                             width: 120
                             height: 30
                             visible: false
-
-                            onClicked: {
-                                modelTree.saveChanges(lastImage, sliderRotation.value * 360, lectImage);
-                                lection_image.source = "";
-                                lection_image.source = lectImage;
-                                sliderRotation.value = 0;
-                                buttonOkOnView.visible = false;
-                                butCancelOnView.visible = false;
+                            opacity: 0.9
+                            MouseArea {
+                                hoverEnabled:true
+                                anchors.fill: parent
+                                onEntered: { parent.opacity = 1 }
+                                onExited: { parent.opacity = 0.9 }
+                                onClicked: {
+                                    modelTree.saveChanges(lastImage, sliderRotation.value * 360, lectImage);
+                                    lection_image.source = "";
+                                    lection_image.source = lectImage;
+                                    sliderRotation.value = 0;
+                                    buttonOkOnView.visible = false;
+                                    butCancelOnView.visible = false;
+                                }
                             }
 
                             Image {
@@ -648,12 +703,18 @@ Item {
                             width: 120
                             height: 30
                             visible: false
-
-                            onClicked: {
-                                lection_image.source = lectImage;
-                                modelTree.cancelChanges(lectImage);
-                                buttonOkOnView.visible = false;
-                                butCancelOnView.visible = false;
+                            opacity: 0.9
+                            MouseArea {
+                                hoverEnabled:true
+                                anchors.fill: parent
+                                onEntered: { parent.opacity = 1 }
+                                onExited: { parent.opacity = 0.9 }
+                                onClicked: {
+                                    lection_image.source = lectImage;
+                                    modelTree.cancelChanges(lectImage);
+                                    buttonOkOnView.visible = false;
+                                    butCancelOnView.visible = false;
+                                }
                             }
 
                             Image {
@@ -681,16 +742,12 @@ Item {
 
                         Slider {
                             id: sliderH_ScaleView
-//                            x: parent.width/2
-//                            width: parent.width/2
                             anchors.right: parent.right
                             width: buttonOkOnView.width*2+14
                             height: parent.height
                             value:0.0
                             minimumValue:0.5
                             maximumValue:2
-                            //minimumValue:0.5
-                            //maximumValue:2
 
                         }
 
