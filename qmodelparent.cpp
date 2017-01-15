@@ -897,30 +897,6 @@ QUrl QModelParent::imageImprovment(QUrl image)
     return QUrl::fromLocalFile(path);
 }
 
-QUrl QModelParent::drawRect(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight)
-{
-    QPixmap pix;
-    pix.load(image.toLocalFile());
-    double propWidth = (double) pix.width() / showedWidth;
-    double propHeight = (double) pix.height() / showedHeight;
-    QPainter painter;
-    painter.begin(&pix);
-    painter.setPen(QPen(Qt::DashLine));
-    painter.fillRect(x * propWidth, y * propHeight, width * propWidth, height * propHeight, QBrush(QColor(128, 128, 255, 100)));
-    painter.end();
-    QString path = image.path();
-    path = path.mid(0, path.lastIndexOf('.'))
-               .append("rect")
-               .append(path.mid(path.lastIndexOf('.')));
-    QFile file(path);
-    if (file.exists()) {
-        QFile::remove(path);
-    }
-    file.open(QIODevice::WriteOnly);
-    pix.save(&file);
-    return QUrl::fromLocalFile(path);
-}
-
 QUrl QModelParent::cutImage(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight)
 {
     IplImage* img = cvLoadImage(image.path().toStdString().c_str(), 1);

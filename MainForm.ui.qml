@@ -1,4 +1,4 @@
-import QtQuick 2.6
+import QtQuick 2.7
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
@@ -254,6 +254,7 @@ Item {
                                     onExited: { parent.opacity = 0.9 }
                                     onClicked: {
                                         if ( lection_image.status != Image.Null ) {
+                                            canvas.visible = false;
                                             lection_image.source = modelTree.cutImage(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
                                             lastImage = lection_image.source;
                                             hasChanges = true;
@@ -493,6 +494,19 @@ Item {
                             cache: false
                             rotation: sliderRotation.value * 360
 
+                            Canvas {
+                                id: canvas
+                                anchors.fill: parent
+                                onPaint: {
+                                    var ctx = getContext("2d");
+                                    ctx.lineWidth = 2 / sliderH_ScaleView.value;
+                                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                                    ctx.beginPath();
+                                    ctx.rect(rectX, rectY, rectWidth, rectHeight);
+                                    ctx.stroke();
+                                }
+                            }
+
                             MouseArea {
                                  id: imageMouseArea
                                  width: lection_image.width
@@ -500,6 +514,7 @@ Item {
                                  onPositionChanged: {
                                      rectWidth = mouse.x - rectX;
                                      rectHeight = mouse.y - rectY;
+                                     canvas.requestPaint();
                                  }
 
                                  onPressed: {
@@ -507,10 +522,15 @@ Item {
                                      rectY = mouse.y;
                                      rectWidth = 0;
                                      rectHeight = 0;
+                                     canvas.visible = true;
+                                     canvas.requestPaint();
                                  }
 
                                  onReleased: {
-                                     lection_image.source = (rectWidth == 0 || rectHeight == 0) ? lastImage : modelTree.drawRect(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
+                                     rectX = (rectWidth < 0) ? rectX + rectWidth : rectX;
+                                     rectY = (rectHeight < 0) ? rectY + rectHeight : rectY;
+                                     rectWidth = (rectWidth < 0) ? -rectWidth : rectWidth;
+                                     rectHeight = (rectHeight < 0) ? -rectHeight : rectHeight;
                                  }
 
                             }
