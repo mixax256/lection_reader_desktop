@@ -150,7 +150,7 @@ void QModelParent::print(QModelIndex indx){
                   QUrl addr = (new QUrl(static_cast<IData*>(images[k]->data)->path))->toString();
                   QPixmap pix;
                   pix.load(addr.toString());
-
+                  bool bigImage = false;
                   QRect rect = painter.viewport();
                   QSize size = pix.size();
                   if (printer.height() > printer.width()){
@@ -158,14 +158,17 @@ void QModelParent::print(QModelIndex indx){
                           QSize imageSize = pix.size();
                           imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                           size = imageSize;
+                          yCoord = 0;
+                          bigImage = true;
                       }
                       if (( yCoord + size.height()) > lengthPage && !(size.width() > printer.width())){
                          printer.newPage();
                          yCoord = 0;
                       }
                          if (size.width() > printer.width()){
-                             if (k)
+                             if (k && !bigImage)
                                printer.newPage();
+                             bigImage = false;
                              int w, h, x, y;
                              x=pix.width();
                              y=pix.height();
@@ -203,14 +206,17 @@ void QModelParent::print(QModelIndex indx){
                           QSize imageSize = pix.size();
                           imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                           size = imageSize;
+                          xCoord = 0;
+                          bigImage = true;
                       }
                       if (( xCoord + size.width()) > lengthPage && !(size.height() > printer.height()) ){
                           printer.newPage();
-                          yCoord = 0;
+                          xCoord = 0;
                       }
                       if (size.height() > printer.height()){
-                          if (k)
+                          if (k && !bigImage)
                             printer.newPage();
+                          bigImage = false;
                           int w, h, x, y;
                           x=pix.width();
                           y=pix.height();
@@ -268,20 +274,25 @@ void QModelParent::print(QModelIndex indx){
                     pix.load(addr.toString());
                     QRect rect = painter.viewport();
                     QSize size = pix.size();\
+                    bool bigImage = false;
                     if (printer.height() > printer.width()){
                         if (size.width() > printer.width() && size.height() > printer.height()){
+                            printer.newPage();
                             QSize imageSize = pix.size();
                             imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                             size = imageSize;
+                            bigImage = true;
+                            yCoord = 0;
                         }
                         if (( yCoord + size.height()) > lengthPage && !(size.width() > printer.width())){
                            printer.newPage();
                            yCoord = 0;
                         }
                            if (size.width() > printer.width()){
-                               if (l || k)
+                               if ((l || k) && !bigImage )
                                  printer.newPage();
                                int w, h, x, y;
+                               bigImage = false;
                                x=pix.width();
                                y=pix.height();
                                size=pix.size();
@@ -318,14 +329,17 @@ void QModelParent::print(QModelIndex indx){
                             QSize imageSize = pix.size();
                             imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                             size = imageSize;
+                            bigImage = true;
+                            xCoord = 0;
                         }
                         if (( xCoord + size.width() && !(size.height() > printer.height())) > lengthPage){
                             printer.newPage();
                             xCoord = 0;
                         }
                         if (size.height() > printer.height()){
-                            if (l || k)
+                            if ((l || k) && !bigImage)
                               printer.newPage();
+                            bigImage = false;
                             int w, h, x, y;
                             x=pix.width();
                             y=pix.height();
