@@ -70,7 +70,6 @@ public:
     Q_INVOKABLE bool addItem(QString name, QModelIndex parent);
     Q_INVOKABLE int getType(QModelIndex index);
     Q_INVOKABLE QUrl imageImprovment(QUrl image);
-    Q_INVOKABLE QUrl drawRect(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight);
     Q_INVOKABLE QUrl cutImage(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight);
     Q_INVOKABLE QModelIndex getImage(QModelIndex curIndex, int pressedKey);
     Q_INVOKABLE void saveChanges(QUrl lastImage, int rotationAngle, QUrl originalImage);
