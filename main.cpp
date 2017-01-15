@@ -15,8 +15,6 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     QTextCodec* codec = QTextCodec::codecForName("UTF-8");
-//    QTextCodec::setCodecForTr(codec);
-//    QTextCodec::setCodecForCStrings(codec);
     QTextCodec::setCodecForLocale(codec);
 
     QString dbName = "lections";
@@ -29,27 +27,5 @@ int main(int argc, char *argv[])
     QModelParent model(dbName, tableName);
     engine.rootContext()->setContextProperty("modelTree", &model);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    //QDataBaseWork dataBaseWork;
-    //dataBaseWork.createDataBase(dbName);
-    //dataBaseWork.createTable(tableName);
-    //dataBaseWork.insertInTable(tableName, NULL, "/home", "тестовая запись", "", 1);
-
-    //map <QString, QString> rowsAndVals = {{"tags", "148"}};
-    //dataBaseWork.updateInTable(tableName, rowsAndVals, "id = 2");
-    /*dataBaseWork.deleteFromTable(tableName, "");*/
-    //QModelParent model(dbName);
-    //QHBoxLayout layout (&widget);
-    /*QWidget widget;
-     //QTableView lview;
-     //layout.addWidget(&view);
-    QTreeView view;
-     //layout.addWidget(&lview);
-         view.setModel(&model);
-         //lview.setModel(&model);
-       //  lview.setRootIndex(ip->index(0,0,ip->index(0,0,QModelIndex())));
-    // QObject::connect (&view,SIGNAL(clicked(QModelIndex)),&lview,SLOT(setRootIndex(QModelIndex)));
-    // QObject::connect (&view,SIGNAL(entered(QModelIndex)),&lview,SLOT(setRootIndex(QModelIndex)));
-    // QObject::connect (&view,SIGNAL(activated(QModelIndex)),&lview,SLOT(setRootIndex(QModelIndex)));
-     widget.show();*/
     return app.exec();
 }

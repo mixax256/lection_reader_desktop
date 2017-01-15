@@ -1,5 +1,7 @@
 TEMPLATE = app
 
+INCLUDEPATH += /usr/local/opencv2/
+LIBS += -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc
 QT += qml quick widgets
 QT += sql
 QT += printsupport
@@ -8,8 +10,7 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     qdatabasework.cpp \
-    qmodelparent.cpp \
-    qmlbuttonclicks.cpp
+    qmodelparent.cpp
 
 RESOURCES += qml.qrc
 
@@ -23,5 +24,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     qdatabasework.h \
-    qmodelparent.h \
-    qmlbuttonclicks.h
+    qmodelparent.h
