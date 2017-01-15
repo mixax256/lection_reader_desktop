@@ -556,7 +556,7 @@ Item {
 
                        Image {
                             id: lection_image
-                            scale: sliderH_ScaleView.value + 0.5
+                            scale: sliderH_ScaleView.value
                             fillMode: Image.PreserveAspectFit
                             transformOrigin: Item.Center
                             cache: false
@@ -611,8 +611,9 @@ Item {
 
                         ToolButton {
                             id: buttonOkOnView
-                            x: 130
-                            y: 0
+                            anchors.right:butCancelOnView.left
+                            anchors.rightMargin: 7
+                            y: -1
                             width: 120
                             height: 30
                             visible: false
@@ -642,8 +643,8 @@ Item {
 
                         ToolButton {
                             id: butCancelOnView
-                            x: 270
-                            y: 0
+                            anchors.right:parent.right
+                            y: -1
                             width: 120
                             height: 30
                             visible: false
@@ -680,9 +681,14 @@ Item {
 
                         Slider {
                             id: sliderH_ScaleView
-                            x: parent.width/2
-                            width: parent.width/2
+//                            x: parent.width/2
+//                            width: parent.width/2
+                            anchors.right: parent.right
+                            width: buttonOkOnView.width*2+14
                             height: parent.height
+                            value:0.0
+                            minimumValue:0.5
+                            maximumValue:2
                             //minimumValue:0.5
                             //maximumValue:2
 
