@@ -613,6 +613,7 @@ Item {
                                 onExited: { parent.opacity = 0.9 }
                                 onClicked: {
                                     lection_image.source = lectImage;
+                                    lastImage = lectImage;
                                     modelTree.cancelChanges(lectImage);
                                     buttonOkOnView.visible = false;
                                     butCancelOnView.visible = false;
