@@ -144,14 +144,12 @@ void QModelParent::print(QModelIndex indx){
         if(dlg->exec() == QDialog::Accepted){
             QPainter painter(&printer);
 
-            QPrinter::Orientation orient;
             QList<DataWrapper*> images = elem->children;
               for (int k = 0; k < images.count(); k++) {
                   QUrl addr = (new QUrl(static_cast<IData*>(images[k]->data)->path))->toString();
                   QPixmap pix;
                   pix.load(addr.toString());
                   bool bigImage = false;
-                  bool rotImage = false;
                   QRect rect = painter.viewport();
                   QSize size = pix.size();
                   if (printer.height() > printer.width()){
@@ -832,6 +830,8 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
             case THEME:
                 setData(child, IMAGE, TYPE_MODEL);
             break;
+            default:
+            break;
         }
         setData(child, data->id, PID);
         if (data->type != THEME) {
@@ -859,8 +859,6 @@ bool QModelParent::addItem(QString name, QModelIndex parent)
             QFile::copy(oldFile, newFileName);
             setData(child, newFileName, PATH);
         }
-        //setData(child, "", COMMENT);
-        //setData(child, "", TAG);
         setData(child, data->count-1, NUMBER);
         DataWrapper* data_child = static_cast<DataWrapper *> (child.internalPointer());
         data_child->parent = data;
