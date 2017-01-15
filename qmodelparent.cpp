@@ -125,7 +125,7 @@ void QModelParent::print(QModelIndex indx){
                   else{
                       if (( xCoord + size.width()) > lengthPage && !(size.height() > printer.height()) ){
                           printer.newPage();
-                          xCoord = 0;
+                          yCoord = 0;
                       }
                       if (size.height() > printer.height()){
                           if (k)
@@ -188,7 +188,7 @@ void QModelParent::print(QModelIndex indx){
                     QRect rect = painter.viewport();
                     QSize size = pix.size();
                     if (printer.height() > printer.width()){
-                        if (( yCoord + size.height()) > lengthPage){
+                        if (( yCoord + size.height()) > lengthPage && !(size.width() > printer.width())){
                            printer.newPage();
                            yCoord = 0;
                         }
@@ -216,7 +216,7 @@ void QModelParent::print(QModelIndex indx){
                                painter.setWindow(pix.rect());
                                painter.drawPixmap(QPoint(0, 0), pix);
                                yCoord = 0;
-                               if (((l) && (l != (images.count() - 1) ) && k != (themes.count() - 1)) || (1 == images.count() ))
+                               if (((l) && (l != (images.count() - 1) ) && k != (themes.count() - 1)) || (1 == images.count() || ((l || k)&& (l != (images.count() - 1) ) && k != (themes.count() - 1))))
                                  printer.newPage();
                         }
                         else{
@@ -256,7 +256,7 @@ void QModelParent::print(QModelIndex indx){
                             painter.setWindow(pix.rect());
                             painter.drawPixmap(QPoint(0, 0), pix);
                             xCoord = 0;
-                            if (((l) && (l != images.count() - 1) && k != themes.count() - 1) || ( 1 == images.count()) )
+                            if (((l) && (l != (images.count() - 1) ) && k != (themes.count() - 1)) || (1 == images.count() || ((l || k)&& (l != (images.count() - 1) ) && k != (themes.count() - 1))))
                               printer.newPage();
                         }
                         else{
