@@ -151,11 +151,13 @@ void QModelParent::print(QModelIndex indx){
                   QPixmap pix;
                   pix.load(addr.toString());
                   bool bigImage = false;
+                  bool rotImage = false;
                   QRect rect = painter.viewport();
                   QSize size = pix.size();
                   if (printer.height() > printer.width()){
                       if (size.width() > printer.width() && size.height() > printer.height()){
-                          printer.newPage();
+                          if (k)
+                            printer.newPage();
                           QSize imageSize = pix.size();
                           imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                           size = imageSize;
@@ -163,7 +165,9 @@ void QModelParent::print(QModelIndex indx){
                           bigImage = true;
                       }
                       if (( yCoord + size.height()) > lengthPage && !(size.width() > printer.width())){
-                         printer.newPage();
+                          if (!bigImage)
+                            printer.newPage();
+                          bigImage = false;
                          yCoord = 0;
                       }
                          if (size.width() > printer.width()){
@@ -200,25 +204,29 @@ void QModelParent::print(QModelIndex indx){
                           painter.setWindow(pix.rect());
                           painter.drawPixmap(QPoint(0, yCoord), pix);
                           yCoord +=  size.height();
+                          bigImage = false;
                       }
                   }
                   else{
                       if (size.width() > printer.width() && size.height() > printer.height()){
-                          printer.newPage();
+                          if (k && !bigImage)
+                            printer.newPage();
                           QSize imageSize = pix.size();
                           imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                           size = imageSize;
                           xCoord = 0;
                           bigImage = true;
                       }
-                      if (( xCoord + size.width()) > lengthPage && !(size.height() > printer.height()) ){
-                          printer.newPage();
+                      if (( xCoord + size.width()) > lengthPage && !(size.height() > printer.height()) && k){
+                          if (!bigImage)
+                            printer.newPage();
+                          bigImage = false;
                           xCoord = 0;
                       }
                       if (size.height() > printer.height()){
                           if (k && !bigImage)
                             printer.newPage();
-                          bigImage = false;
+
                           int w, h, x, y;
                           x=pix.width();
                           y=pix.height();
@@ -240,8 +248,9 @@ void QModelParent::print(QModelIndex indx){
                           painter.setWindow(pix.rect());
                           painter.drawPixmap(QPoint(0, 0), pix);
                           xCoord = 0;
-                          if ((k) && (k != images.count() - 1))
+                          if (k && !bigImage)
                             printer.newPage();
+                          bigImage = false;
                       }
                       else{
                           size.scaled(size.width(), size.height(), Qt::KeepAspectRatio);
@@ -249,6 +258,7 @@ void QModelParent::print(QModelIndex indx){
                           painter.setWindow(pix.rect());
                           painter.drawPixmap(QPoint(xCoord, 0), pix);
                           xCoord +=  size.width();
+                          bigImage = false;
                       }
                   }
               }
@@ -279,7 +289,8 @@ void QModelParent::print(QModelIndex indx){
                     bool bigImage = false;
                     if (printer.height() > printer.width()){
                         if (size.width() > printer.width() && size.height() > printer.height()){
-                            printer.newPage();
+                            if (k || l)
+                              printer.newPage();
                             QSize imageSize = pix.size();
                             imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                             size = imageSize;
@@ -287,7 +298,9 @@ void QModelParent::print(QModelIndex indx){
                             yCoord = 0;
                         }
                         if (( yCoord + size.height()) > lengthPage && !(size.width() > printer.width())){
-                           printer.newPage();
+                            if (!bigImage)
+                              printer.newPage();
+                            bigImage = false;
                            yCoord = 0;
                         }
                            if (size.width() > printer.width()){
@@ -324,11 +337,13 @@ void QModelParent::print(QModelIndex indx){
                             painter.setWindow(pix.rect());
                             painter.drawPixmap(QPoint(0, yCoord), pix);
                             yCoord +=  size.height();
+                            bigImage = false;
                         }
                     }
                     else{
                         if (size.width() > printer.width() && size.height() > printer.height()){
-                            printer.newPage();
+                            if (k || l)
+                              printer.newPage();
                             QSize imageSize = pix.size();
                             imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                             size = imageSize;
@@ -337,7 +352,9 @@ void QModelParent::print(QModelIndex indx){
 
                         }
                         if (( xCoord + size.width() > lengthPage) && !(size.height() > printer.height())) {
-                            printer.newPage();
+                            if (!bigImage)
+                              printer.newPage();
+                            bigImage = false;
                             xCoord = 0;
                         }
                         if (size.height() > printer.height()){
@@ -374,6 +391,7 @@ void QModelParent::print(QModelIndex indx){
                             painter.setWindow(pix.rect());
                             painter.drawPixmap(QPoint(xCoord, 0), pix);
                             xCoord +=  size.width();
+                            bigImage = false;
                         }
                     }
                  }
