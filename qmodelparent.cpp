@@ -155,6 +155,7 @@ void QModelParent::print(QModelIndex indx){
                   QSize size = pix.size();
                   if (printer.height() > printer.width()){
                       if (size.width() > printer.width() && size.height() > printer.height()){
+                          printer.newPage();
                           QSize imageSize = pix.size();
                           imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                           size = imageSize;
@@ -167,7 +168,7 @@ void QModelParent::print(QModelIndex indx){
                       }
                          if (size.width() > printer.width()){
                              if (k && !bigImage)
-                               printer.newPage();
+                               bigImage = false;;
                              bigImage = false;
                              int w, h, x, y;
                              x=pix.width();
@@ -203,6 +204,7 @@ void QModelParent::print(QModelIndex indx){
                   }
                   else{
                       if (size.width() > printer.width() && size.height() > printer.height()){
+                          printer.newPage();
                           QSize imageSize = pix.size();
                           imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                           size = imageSize;
@@ -326,13 +328,15 @@ void QModelParent::print(QModelIndex indx){
                     }
                     else{
                         if (size.width() > printer.width() && size.height() > printer.height()){
+                            printer.newPage();
                             QSize imageSize = pix.size();
                             imageSize.scale((QSize(printer.width(), printer.height())), Qt::KeepAspectRatio);
                             size = imageSize;
                             bigImage = true;
                             xCoord = 0;
+
                         }
-                        if (( xCoord + size.width() && !(size.height() > printer.height())) > lengthPage){
+                        if (( xCoord + size.width() > lengthPage) && !(size.height() > printer.height())) {
                             printer.newPage();
                             xCoord = 0;
                         }
