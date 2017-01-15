@@ -505,11 +505,16 @@ Item {
                                  onPressed: {
                                      rectX = mouse.x;
                                      rectY = mouse.y;
+                                     console.log(rectX + " " + rectY);
                                      rectWidth = 0;
                                      rectHeight = 0;
                                  }
 
                                  onReleased: {
+                                     rectX = (rectWidth < 0) ? rectX + rectWidth : rectX;
+                                     rectY = (rectHeight < 0) ? rectY + rectHeight : rectY;
+                                     rectWidth = (rectWidth < 0) ? -rectWidth : rectWidth;
+                                     rectHeight = (rectHeight < 0) ? -rectHeight : rectHeight;
                                      lection_image.source = (rectWidth == 0 || rectHeight == 0) ? lastImage : modelTree.drawRect(lastImage, rectX, rectY, rectWidth, rectHeight, lection_image.paintedWidth, lection_image.paintedHeight);
                                  }
 

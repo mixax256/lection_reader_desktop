@@ -905,6 +905,7 @@ QUrl QModelParent::drawRect(QUrl image, int x, int y, int width, int height, int
 
 QUrl QModelParent::cutImage(QUrl image, int x, int y, int width, int height, int showedWidth, int showedHeight)
 {
+    qDebug() << width << ' ' << height;
     IplImage* img = cvLoadImage(image.path().toStdString().c_str(), 1);
     double propWidth = (double) img->width / showedWidth;
     double propHeight = (double) img->height / showedHeight;
